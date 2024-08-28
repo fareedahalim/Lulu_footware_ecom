@@ -152,8 +152,15 @@ const continueSignup = async (req, res) => {
         }
 
         // Check if the user already exists
-        const userExists = await User.findOne({ email });
-        if (userExists) {
+        const existingUser = await User.findOne({ email });
+
+        // If the user exists and is blocked, do not allow signup
+        if (existingUser && existingUser.isBlocked) {
+            return res.render("users/signUp", { message: "Your account is blocked, you cannot sign up." });
+        }
+
+        // If the user exists and is not blocked, prevent duplicate signup
+        if (existingUser) {
             return res.render("users/signUp", { message: "User already exists" });
         }
 
@@ -196,7 +203,6 @@ const continueSignup = async (req, res) => {
         req.session.otpExpireTime = Date.now() + 5 * 60 * 1000; // OTP valid for 5 minutes
 
         // Render the OTP verification page with a timer
-        
         console.log("OTP sent:", generatedOtp);
         res.render("users/otp", { user: email, otpSent: true });
     } catch (error) {
@@ -204,7 +210,6 @@ const continueSignup = async (req, res) => {
         res.status(500).send('Internal server error');
     }
 };
-
 
 
 
@@ -242,13 +247,13 @@ const verifyOtp = async (req, res) => {
 //load loginpage
 const loadLogin = async (req, res) => {
     try {
-        // if(!req.session.user)
-        // {
+        if(!req.session.user)
+        {
         return res.render("users/login");
-        // }  
-        // else{
-        // res.redirect("/")
-        // }      
+        }  
+        else{
+        res.redirect("/")
+        }      
     } catch (error) {
         res.redirect("users/pageNot Found")
     }
@@ -275,6 +280,7 @@ console.log(passwordMatch)
             return res.render("users/login", { errorMessage: "Incorrect email or password" });
         }
         req.session.user = findUser._id;
+        console.log(req.session.user._id);
         console.log("is logged")
         res.redirect("/home")
     } catch (error) {

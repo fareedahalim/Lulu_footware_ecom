@@ -1,0 +1,268 @@
+<%- include("../../views/partials/admin/header") %>
+
+<style>
+    .main-panel {
+        background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU');
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        padding-top: 20px;
+    }
+
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .card-title {
+        color: rgb(10, 109, 170);
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group select {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: rgb(10, 109, 170);
+        outline: none;
+        box-shadow: 0 0 5px rgba(10, 109, 170, 0.5);
+    }
+
+    .btn-primary {
+        background-color: rgb(10, 109, 170);
+        border-color: rgb(10, 109, 170);
+        padding: 10px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.3s;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background-color: rgb(8, 88, 137);
+        transform: translateY(-2px);
+    }
+
+    .error-message {
+        color: red;
+        font-size: 12px;
+    }
+
+    .image-preview {
+        max-width: 100px;
+        max-height: 100px;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .btn {
+        margin-top: 10px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .content-wrapper {
+        padding: 40px;
+    }
+</style>
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Add Product Details</h2>
+                    
+                    <form action="/admin/add-varient/<%= product._id %>" method="POST" enctype="multipart/form-data" id="add_product_form" onsubmit="return varientValidation()">
+                        <div class="form-group">
+                            <label for="stock">Stock</label>
+                            <input type="number" name="stock" id="stock" placeholder="Enter stock">
+                            <p id="stockError" class="error-message"></p>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="color">Color</label>
+                            <input type="text" name="color" id="color" class="form-control" placeholder="Enter color">
+                            <p id="colorError" class="error-message"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price">Price</label>
+                            <input type="number" name="price" id="price" placeholder="Enter price">
+                            <p id="priceError" class="error-message"></p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="size">Size</label>
+                            <input type="number" name="size" id="size" placeholder="Enter size">
+                            <p id="sizeError" class="error-message"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image1">Image 1</label>
+                            <img id="previewImage1" class="image-preview" />
+                            <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event, 1)">
+                            <button type="button" id="removeImage1" class="btn btn-secondary" style="display: none;" onclick="removeImage(1)">Remove</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image2">Image 2</label>
+                            <img id="previewImage2" class="image-preview" />
+                            <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event, 2)">
+                            <button type="button" id="removeImage2" class="btn btn-secondary" style="display: none;" onclick="removeImage(2)">Remove</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image3">Image 3</label>
+                            <img id="previewImage3" class="image-preview" />
+                            <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event, 3)">
+                            <button type="button" id="removeImage3" class="btn btn-secondary" style="display: none;" onclick="removeImage(3)">Remove</button>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save Product</button>
+                    </form>
+                    
+                    <br>
+                    <a href="/admin/products" class="btn btn-secondary">Back to Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+function varientValidation() {
+            
+            
+            var size = document.getElementById('size').value;
+            var price = document.getElementById('price').value;
+            var stock = document.getElementById('stock').value;
+            var color = document.getElementById('color').value;
+            var image1 = document.getElementById('image1').value;
+            var image2 = document.getElementById('image2').value;
+            var image3 = document.getElementById('image3').value;
+    
+            // Reset previous errors
+            resetErrors();
+    
+            var isValid = true;
+    
+            
+            
+            if (size === '') {
+                document.getElementById('sizeError').innerText = 'Please select a size';
+                isValid = false;
+            }
+    
+            if (price.trim() === '') {
+                document.getElementById('priceError').innerText = 'Please enter price';
+                isValid = false;
+            } else if (isNaN(price)) {
+            document.getElementById('priceError').innerText = 'Only numbers are allowed';
+            isValid = false;
+            } else if(price <= 0) {
+             document.getElementById('priceError').innerText = 'Price should be positive';
+             isValid = false;
+         }
+          
+
+            if (stock.trim() === '') {
+                document.getElementById('stockError').innerText = 'Please enter stock';
+                isValid = false;
+            } else if (isNaN(stock)) {
+            document.getElementById('stockError').innerText = 'Only numbers are allowed';
+            isValid = false;
+            } else if(stock <= 0) {
+             document.getElementById('stockError').innerText = 'stock should be positive';
+             isValid = false;
+         }
+         if(color===''){
+            document.getElementById('colorError').innerText='Please enter color';
+            isValid=false;
+         }
+    
+        
+        
+            if (image1.trim() === '') {
+                document.getElementById('image1Error').innerText = 'Please upload image 1';
+                isValid = false;
+            }
+    
+            if (image2.trim() === '') {
+                document.getElementById('image2Error').innerText = 'Please upload image 2';
+                isValid = false;
+            }
+    
+            if (image3.trim() === '') {
+                document.getElementById('image3Error').innerText = 'Please upload image 3';
+                isValid = false;
+            }
+    
+            return isValid;
+        }
+    
+        function resetErrors() {
+            var errorMessages = document.getElementsByClassName('error-message');
+            for (var i = 0; i < errorMessages.length; i++) {
+                errorMessages[i].innerText = '';
+            }
+        }
+
+
+
+
+
+
+        function previewImage(event, previewId) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const output = document.getElementById(`previewImage${previewId}`);
+        output.src = reader.result;
+        output.style.display = 'block';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}    
+    </script>
+
+
+
+
+
+  
+</script>
+
+<%- include("../../views/partials/admin/footer") %>

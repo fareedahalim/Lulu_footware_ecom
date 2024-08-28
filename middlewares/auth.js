@@ -1,8 +1,8 @@
 const User=require('../models/userModel')
 const isLogged=async(req,res,next)=>{
     try {
-        if(req.session._id){
-            const user=await User.findById({_id:req.session._id})
+        if(req.session.user._id){
+            const user=await User.findById({_id:req.session.user._id})
             if(user.isBlocked ==true){
                 req.session.destroy()
                 res.redirect('/')

@@ -1,0 +1,135 @@
+<%- include("../../views/partials/admin/header") %>
+<style>
+    .card {
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group label {
+        font-size: 14px;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        border-color: #0A6DAA;
+        box-shadow: 0 0 5px rgba(10, 109, 170, 0.5);
+    }
+
+    .btn-primary:hover {
+        background-color: #084E82;
+    }
+</style>
+
+<div class="main-panel">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center" style="color: #0A6DAA; font-weight: bold;">Add Product</h2>
+                <form action="/admin/add-product" method="POST" style="margin-top: 20px;" id="add_product_form" onsubmit="return productValidation()">
+                    <div class="form-group">
+                        <label for="productName" style="font-weight: bold;">Product Name:</label>
+                        <input type="text" name="productName" id="productName" class="form-control" placeholder="Enter product name" required>
+                        <p id="productNameError" class="error-message"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" style="font-weight: bold;">Description:</label>
+                        <textarea name="description" id="description" class="form-control" placeholder="Enter product description" rows="4" required></textarea>
+                        <p id="descriptionError" class="error-message"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="brand" style="font-weight: bold;">Brand:</label>
+                        <select name="brand" id="brand" class="form-control" required>
+                            <% brands.forEach(function(brand) { %>
+                                <option value="<%= brand._id %>"><%= brand.brandName %></option>
+                            <% }) %>
+                        </select>
+                        <p id="brandError" class="error-message"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="category" style="font-weight: bold;">Occasion:</label>
+                        <select name="category" id="category" class="form-control" required>
+                            <% occasions.forEach(function(occasion) { %>
+                                <option value="<%= occasion._id %>"><%= occasion.categoryName %></option>
+                            <% }) %>
+                        </select>
+                        <p id="categoryError" class="error-message"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender" style="font-weight: bold;">Gender:</label>
+                        <select name="gender" id="gender" class="form-control" required>
+                            <option value="Men">Men</option>
+                            <option value="Women">Women</option>
+                            <option value="Unisex">Unisex</option>
+                            
+                        </select>
+                        <p id="genderError" class="error-message"></p>
+
+                    </div>
+                    <!-- Add other fields as necessary -->
+                    <button type="submit" class="btn btn-primary btn-block" style="background-color: #0A6DAA; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold;">Add Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function productValidation() {
+        var productName = document.getElementById('productName').value;
+        var category = document.getElementById('category').value;
+        var brand = document.getElementById('brand').value;
+        var gender= document.getElementById('gender').value;
+        var description = document.getElementById('description').value;
+       
+        // Reset previous errors
+        resetErrors();
+
+        var isValid = true;
+
+        if (productName.trim() === '') {
+        document.getElementById('productNameError').innerText = 'Please enter product name';
+        isValid = false;
+        } else if (!/^[A-Za-z]+$/.test(productName.trim())) {
+        document.getElementById('productNameError').innerText = 'Product name should only contain letters';
+        isValid = false;
+        } else {
+     
+        document.getElementById('productNameError').innerText = '';
+        }
+
+        if (category === '') {
+            document.getElementById('categoryError').innerText = 'Please select a category';
+            isValid = false;
+        }
+        if (brand === '') {
+            document.getElementById('brandError').innerText = 'Please select a brand';
+            isValid = false;
+        }
+       if (description.trim() === '') {
+            document.getElementById('descriptionError').innerText = 'Please enter description';
+            isValid = false;
+        }
+       
+
+        return isValid;
+    }
+
+    function resetErrors() {
+        var errorMessages = document.getElementsByClassName('error-message');
+        for (var i = 0; i < errorMessages.length; i++) {
+            errorMessages[i].innerText = '';
+        }
+    }
+</script>
+
+
+
+
+
+
+<%- include("../../views/partials/admin/footer") %>

@@ -1,0 +1,109 @@
+<%- include("../../views/partials/admin/header") %>
+ <head>
+<div class="main-panel">
+    <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+      <div class="page-header">
+       
+        
+        <div class="col-md-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">Occasion List</h2>
+              <p class="card-description"> <code></code>
+              </p>
+              <h5><a href="/admin/add-category" class="btn btn-primary blue-button" style="background-color: rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">Add Occasion</a></h5>
+              <br>
+              <br>
+
+              <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
+                  <thead>
+                      <tr style="background-color: #f6c2c2; color: rgb(27, 26, 26);">
+                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">
+                              <label class="control control--checkbox"></label>
+                          </th>
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">No</th> -->
+                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Occasion</th>
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Amount</th> -->
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Type</th> -->
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer End Date</th> -->
+                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Status</th>
+                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Delete</th> -->
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <% for (var i = 0; i < occasions.length; i++) { %>
+                          <tr>
+                              <td style="border: 1px solid #ddd; padding: 8px;"><%= i+1 %></td>
+                              <td style="border: 1px solid #ddd; padding: 8px;"><%= occasions[i].categoryName %></td>
+                             
+                              <td style="border: 1px solid #ddd; padding: 8px;">
+                                  <form id="blockForm_<%= occasions[i]._id %>"
+                                        action="/admin/occasion/<%= occasions[i]._id %>/update-status"
+                                        method="post"
+                                        onsubmit="return confirmBlock('<%= occasions[i]._id %>');">
+                                      <button type="submit" style="border: 2px solid #5c5b5b; background-color: #fffdfd;">
+                                          <% if (occasions[i].blocked) { %>
+                                              <span style="color: red;">Blocked</span>
+                                          <% } else { %>
+                                              <span style="color: green;">Active</span>
+                                          <% } %>
+                                      </button>
+                                  </form>
+                              </td>
+                              <td style="border: 1px solid #ddd; padding: 8px;">
+                                  <button class="btn" style="background-color: yellow; color: black; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 4px;">
+                                      <a href="/admin/load-edit/<%= occasions[i]._id %>" style="color: inherit; text-decoration: none;">Edit</a>
+                                  </button>
+                              </td>
+                             
+                          </tr>
+                      <% } %>
+                  </tbody>
+              </table>
+              
+      <br>
+      <br>
+      <a href="/admin/main-category"style="background-color:  rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 10px; text-decoration: none; display: inline-block;">Back To Main Category</a>
+  </div>
+</div>
+</div>
+<!-- <script>
+function confirmDelete(categoryId) {
+  var confirmDelete = confirm("Are you sure you want to delete this category?");
+  if (confirmDelete) {
+      window.location.href = "/admin/category/" + categoryId;
+    
+  }
+}
+</script> -->
+<script>
+function confirmBlock(occasionId) {
+  Swal.fire({
+      title: 'Are you sure?',
+      text: 'Are you sure you want to block/unblock this category?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, block/unblock it!'
+  }).then((result) => {
+      if (result.isConfirmed) {
+          // Submit the form if user confirms
+          document.getElementById('blockForm_' + occasionId).submit();
+      }
+  });
+
+  // Prevent the form from submitting automatically
+  return false;
+}
+</script>
+</div> 
+</div> 
+</div> 
+<!-- Footer End -->
+</div>
+<!-- Content End -->
+
+
+<%- include("../../views/partials/admin/footer") %>

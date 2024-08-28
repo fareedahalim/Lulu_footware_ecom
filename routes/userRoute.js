@@ -47,7 +47,7 @@ router.post('/login',userController.login)
 //logout
 router.get('/logout',auth.isLogout,userController.logout)
 
-router.get('/forgot-password', auth.isLogged,userController.loadForgotPassword);
+router.get('/forgot-password',userController.loadForgotPassword);
 router.post('/forgot-password', userController.handleForgotPassword);
 
 router.get('/reset-verify-otp', (req, res) => res.render('users/resetOtp')); // OTP Verification Page

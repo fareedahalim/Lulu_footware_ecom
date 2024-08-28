@@ -1,0 +1,94 @@
+<%- include("../../views/partials/admin/header") %>
+<div class="main-panel">
+    <!-- <div class="content-wrapper" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;"> -->
+        <div class="page-header">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">Product List</h2>
+                        <p class="card-description"></p>
+                        <h5>
+                            <a href="/admin/add-product" class="btn btn-primary blue-button" style="background-color: rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">Add Product</a>
+                        </h5>
+                        <br><br>
+                        <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
+                            <thead>
+                                <tr style="background-color: #f6c2c2; color: rgb(27, 26, 26);">
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">No</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Name</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Description</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Brand</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Occasion</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">gender</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Variant View</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Status</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (var i = 0; i < products.length; i++) { %>
+                                    <tr>
+
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><%= i + 1 %></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><%= products[i].productName %></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><%= products[i].description %></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><%= products[i].brand.brandName %></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><%= products[i].category.categoryName %></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><%= products[i].gender %></td>
+                                        
+                                        <td style="border: 1px solid #ddd; padding: 8px;">
+                                            <button class="btn" style="background-color: yellow; color: black; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 4px;">
+                                                <a href="/admin/varient/<%= products[i]._id %>" style="color: inherit; text-decoration: none;">View the varient</a>
+                                            </button>
+                                        </td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;">
+                                            <form id="blockForm_<%= products[i]._id %>"
+                                                  action="/admin/products/<%= products[i]._id %>/update-status"
+                                                  method="post"
+                                                  onsubmit="return confirmBlock('<%= products[i]._id %>');">
+                                                <button type="submit" style="border: 2px solid #5c5b5b; background-color: #fffdfd;">
+                                                    <% if (products[i].blocked) { %>
+                                                        <span style="color: red;">Blocked</span>
+                                                    <% } else { %>
+                                                        <span style="color: green;">Active</span>
+                                                    <% } %>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;">
+                                            <button class="btn" style="background-color: yellow; color: black; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 4px;">
+                                                <a href="/admin/edit-product/<%= products[i]._id %>" style="color: inherit; text-decoration: none;">Edit</a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <br><br>
+                        <a href="/admin" style="background-color: rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 10px; text-decoration: none; display: inline-block;">Back To Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmBlock(productId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Are you sure you want to block/unblock this product?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, block/unblock it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('blockForm_' + productId).submit();
+        }
+    });
+    return false;
+}
+</script>
+<%- include("../../views/partials/admin/footer") %>

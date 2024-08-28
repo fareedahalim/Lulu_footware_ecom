@@ -27,7 +27,7 @@ const login = async (req, res) => {
             return res.render("admin/admin-login", { errorMessage: "Incorrect password" });
         }
 
-        req.session.admin_id = admin._id; // Store admin ID in session
+        req.session.admin_id = admin._id; 
         return res.redirect("/admin");
 
     } catch (error) {

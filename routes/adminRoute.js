@@ -5,6 +5,7 @@ const auth = require("../middlewares/adminAuth");
 const adminController = require("../controllers/adminController");
 const customerController = require("../controllers/customerController");
 const categoryController=require("../controllers/categoryController")
+const multerMiddleware=require("../middlewares/multer").multerMiddleware
 router.use(nocache());
 
 router.get("/pageError", adminController.pageError);
@@ -23,8 +24,32 @@ router.get("/unblockCustomer",auth.isLogin,customerController.customerUnblocked)
 // router.post("/addCategory",auth.isLogin,categoryController.addCategory)
 
 
-router.get('/category',auth.isLogin,categoryController.category)
-router.post('/addCategory',auth.isLogin,categoryController.addCategory)
+router.get('/main-category',auth.isLogin,categoryController.category)
+router.get('/occasion',auth.isLogin,categoryController.loadOccasion)
+router.get('/add-category',auth.isLogin,categoryController.addCategory)
+router.post('/add-category',auth.isLogin,categoryController.addNewCategory)
+router.get('/brand',auth.isLogin,categoryController.loadBrand)
+router.get('/add-brand',auth.isLogin,categoryController.addBrand)
+router.post('/add-brand',auth.isLogin,categoryController.addNewBrand)
+router.post('/occasion/:occasionId/update-status',auth.isLogin,categoryController.updateOccasionStatus)
+//edit occasion
+router.get('/load-edit/:occasionId',auth.isLogin,categoryController.loadEdit)
+router.post('/edit-occasion/:occasionId', auth.isLogin, categoryController.editOccasion);
+
+//edit brand
+router.post('/brand/:brandId/update-status',auth.isLogin,categoryController.updateBrandStatus)
+router.get('/edit-brand/:brandId',auth.isLogin,categoryController.loadEditBrand)
+router.post('/edit-brand/:brandId',auth.isLogin,categoryController.editBrand)
+///product management
+router.get('/products',auth.isLogin,categoryController.loadproduct)
+router.get('/add-product',auth.isLogin,categoryController.loadAddProduct)
+router.post('/add-product',auth.isLogin,categoryController.addNewProduct)
+
+// router.get('/varient',auth.isLogin,categoryController)
+router.get('/add-varient/:productId',auth.isLogin,categoryController.loadAddVarient)
+router.post('/add-varient/:productId',auth.isLogin,multerMiddleware.array('images', 3), categoryController.addVarient);
+router.get('/varient/:productId',auth.isLogin,categoryController.loadVarient)
+
 module.exports = router;
 
 

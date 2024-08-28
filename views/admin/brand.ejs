@@ -8,11 +8,12 @@
         <div class="col-md-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
-              <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">Category List</h2>
+              <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">Brand List</h2>
               <p class="card-description"> <code></code>
               </p>
-              <h5><a href="/admin/add-category" class="btn btn-primary blue-button" style="background-color: rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">Add Category</a></h5>
-
+              <h5><a href="/admin/add-brand" class="btn btn-primary blue-button" style="background-color: rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">Add Brand</a></h5>
+              <br>
+              <br>
 
               <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
                   <thead>
@@ -20,42 +21,32 @@
                           <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">
                               <label class="control control--checkbox"></label>
                           </th>
-                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Category</th>
-                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Amount</th>
-                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Type</th>
-                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer End Date</th>
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">No</th> -->
+                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Brand</th>
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Discription</th> -->
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Amount</th> -->
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Type</th> -->
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer End Date</th> -->
                           <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Status</th>
                           <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
-                          <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Delete</th>
+                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Delete</th> -->
                       </tr>
                   </thead>
                   <tbody>
-                      <% for (var i = 0; i < categories.length; i++) { %>
+                      <% for (var i = 0; i < brands.length; i++) { %>
                           <tr>
                               <td style="border: 1px solid #ddd; padding: 8px;"><%= i+1 %></td>
-                              <td style="border: 1px solid #ddd; padding: 8px;"><%= categories[i].categoryName %></td>
+                              <td style="border: 1px solid #ddd; padding: 8px;"><%= brands[i].brandName %></td>
+                              <!-- <td style="border: 1px solid #ddd; padding: 8px;"><%= brands[i].Discription %></td> -->
+                             
+                             
                               <td style="border: 1px solid #ddd; padding: 8px;">
-                                  <% if (categories[i].offer && categories[i].offer.amount !== '') { %>
-                                      <%= categories[i].offer.amount %> 
-                                  <% } %>
-                              </td>
-                              <td style="border: 1px solid #ddd; padding: 8px;">
-                                  <% if (categories[i].offer) { %>
-                                      <%= categories[i].offer.type %> 
-                                  <% } %>
-                              </td>
-                              <td style="border: 1px solid #ddd; padding: 8px;">
-                                  <% if (categories[i].offer && categories[i].offer.endDate) { %>
-                                      <%= categories[i].offer.endDate ? categories[i].offer.endDate.toLocaleDateString() : 'N/A' %>
-                                  <% } %>
-                              </td>
-                              <td style="border: 1px solid #ddd; padding: 8px;">
-                                  <form id="blockForm_<%= categories[i]._id %>"
-                                        action="/admin/category/<%= categories[i]._id %>/update-status"
+                                  <form id="blockForm_<%= brands[i]._id %>"
+                                        action="/admin/brand/<%= brands[i]._id %>/update-status"
                                         method="post"
-                                        onsubmit="return confirmBlock('<%= categories[i]._id %>');">
+                                        onsubmit="return confirmBlock('<%= brands[i]._id %>');">
                                       <button type="submit" style="border: 2px solid #5c5b5b; background-color: #fffdfd;">
-                                          <% if (categories[i].blocked) { %>
+                                          <% if (brands[i].blocked) { %>
                                               <span style="color: red;">Blocked</span>
                                           <% } else { %>
                                               <span style="color: green;">Active</span>
@@ -65,13 +56,10 @@
                               </td>
                               <td style="border: 1px solid #ddd; padding: 8px;">
                                   <button class="btn" style="background-color: yellow; color: black; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 4px;">
-                                      <a href="/admin/load-edit/<%= categories[i]._id %>" style="color: inherit; text-decoration: none;">Edit</a>
+                                      <a href="/admin/edit-brand/<%= brands[i]._id %>" style="color: inherit; text-decoration: none;">Edit</a>
                                   </button>
                               </td>
-                              <td style="border: 1px solid #ddd; padding: 8px;">
-                                  <!-- Delete button with onclick event -->
-                                  <button onclick="confirmDelete('<%= categories[i]._id %>', this.parentNode.parentNode)" class="btn btn-danger">Delete</button>
-                              </td>
+                             
                           </tr>
                       <% } %>
                   </tbody>
@@ -79,11 +67,11 @@
               
       <br>
       <br>
-      <a href="/admin/home"style="background-color:  rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 10px; text-decoration: none; display: inline-block;">Back To Home</a>
+      <a href="/admin"style="background-color:  rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 10px; text-decoration: none; display: inline-block;">Back To Home</a>
   </div>
 </div>
 </div>
-<script>
+<!-- <script>
 function confirmDelete(categoryId) {
   var confirmDelete = confirm("Are you sure you want to delete this category?");
   if (confirmDelete) {
@@ -91,12 +79,12 @@ function confirmDelete(categoryId) {
     
   }
 }
-</script>
+</script> -->
 <script>
-function confirmBlock(categoryId) {
+function confirmBlock(brandId) {
   Swal.fire({
       title: 'Are you sure?',
-      text: 'Are you sure you want to block/unblock this category?',
+      text: 'Are you sure you want to block/unblock this brand?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -105,7 +93,7 @@ function confirmBlock(categoryId) {
   }).then((result) => {
       if (result.isConfirmed) {
           // Submit the form if user confirms
-          document.getElementById('blockForm_' + categoryId).submit();
+          document.getElementById('blockForm_' + brandId).submit();
       }
   });
 
@@ -138,7 +126,7 @@ link.classList.add('active');
 });
 </script>
 
-<script>
+<!-- <script>
 function confirmDelete(categoryId, row) {
     var confirmDelete = confirm("Are you sure you want to delete this category?");
     if (confirmDelete) {
@@ -165,7 +153,7 @@ function confirmDelete(categoryId, row) {
         });
     }
 }
-</script>    
+</script>     -->
 
 
 <%- include("../../views/partials/admin/footer") %>

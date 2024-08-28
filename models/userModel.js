@@ -7,12 +7,12 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    email: {  // Corrected typo
+    email: {  
         type: String,
         required: true,
         unique: true
     },
-    mobile: {  // Added mobile field based on your requirements
+    mobile: {  
         type: String,
         required: false,
         unique: true,
