@@ -1,32 +1,36 @@
 <%- include("../../views/partials/admin/header") %>
+<style>
+    .error {
+        color: red;
+        font-size: 0.875rem;
+    }
+    .main-panel {
+        padding: 40px 20px;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 10px;
+    }
+</style>
 
 <div class="main-panel">
-    <div class="content-wrapper" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+    <!-- Commented out background image -->
+    <!-- <div class="content-wrapper" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;"> -->
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">Add Brand</h2>
                     
-                    <form action="/admin/add-brand" method="POST" id="add_user" onsubmit=" brandValidation()">
+                    <form id="brandForm">
                         <div class="new_user">
                             <div class="form-group">
-                                <label for="brandName" class="text-dark">Brand  </label>
+                                <label for="brandName" class="text-dark">Brand</label>
                                 <input type="text" name="brandName" id="brandName" class="form-control" placeholder="Enter a brand name">
                                 <span id="brandNameError" class="error"></span>
                             </div>
-                            
-                            <!-- <div class="form-group">
-                                <label for="brandName" class="text-dark">Discription </label>
-                                <textarea placeholder="Type here" name="description" class="form-control" id="descriptionId" required></textarea>
-                                <div id="description-error" class="error-message"></div>
-                            </div> -->
-                            
-                            <% if (typeof message !== 'undefined') { %>
-                            <div id="message" class="error">
-                                <%= message %>
-                            </div>
+                            <% if (locals.message) { %>
+                                <div class="alert alert-danger text-center" id="enterUsername">
+                                  <%= message %>
+                                </div>
                             <% } %>
-                            
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary blue-button" style="background-color: rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px;">Save</button>
                             </div>
@@ -42,35 +46,30 @@
 </div>
 
 <script>
-    
-    async function brandValidation() {
+    document.getElementById("brandForm").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent the default form submission
 
         const brandName = document.getElementById("brandName").value.trim();
         const brandNameError = document.getElementById("brandNameError");
+
+        // Clear previous error messages
         brandNameError.innerText = "";
 
+        // Check if the brand name is empty
         if (brandName === "") {
             brandNameError.innerText = "Brand name is required";
             return false;
         }
 
+        // Check if the brand name contains only alphabetic characters
         if (!/^[A-Za-z\s]+$/.test(brandName)) {
-            brandNameError.innerText = "Brand name must be alphabetic characters only";
+            brandNameError.innerText = "Brand name must contain alphabetic characters only.";
             return false;
         }
 
-        const isUnique = await checkBrandNameUnique(brandName);
-        if (!isUnique) {
-            brandNameError.innerText = "Brand name already exists";
-            return false;
-        }
-
-        return true;
-    }
-
-    async function checkBrandNameUnique(brandName) {
+        // Check if the brand name is unique
         try {
-            const response = await fetch('/admin/check-brand-unique', {  // Make sure this path is correct
+            const response = await fetch('/admin/check-brand-unique', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -79,12 +78,35 @@
             });
 
             const result = await response.json();
-            return result.isUnique;
+
+            if (!result.isUnique) {
+                brandNameError.innerText = "Brand name already exists";
+                return false;
+            }
+
+            // Submit the form data using fetch API
+            const formResponse = await fetch("/admin/add-brand", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ brandName })
+            });
+
+            const formResult = await formResponse.json();
+
+            if (!formResult.success) {
+                // Display the error message in the frontend
+                brandNameError.innerText = formResult.message;
+            } else {
+                // Redirect to the brand list or show a success message
+                window.location.href = "/admin/brands";
+            }
         } catch (error) {
-            console.error('Error checking brand name uniqueness:', error);
-            return false;
+            console.error("Error checking brand name uniqueness:", error);
+            brandNameError.innerText = "An error occurred while checking brand name uniqueness. Please try again.";
         }
-    }
+    });
 </script>
 
 <%- include("../../views/partials/admin/footer") %>

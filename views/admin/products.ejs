@@ -43,17 +43,19 @@
                                         </td>
                                         <td style="border: 1px solid #ddd; padding: 8px;">
                                             <form id="blockForm_<%= products[i]._id %>"
-                                                  action="/admin/products/<%= products[i]._id %>/update-status"
-                                                  method="post"
-                                                  onsubmit="return confirmBlock('<%= products[i]._id %>');">
-                                                <button type="submit" style="border: 2px solid #5c5b5b; background-color: #fffdfd;">
-                                                    <% if (products[i].blocked) { %>
-                                                        <span style="color: red;">Blocked</span>
-                                                    <% } else { %>
-                                                        <span style="color: green;">Active</span>
-                                                    <% } %>
-                                                </button>
-                                            </form>
+                                                action="/admin/products/<%= products[i]._id %>/update-status"
+                                                method="post">
+                                              <button type="button" 
+                                                      style="border: 2px solid #5c5b5b; background-color: #fffdfd;"
+                                                      onclick="confirmBlock('<%= products[i]._id %>')">
+                                                  <% if (products[i].isBlocked) { %>
+                                                      <span style="color: red;">Blocked</span>
+                                                  <% } else { %>
+                                                      <span style="color: green;">Active</span>
+                                                  <% } %>
+                                              </button>
+                                          </form>
+                                          
                                         </td>
                                         <td style="border: 1px solid #ddd; padding: 8px;">
                                             <button class="btn" style="background-color: yellow; color: black; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 4px;">
@@ -69,9 +71,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+    
 
 <script>
 function confirmBlock(productId) {
@@ -91,4 +91,7 @@ function confirmBlock(productId) {
     return false;
 }
 </script>
+</div>
+<!-- </div> -->
+</div>
 <%- include("../../views/partials/admin/footer") %>

@@ -1,0 +1,148 @@
+
+<%- include("../../views/partials/user/header") %>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Profile</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="single-product.html">Profile</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="main-panel">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">Edit Profile</h2>
+                <form id="edit_profile" class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username" value="<%= user.username %>" class="form-control" placeholder="Enter your username">
+                                <span id="usernameError" class="error text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" id="email" value="<%= user.email %>" class="form-control" placeholder="Enter your email">
+                                <span id="emailError" class="error text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="mobile">Phone Number</label>
+                                <input type="text" name="mobile" id="mobile" value="<%= user.mobile %>" class="form-control" placeholder="Enter your phone number">
+                                <span id="mobileError" class="error text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <% if (typeof message !== 'undefined') { %>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger">
+                                    <%= message %>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </form>
+                
+                <br>
+                <a href="/profile" style="background-color: #0A6DAA; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; text-decoration: none;">Back To Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("edit_profile").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+       
+        // Clear previous error messages
+        document.getElementById("usernameError").innerText = "";
+        document.getElementById("emailError").innerText = "";
+        document.getElementById("mobileError").innerText = "";
+        
+
+        let isValid = true;
+
+        if (username === "") {
+            
+            document.getElementById("usernameError").innerText = "Username is required";
+            isValid = false;
+        }
+
+        if (email === "" || !/\S+@\S+\.\S+/.test(email)) {
+            document.getElementById("emailError").innerText = "A valid email is required";
+            isValid = false;
+        }
+
+        if (mobile === "") {
+            document.getElementById("mobileError").innerText = "Phone number is required";
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        
+
+        try {
+            const response = await fetch('/edit-profile/<%= user._id %>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    mobile
+                    
+                }),
+            });
+
+            const result = await response.json(); // Parse the JSON response
+
+            if (response.ok) {
+                window.location.href = '/profile'; // Redirect to the profile page
+            } else {
+                const errorElement = document.querySelector('.alert');
+                if (errorElement) {
+                    errorElement.textContent = result.message; // Show error message
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            const errorElement = document.querySelector('.alert');
+            if (errorElement) {
+                errorElement.textContent = 'An error occurred. Please try again.'; // Show generic error message
+            }
+        }
+    });
+</script>

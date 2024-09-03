@@ -31,6 +31,7 @@ router.post('/add-category',auth.isLogin,categoryController.addNewCategory)
 router.get('/brand',auth.isLogin,categoryController.loadBrand)
 router.get('/add-brand',auth.isLogin,categoryController.addBrand)
 router.post('/add-brand',auth.isLogin,categoryController.addNewBrand)
+
 router.post('/occasion/:occasionId/update-status',auth.isLogin,categoryController.updateOccasionStatus)
 //edit occasion
 router.get('/load-edit/:occasionId',auth.isLogin,categoryController.loadEdit)
@@ -44,11 +45,16 @@ router.post('/edit-brand/:brandId',auth.isLogin,categoryController.editBrand)
 router.get('/products',auth.isLogin,categoryController.loadproduct)
 router.get('/add-product',auth.isLogin,categoryController.loadAddProduct)
 router.post('/add-product',auth.isLogin,categoryController.addNewProduct)
+router.get('/edit-product/:prodectId',auth.isLogin,categoryController.loadEditProduct)
+router.post('/edit-product/:productId',auth.isLogin,categoryController.editProduct)
+router.post('/products/:productId/update-status',auth.isLogin,categoryController.updateProductStatus)
 
 // router.get('/varient',auth.isLogin,categoryController)
 router.get('/add-varient/:productId',auth.isLogin,categoryController.loadAddVarient)
 router.post('/add-varient/:productId',auth.isLogin,multerMiddleware.array('images', 3), categoryController.addVarient);
 router.get('/varient/:productId',auth.isLogin,categoryController.loadVarient)
+router.get('/edit-varient/:varientId',auth.isLogin,categoryController.loadEditVarient)
+router.post('/edit-varient/:varientId',auth.isLogin,categoryController.editVarient)
 
 module.exports = router;
 

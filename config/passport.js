@@ -28,7 +28,7 @@ passport.use(new GoogleStrategy({
                 email: profile.emails[0].value,
                 googleId: profile.id,  // Ensure this is not null
             });
-            await user.save();
+            await user.create();
             return done(null, user);
         }
     } catch (error) {

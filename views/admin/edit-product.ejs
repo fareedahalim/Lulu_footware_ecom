@@ -1,0 +1,178 @@
+<%- include("../../views/partials/admin/header") %>
+
+<style>
+    .card {
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group label {
+        font-size: 14px;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        border-color: #0A6DAA;
+        box-shadow: 0 0 5px rgba(10, 109, 170, 0.5);
+    }
+
+    .btn-primary:hover {
+        background-color: #084E82;
+    }
+
+    .alert {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="main-panel">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title" style="color: #0A6DAA; text-align: center;">Edit Product</h2>
+                
+                <form id="edit_product">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" name="productName" id="productName" value="<%= product.productName %>" class="form-control" placeholder="Enter product name">
+                        <span id="productNameError" class="error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" class="form-control" placeholder="Enter product description" rows="4"><%= product.description %></textarea>
+                        <span id="descriptionError" class="error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="brand">Brand</label>
+                        <select name="brand" id="brand" class="form-control" required>
+                            <% brands.forEach(function(brand) { %>
+                                <option value="<%= brand._id %>" <%= product.brand._id.toString() === brand._id.toString() ? 'selected' : '' %>><%= brand.brandName %></option>
+                            <% }) %>
+                        </select>
+                        <span id="brandError" class="error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Occasion</label>
+                        <select name="category" id="category" class="form-control" required>
+                            <% occasions.forEach(function(occasion) { %>
+                                <option value="<%= occasion._id %>" <%= product.category._id.toString() === occasion._id.toString() ? 'selected' : '' %>><%= occasion.categoryName %></option>
+                            <% }) %>
+                        </select>
+                        <span id="categoryError" class="error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select name="gender" id="gender" class="form-control" required>
+                            <option value="Men" <%= product.gender === 'Men' ? 'selected' : '' %>>Men</option>
+                            <option value="Women" <%= product.gender === 'Women' ? 'selected' : '' %>>Women</option>
+                            <option value="Unisex" <%= product.gender === 'Unisex' ? 'selected' : '' %>>Unisex</option>
+                        </select>
+                        <span id="genderError" class="error"></span>
+                    </div>
+                    <!-- Add other fields as necessary -->
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+                
+                <br>
+                <a href="/admin/products" style="background-color: #0A6DAA; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; text-decoration: none;">Back To Products</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("edit_product").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const productName = document.getElementById("productName").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const brand = document.getElementById("brand").value;
+        const category = document.getElementById("category").value;
+        const gender = document.getElementById("gender").value;
+
+        // Clear previous error messages
+        document.getElementById("productNameError").innerText = "";
+        document.getElementById("descriptionError").innerText = "";
+        document.getElementById("brandError").innerText = "";
+        document.getElementById("categoryError").innerText = "";
+        document.getElementById("genderError").innerText = "";
+
+        let isValid = true;
+
+        if (productName === "") {
+            document.getElementById("productNameError").innerText = "Product name is required";
+            isValid = false;
+        }
+
+        if (description === "") {
+            document.getElementById("descriptionError").innerText = "Description is required";
+            isValid = false;
+        }
+
+        if (brand === "") {
+            document.getElementById("brandError").innerText = "Brand is required";
+            isValid = false;
+        }
+
+        if (category === "") {
+            document.getElementById("categoryError").innerText = "Category is required";
+            isValid = false;
+        }
+
+        if (gender === "") {
+            document.getElementById("genderError").innerText = "Gender is required";
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        const formData = new FormData(this); // Create FormData object from form
+
+        try {
+            const response = await fetch('/admin/edit-product/<%= product._id %>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productName,
+                    description,
+                    brand,
+                    category,
+                    gender
+                }),
+            });
+
+            const result = await response.json(); // Parse the JSON response
+
+            if (response.ok) {
+                window.location.href = '/admin/products'; // Redirect to the product list page
+            } else {
+                const errorElement = document.querySelector('.alert');
+                if (errorElement) {
+                    errorElement.textContent = result.message; // Show error message
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            const errorElement = document.querySelector('.alert');
+            if (errorElement) {
+                errorElement.textContent = 'An error occurred. Please try again.'; // Show generic error message
+            }
+        }
+    });
+</script>
+
+<%- include("../../views/partials/admin/footer") %>

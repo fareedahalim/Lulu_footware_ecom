@@ -1,8 +1,11 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt")
+const Product = require('../models/productModel'); // Adjust the path as necessary
+const Varient = require('../models/varientModel');
 
 const otpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
+const { ProfilingLevel } = require("mongodb");
 require("dotenv").config();
 
 
@@ -22,19 +25,48 @@ const loadHomepage = async (req, res) => {
         // Check if the user is logged in by checking session
         const user = req.session.user;
         
+        
+         
+         if(user){
+            const userDetails=await User.findById({_id:user})
+            // console.log(userDetails.username)
+        if(userDetails.isBlocked===true)
+        {
+            req.session.destroy((err)=>{
+                if(err){
+                    console.log("Session destruction error",err.message)
+                    return res.redirect("/pageNotFound");
+                }
+                return res.redirect("/login")
+            })
+        }
+    }
+        let userData = null;
+
         if (user) {
             // If the user is logged in, fetch the user data from the database
-            const userData = await User.findOne({ _id: user });
-            
-            // Pass the user data to the view
-            return res.render("users/home", { user: userData });
-        } else {
-            // If not logged in, render the homepage without user data
-            return res.render("users/home", { user: null });
+            userData = await User.findOne({ _id: user });
         }
+
+
+        // Fetch all products and populate the brand and category fields
+        const products = await Product.find().populate('brand').populate('category');
+
+        // For each product, fetch its variants
+        const productsWithVariants = await Promise.all(products.map(async product => {
+            const variants = await Varient.find({ productId: product._id });
+            return {
+                ...product.toObject(),
+                variants
+            };
+        }));
+
+        // Render the home page with the fetched products, their variants, and user data
+       return res.render('users/home', { user: userData, products: productsWithVariants });
+
     } catch (error) {
-        console.log("Home page error:", error);
-        res.status(500).send("Server error");
+        console.log('Error loading home page:', error.message);
+        res.status(500).send('Internal Server Error');
     }
 };
 
@@ -42,22 +74,71 @@ const loadShoppingPage=async(req,res)=>{
     try {
         // Check if the user is logged in by checking session
         const user = req.session.user;
-        
+        let userData = null;
+
         if (user) {
             // If the user is logged in, fetch the user data from the database
-            const userData = await User.findOne({ _id: user });
-            
-            // Pass the user data to the view
-            return res.render("users/shop", { user: userData });
-        } else {
-            // If not logged in, render the homepage without user data
-            return res.render("users/shop", { user: null });
+            userData = await User.findOne({ _id: user });
         }
+
+        // Fetch all products and populate the brand and category fields
+        const products = await Product.find().populate('brand').populate('category');
+
+        // For each product, fetch its variants
+        const productsWithVariants = await Promise.all(products.map(async product => {
+            const variants = await Varient.find({ productId: product._id });
+            return {
+                ...product.toObject(),
+                variants
+            };
+        }));
+        
+        // Render the home page with the fetched products, their variants, and user data
+       return res.render('users/shop', { user: userData, products: productsWithVariants });
+
     } catch (error) {
-        console.log("Home page error:", error);
-        res.status(500).send("Server error");
+        console.log('Error loading home page:', error.message);
+        res.status(500).send('Internal Server Error');
     }
 };
+
+const loadProductDetails = async (req, res) => {
+    try {
+        const user = req.session.user;
+        let userData = null;
+
+        // Get productId and variantId from request parameters or query
+        const  varientId = req.params.varientId;
+        console.log("varientId:",varientId)
+        
+        console.log(user)
+        if (user) {
+            userData = await User.findById(user);
+            if (!userData) {
+                return res.status(404).send('User not found');
+            }
+        }
+        // if (!user) {
+        //     return res.status(404).send('User not logged');
+        // }
+        const varient = await Varient.findById(varientId);
+
+        console.log(varient)
+        const product = await Product.findById(varient.productId).populate('brand category');
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+        console.log(product)
+
+       
+        return res.render('users/singleProduct', { user: userData, product, varient });
+
+    } catch (error) {
+        console.log('Error loading product details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
 const loadSignUp = async (req, res) => {
     try {
 
@@ -211,7 +292,47 @@ const continueSignup = async (req, res) => {
     }
 };
 
+const resendOtp=async(req,res)=>{
+    try{
+    const generatedOtp = generateNumericOtp(6);
+    const email=req.session.userData.email
+    console.log(email);
+        // Send OTP via email
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
 
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'OTP Verification',
+            text: `Your OTP for Lulu Footwear signup is ${generatedOtp}`,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                return res.render("users/signUp", { message: "Failed to send OTP email. Please try again." });
+            }
+            console.log('Email sent: ' + info.response);
+        });
+
+        
+        req.session.otpExpireTime = Date.now() + 1 * 60 * 1000; // OTP valid for 5 minutes
+
+        
+        console.log("OTP sent:", generatedOtp);
+        console.log(email)
+        res.render("users/otp", { user: email, otpSent: true });
+    } catch (error) {
+        console.error("Error during signup:", error);
+        res.status(500).send('Internal server error');
+    }
+}
 
 const verifyOtp = async (req, res) => {
     console.log("kgsdkfsdkufg")
@@ -219,11 +340,10 @@ const verifyOtp = async (req, res) => {
     console.log(otp)
     console.log(req.session.userOtp)
     if (otp === req.session.userOtp) {
-        console.log("yss")
+        
         const user = req.session.userData
 
-        
-        console.log("yss")
+    
         const saveUserData = new User({
             username: user.username,
             email: user.email,
@@ -307,6 +427,7 @@ const logout=async(req,res)=>{
 
 // 
 const loadForgotPassword = (req, res) => {
+    console.log("load forgot password")
     res.render('users/forgotPassword', { message: req.session.message });
     req.session.message = null;
 };
@@ -314,10 +435,11 @@ const loadForgotPassword = (req, res) => {
 const verifyResetOtp = async (req, res) => {
     try {
         const { otp } = req.body;
-
+        console.log(otp)
+        console.log(req.session.resetOtp)
         // Compare OTP with the session OTP
         if (otp === req.session.resetOtp) {
-            req.session.resetOtpVerified = true; // Set a flag for successful OTP verification
+            // req.session.resetOtpVerified = true; // Set a flag for successful OTP verification
             return res.redirect('/reset-password'); // Redirect to reset password page
         } else {
             return res.render("users/resetOtp", { errorMessage: "Invalid OTP, please try again" });
@@ -331,6 +453,7 @@ const verifyResetOtp = async (req, res) => {
 // Handle Forgot Password
 const handleForgotPassword = async (req, res) => {
     try {
+        console.log("opo")
         const { email } = req.body;
         const user = await User.findOne({ email });
 
@@ -341,6 +464,7 @@ const handleForgotPassword = async (req, res) => {
 
         // Generate OTP and send via email
         const generatedOtp = generateNumericOtp(6);
+        
 
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
@@ -379,7 +503,7 @@ const handleForgotPassword = async (req, res) => {
 
 // Load Reset Password Page
 const loadResetPassword = (req, res) => {
-    if (!req.session.resetOtpVerified) {
+    if (!req.session.resetOtp) {
         req.session.message = "Unauthorized access. Please request a password reset and verify OTP.";
         return res.redirect('/forgot-password');
     }
@@ -414,10 +538,107 @@ const handleResetPassword = async (req, res) => {
         res.status(500).send("Server error");
     }
 };
+
+//User Profile------------------------------
+
+const viewProfile=async(req,res)=>{
+    try {
+        
+        
+       const user=await User.findById(req.session.user);
+       res.render("users/profile",{user}); 
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+const loadEditProfile = async (req, res) => {
+    try{
+    const userId=req.params.id;
+    
+    const user=await User.findById(userId);
+    
+    res.render('users/edit-profile',{user});
+    }
+    catch(error){
+        console.error('Error loading edit category page:', error.message);
+        res.status(500).send('Internal Server Error');
+    }
+    
+};
+
+
+const editProfile=async(req,res)=>{
+    try {
+        const userId = req.params.id;
+        console.log("userId:",userId)
+        const { username, email, mobile } = req.body;
+
+        // Validate inputs
+        if (!username || !email || !mobile) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        // Update user in the database
+        const user = await User.findByIdAndUpdate(userId, { username, email, mobile }, { new: true });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ message: 'Profile updated successfully' });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+
+}
+const loadchangepassword=async(req,res)=>{
+    if (req.session.user) {
+        res.render('users/changePassword');
+    } else {
+        res.redirect('/login'); 
+    }
+}
+const changepassword=async(req,res)=>{
+    
+    const {oldPassword,newPassword,confirmPassword}=req.body;
+    console.log("oldPassword",oldPassword);
+    console.log("newPassword",newPassword);
+    
+    const userId=req.session.user;
+    console.log("userId",userId)
+
+    try {
+        if(newPassword!==confirmPassword){
+            return res.render('users/changePassword',{message:"Password do not match"})
+        }
+      const user=await User.findById(userId);
+      if(!user){
+        return res.status(404).send("User not found")
+      } 
+      const isPasswordMatch=await bcrypt.compare(oldPassword,user.password);
+      console.log("isPasswordMatch",isPasswordMatch)
+      if(!isPasswordMatch){
+      return  res.render("users/changePassword",{message:"Incorrect old password"})
+      }
+      
+      user.password=newPassword;
+
+      await user.save();
+      return res.render("users/login", { message: "Password updated successfully" });
+
+    } catch (error) {
+        console.log(error.message)
+         return res.render('users/profile', { message: "An error occurred. Please try again later." });
+    }
+}
 // Export the functions
 module.exports = {
     loadHomepage,
     loadShoppingPage,
+    loadProductDetails,
     loadSignUp,
     continueSignup,
     verifyOtp,
@@ -429,5 +650,11 @@ module.exports = {
     handleForgotPassword,
     loadResetPassword,
     handleResetPassword,
-    verifyResetOtp
+    verifyResetOtp,
+    resendOtp,
+    viewProfile,
+    loadEditProfile,
+    editProfile,
+    loadchangepassword,
+    changepassword
 }

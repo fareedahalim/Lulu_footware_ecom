@@ -16,6 +16,7 @@
 	<meta charset="UTF-8">
 	<!-- Site Title -->
 	<title>Lulu Footware</title>
+
 	<style>
 		.dropdown{
 			position:relative;
@@ -47,19 +48,34 @@
 			position:relative;
 			z-index:500
 		}
+		
+		.logo-title {
+        font-family:'Courier New', Courier, monospace;
+        font-weight: 700; /* Bold weight */
+        font-size: 3em; /* Large size */
+        color: #000000; /* Solid black color */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow in black */
+        letter-spacing: 2px; /* Spacing between letters */
+        text-transform: uppercase; /* Uppercase for emphasis */
+    }
+
 	</style>
 	<!-- CSS files -->
-	<link rel="stylesheet" href="css/linearicons.css">
-	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/themify-icons.css">
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<link rel="stylesheet" href="css/owl.carousel.css">
-	<link rel="stylesheet" href="css/nice-select.css">
-	<link rel="stylesheet" href="css/nouislider.min.css">
-	<link rel="stylesheet" href="css/ion.rangeSlider.css" />
-	<link rel="stylesheet" href="css/ion.rangeSlider.skinFlat.css" />
-	<link rel="stylesheet" href="css/magnific-popup.css">
-	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="/css/linearicons.css">
+	<link rel="stylesheet" href="/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/css/themify-icons.css">
+	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link rel="stylesheet" href="/css/owl.carousel.css">
+	<link rel="stylesheet" href="/css/nice-select.css">
+	<link rel="stylesheet" href="/css/nouislider.min.css">
+	<link rel="stylesheet" href="/css/ion.rangeSlider.css" />
+	<link rel="stylesheet" href="/css/ion.rangeSlider.skinFlat.css" />
+	<link rel="stylesheet" href="/css/magnific-popup.css">
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -69,8 +85,13 @@
 		<div class="main_menu">
 			<nav class="navbar navbar-expand-lg navbar-light main_box">
 				<div class="container">
+					<!-- <img src="/lulu-logo.webp"  -->
+					<!-- alt="Lulu Footwear Logo" style="width:70px; height: auto;"> -->
+					
+					<h1 class="logo-title">Lulu Footwear</h1>
+
 					<!-- Brand and toggle get grouped for better mobile display -->
-					<a class="navbar-brand logo_h" href="/"><img src="img/logo.png" alt=""></a>
+					<!-- <a class="navbar-brand logo_h" href="/"><img src="img/logo.png" alt=""></a> -->
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
 						aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="icon-bar"></span>
@@ -90,7 +111,7 @@
 										<%= user.username %>
 									</a>
 									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="/userProfile">Profile</a></li>
+										<li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
 										<li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
 									</ul>
 								</li>
@@ -106,7 +127,6 @@
 		</div>
 	</header>
 	
-	<!-- End Header Area -->
 
 </body>
 </html>

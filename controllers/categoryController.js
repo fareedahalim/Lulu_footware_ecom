@@ -100,44 +100,83 @@ const addBrand=async (req,res)=>{
     }
 }
 
+// const addNewBrand = async (req, res) => {
+//     try {
+//         const { brandName } = req.body;
+
+//         // Check if the brand name already exists
+//         if(brandName===""){
+//             return res.render("admin/add-brand",{message:"Brand name is required"})
+//         }
+//         const existBrandName = await Brand.findOne({ brandName });
+
+//         if (existBrandName) {
+//             // If the brand already exists, render the form again with an error message
+//             return res.render("admin/add-brand", { message: "This Brand already exists, please choose another" });
+//         }
+
+//         // If not, proceed to create a new brand
+//         const newBrand = new Brand({
+//             brandName
+//         });
+
+//         const savedBrand = await newBrand.save();
+//         console.log("Brand saved:", savedBrand);
+
+//         // Redirect to the brand list or wherever appropriate
+//         return res.redirect('/admin/brand');
+
+//     } catch (error) {
+//         // Check if the error is a duplicate key error
+//         if (error.code === 11000) {
+//             return res.render("admin/add-brand", { message: "This Brand already exists, please choose another" });
+//         }
+
+//         // Handle other errors
+//         console.error('Error adding new brand:', error.message);
+//         res.status(500).send('Internal Server Error');
+//     }
+// };
 const addNewBrand = async (req, res) => {
-    try {
-        const { brandName, brandDiscription } = req.body;
-
-        // Check if the brand name already exists
-        if(brandName===""){
-            return res.render("admin/add-brand",{message:"Brand name is required"})
+    
+        try {
+            const { brandName } = req.body;
+    
+            // Validate category name
+            if (brandName === "") {
+                return res.json({ success: false, message: "Please enter a brand name." });
+            }
+    
+            if (!/^[A-Za-z\s]+$/.test(brandName)) {
+                return res.json({ success: false, message: "Brand name must contain alphabetic characters only. Numbers or special characters are not allowed." });
+            }
+    
+            // Check if category name already exists
+            const existsBrandName = await Brand.findOne({ brandName: new RegExp(`^${brandName}$`, 'i') });
+            // console.log(existsCategoryName)
+    
+            if (existsBrandName) {
+                if (existsBrandName.isBlocked) {
+                    return res.json({ success: false, message: "This brand is blocked. Please choose a different name." });
+                } else {
+                    return res.json({ success: false, message: "This brand already exists. Please choose a different name." });
+                }
+            }
+    
+            // Create new category
+            const newBrand = new Brand({ categoryName });
+            await newBrand.save();
+    
+            // Send success response
+            return res.json({ success: true, message: "Brand added successfully." });
+            
+        } catch (error) {
+            console.error('Error adding new category:', error.message);
+            return res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
-        const existBrandName = await Brand.findOne({ brandName });
+    };
+    
 
-        if (existBrandName) {
-            // If the brand already exists, render the form again with an error message
-            return res.render("admin/add-brand", { message: "This Brand already exists, please choose another" });
-        }
-
-        // If not, proceed to create a new brand
-        const newBrand = new Brand({
-            brandName,
-            brandDiscription
-        });
-
-        const savedBrand = await newBrand.save();
-        console.log("Brand saved:", savedBrand);
-
-        // Redirect to the brand list or wherever appropriate
-        return res.redirect('/admin/brand');
-
-    } catch (error) {
-        // Check if the error is a duplicate key error
-        if (error.code === 11000) {
-            return res.render("admin/add-brand", { message: "This Brand already exists, please choose another" });
-        }
-
-        // Handle other errors
-        console.error('Error adding new brand:', error.message);
-        res.status(500).send('Internal Server Error');
-    }
-};
 //update-occasion
 const updateOccasionStatus = async (req, res) => {
     try {
@@ -236,7 +275,7 @@ const loadEditBrand=async (req,res)=>{
     try {
         const brandId = req.params.brandId;
 
-        // Fetch the brand from the database
+        
         const brand = await Brand.findById(brandId);
         console.log(brand)
         
@@ -319,8 +358,12 @@ const editBrand = async (req, res) => {
 ////product-management
 const loadproduct=async(req,res)=>{
     try{
+        
         const products=await Product.find().populate('brand').populate('category')
-        // console.log('iam products',products)
+    
+        // console.log(`products:${products}`)
+    
+
         res.render('admin/products',{products})
 
     }
@@ -333,8 +376,9 @@ const loadAddProduct=async(req,res)=>{
     
         try {
             // Fetch all brands and occasions from the database
-            const brands = await Brand.find();
-            const occasions = await Occasion.find();
+            const brands = await Brand.find({blocked:false});
+            const occasions = await Occasion.find({blocked:false});
+            
     
             // Render the add-product page with the fetched data
             res.render('admin/add-product', { 
@@ -347,10 +391,27 @@ const loadAddProduct=async(req,res)=>{
         }
     
 }
+
 const addNewProduct = async (req, res) => {
     try {
-        const { productName, description, brand, category,gender } = req.body;
+        const { productName, description, brand, category, gender } = req.body;
 
+        // Check if the product already exists
+        const existingProduct = await Product.findOne({ productName: productName.trim() });
+
+        if (existingProduct) {
+            // If product exists, render the add-product page with an error message
+            const brands = await Brand.find({ blocked: false });
+            const occasions = await Occasion.find({ blocked: false });
+
+            return res.render('admin/add-product', { 
+                brands, 
+                occasions,
+                errorMessage: 'Product already exists' // Pass the error message
+            });
+        }
+
+        // If product does not exist, save the new product
         const newProduct = new Product({
             productName,
             description,
@@ -361,11 +422,102 @@ const addNewProduct = async (req, res) => {
 
         await newProduct.save();
         res.redirect('/admin/products'); // Redirect to the products page
+
     } catch (error) {
         console.error('Error adding new product:', error.message);
         res.status(500).send('Internal Server Error');
     }
 };
+
+const loadEditProduct=async(req,res)=>{
+    try {
+       const productId=req.params.prodectId;
+       console.log("productId:",productId)
+       const product=await Product.findById(productId).populate('brand').populate('category')
+       if(!product){
+        return res.status(404).send("product not found")
+       }
+       const brands=await Brand.find();
+       const occasions=await Occasion.find();
+    //    console.log("product:",product)
+       res.render('admin/edit-product',{product,brands,occasions})
+
+    } catch (error) {
+        console.error('Error loading edit product page',error);
+        res.redirect('/admin/product')
+    }
+}
+
+const editProduct=async(req,res)=>{
+
+    
+        try {
+            const productId = req.params.productId;
+            const { productName, description, brand, category, gender } = req.body;
+    
+            console.log('Received Product Data:', { productName, description, brand, category, gender });
+    
+            // Validate the product name
+            if (!productName || !/^[A-Za-z\s]+$/.test(productName)) {
+                return res.status(400).json({ message: "Product name is required and must contain only alphabetic characters and spaces." });
+            }
+    
+            // Check if the product name already exists (excluding the current product)
+            const existingProduct = await Product.findOne({
+                productName: new RegExp(`^${productName}$`, 'i'),
+                _id: { $ne: productId }
+            });
+    
+            if (existingProduct) {
+                return res.status(400).json({ message: "This product name already exists. Please choose a different name." });
+            }
+    
+            // Update the product in the database
+            const updatedProduct = await Product.findByIdAndUpdate(
+                productId,
+                { productName, description, brand, category, gender },
+                { new: true }
+            );
+    
+            if (!updatedProduct) {
+                return res.status(404).json({ message: "Product not found." });
+            }
+    
+            res.json({ success: true });
+        } catch (error) {
+            console.error('Error updating product:', error.message);
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
+    };
+    
+ const updateProductStatus=async(req,res)=>{
+        const productId = req.params.productId;
+        console.log(productId)
+
+    try {
+        
+        const product = await Product.findById(productId);
+        console.log(product)
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+
+        
+        product.isBlocked = !product.isBlocked;
+
+        // Save the updated product
+        await product.save();
+
+        // Redirect back to the product list
+        res.redirect('/admin/products');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
+}
+
+    
+//Varient
 const loadAddVarient=async(req,res)=>{
     try {
         const productId=req.params.productId;
@@ -376,6 +528,7 @@ const loadAddVarient=async(req,res)=>{
         res.status(500).send("Internal server error")
     }
 }
+
 
 const addVarient=async(req,res)=>{
     console.log(req.files)
@@ -417,12 +570,65 @@ const loadVarient = async (req, res) => {
 
         const variants = await Varient.find({productId:productId}); // Fetching all variants
         console.log(variants)
-        res.render('admin/varient', { variants }); // Render the variant page with the data
+        res.render('admin/varient', { variants,productId }); // Render the variant page with the data
     } catch (error) {
         console.error('Error rendering variant page:', error.message);
         res.status(500).send("Internal Server Error");
     }
 };
+const loadEditVarient=async(req,res)=>{
+
+    try {
+        const varientId = req.params.varientId;
+        const varient = await Varient.findById(varientId);
+
+        if (!varient) {
+            return res.status(404).send('Variant not found');
+        }
+
+        res.render('admin/edit-varient', {
+            varient: varient,
+            // You can pass additional data if needed
+        });
+    } catch (error) {
+        console.error('Error fetching variant:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+const editVarient=async(req,res)=>{
+    
+        try {
+            const varientId = req.params.varientId;
+            const { stock, color, price, size } = req.body;
+            let images = [];
+    
+            if (req.files && Array.isArray(req.files)) {
+                images = req.files.map(file => file.path.replace('public', ''));
+            }
+    
+            const updatedVarient = await Varient.findByIdAndUpdate(
+                varientId,
+                {
+                    stock,
+                    color,
+                    price,
+                    size,
+                    ...(images.length && { images }), // Only update images if new ones are provided
+                },
+                { new: true } // Return the updated variant
+            );
+    
+            if (!updatedVarient) {
+                return res.status(404).send('Variant not found');
+            }
+    
+            res.redirect(`/admin/varient/${updatedVarient._id}/edit`);
+        } catch (error) {
+            console.error('Error updating variant:', error.message);
+            res.status(500).send('Internal Server Error');
+        }
+    };
+    
 
 
     module.exports={
@@ -442,9 +648,15 @@ const loadVarient = async (req, res) => {
     loadproduct,
     loadAddProduct,
     addNewProduct,
+    loadEditProduct,
+    editProduct,
     loadAddVarient,
     addVarient,
-    loadVarient
+    loadVarient,
+    updateProductStatus,
+    loadEditVarient,
+    editVarient
+    
 
 
 }

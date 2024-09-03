@@ -1,0 +1,166 @@
+
+<%-include("../../views/partials/user/header")%>
+<style>
+    .review_box {
+    background-color: #f9f9f9; /* Light background color */
+    border: 1px solid #ddd; /* Light border */
+}
+
+h2, h4 {
+    color: #333; /* Darker text color */
+}
+
+.btn-primary {
+    background-color: #ff6f61; /* Custom button color */
+    border-color: #ff6f61;
+}
+
+.btn-primary:hover {
+    background-color: #ff4f41; /* Darker hover color */
+    border-color: #ff4f41;
+}
+/* Hide the radio inputs */
+.star-input {
+    display: none;
+}
+
+/* Style the labels as golden stars */
+.star-label {
+    font-size: 30px;
+    color: #ffd700; /* Gold color */
+    cursor: pointer;
+}
+
+/* Add hover effect */
+.star-label:hover,
+.star-label:hover ~ .star-label {
+    color: #ffcc00; /* A lighter gold on hover */
+}
+
+/* When a radio button is checked, color the stars up to that point */
+.star-input:checked ~ .star-label {
+    color: #ffd700;
+}
+
+
+</style>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Product Details Page</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="single-product.html">Product Details</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+    
+    
+    <main>
+      
+        
+
+        <div class="product_image_area">
+            <div class="container">
+                <div class="row s_product_inner">
+                    <div class="col-lg-6">
+                        <div class="s_Product_carousel">
+                      
+                            <div class="single-prd-item">
+                                <img class="img-fluid" src="<%=varient.images[0]%>" alt="Main Product Image">
+                            </div>
+                 
+                            <div class="single-prd-item">
+                                <img class="img-fluid" src="<%=varient.images[1]%>" alt="Additional Product Image 1">
+                            </div>
+                            <div class="single-prd-item">
+                                <img class="img-fluid" src="<%=varient.images[2]%>" alt="Additional Product Image 2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 offset-lg-1">
+                        <div class="s_product_text">
+                            <h3><%=product.productName%></h3>
+                            
+                            <h1><del style="color: red;">&#8377;700</del></h1>
+
+
+                            <h2>&#8377;<%=varient.price%></h2>
+                            <div class="rating">
+                                <% for (let i = 5; i >= 1; i--) { %>
+                                    <input type="radio" name="rating" value="<%= i %>" id="<%= i %>" class="star-input">
+                                    <label for="<%= i %>" class="star-label">☆</label>
+                                <% } %>
+                            </div>
+                            
+                            
+                            <ul class="list">
+                                <li><a class="active" href="#"><span>Category</span> : <%=product.category.categoryName%></a></li>
+                                <li><a class="active" href="#"><span>Brand</span> : <%=product.brand.brandName%></a></li>
+                                <li><a class="active" href="#"><span>Stock</span> : <%= varient.stock%></a></li>
+                                <li><span>Availability</span> : <%= varient.stock > 0 ? "In Stock" : "Out of Stock" %></li>
+                                  
+                            </ul>
+                            <p><%=product.description%></p>
+                            <div class="product_count">
+                                <label for="qty">Quantity:</label>
+                                <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) && sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                            </div>
+                            <div class="card_area d-flex align-items-center">
+                                <a class="primary-btn" href="#">Add to Cart</a>
+                                <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
+                                <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- review -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="mb-4 text-center">Customer Reviews</h2>
+                <div class="review_list mb-5 text-center">
+                    <!-- Placeholder for when there are no reviews -->
+                    <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+                </div>
+                <div class="review_box p-4 rounded shadow-sm">
+                    <h4 class="mb-4 text-center">Add a Review</h4>
+                    <form class="row contact_form" action="/submit-review" method="post" id="reviewForm">
+                        <div class="col-md-12 mb-3">
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-lg" name="username" placeholder="Your Full Name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-4">
+                            <div class="form-group">
+                                <textarea class="form-control form-control-lg" name="comment" rows="4" placeholder="Your Review" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit Now</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</main>
+
+</body>
+</html>
+
+
+<%-include("../../views/partials/user/footer")%>

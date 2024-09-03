@@ -1,0 +1,115 @@
+<%- include("../../views/partials/user/header") %>
+<style>
+    .custom-blue-button {
+        background-color: #007bff; /* Bootstrap blue color or adjust to your desired blue */
+        color: white;
+        /* border: 2px solid black; */
+        text-decoration: none;
+        padding: 10px 20px; /* Adjust padding as needed */
+        border-radius: 5px; /* Optional: rounded corners */
+        font-weight: 100; /* Optional: bold text */
+        display: inline-block; /* Align with text */
+    }
+
+    .custom-blue-button:hover {
+        background-color: #0056b3; /* Darker shade of blue for hover effect */
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Profile</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <!-- <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a> -->
+                    <a href="/profile">profile<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="/address">address</a>
+                </nav>
+            </div>
+        </div>
+        <div class="card">
+            <br>
+            <br>
+            <h4>
+                <a href="/add-Address" class="btn-add-address">
+                  <i class="fa fa-plus"></i> Add New Address
+                </a>
+              </h4>
+            <div class="card-body" style=" margin: 50px; border: 2px solid black; padding: 3rem;">
+                <% console.log("Addresses:", addresses); %>
+                    <% if (addresses && addresses.length> 0) { %>
+                        <% addresses.forEach((userAddress)=> { %>
+                            <div class="address-details"
+                                style="border: 2px solid rgba(222, 203, 203, 0.367); padding: 3%;">
+                                <h6>Address</h6>
+                                <p>
+                                    <%= userAddress.address[0].name || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].mobile || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].address || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].city || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].pincode || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].district || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].state || 'No name found' %>
+                                </p>
+                                <div class="form-group">
+                                    <a href="/update-address/<%= userAddress._id %>">
+                                        <button type="submit" class="btn btn-primary text-dark update-btn" style="background-color: #ea8dd9; color: white;">Edit</button>
+
+                                    </a>
+                          
+                                    <a href="#" onclick="confirmDelete('/delete-address/<%= userAddress._id %>')">
+                                        <button type="button" class="btn btn-danger text-dark delete-btn">Delete</button>
+                                      </a>
+                                  </div>
+                            </div>
+                            <br>
+                            <% }) %>
+                                <% } else { %>
+                                    <p>No addresses found.</p>
+                                    <% } %>
+
+            </div>
+        </div>
+    </main><!-- End .main -->
+    
+
+    <script>
+        function confirmDelete(url) {
+          Swal.fire({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this address!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = url;
+            }
+          });
+        }
+      </script>
+  
+    </body>
+
+
+    </html>
+    
+	

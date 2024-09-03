@@ -1,0 +1,193 @@
+<%- include("../../views/partials/user/header") %>
+<style>
+    .custom-blue-button {
+        background-color: #007bff; /* Bootstrap blue color or adjust to your desired blue */
+        color: white;
+        /* border: 2px solid black; */
+        text-decoration: none;
+        padding: 10px 20px; /* Adjust padding as needed */
+        border-radius: 5px; /* Optional: rounded corners */
+        font-weight: 100; /* Optional: bold text */
+        display: inline-block; /* Align with text */
+    }
+
+    .custom-blue-button:hover {
+        background-color: #0056b3; /* Darker shade of blue for hover effect */
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Profile</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <!-- <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a> -->
+                    <a href="single-product.html">profile</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="page-content">
+    <div class="checkout">
+        <div class="container" style="display: flex; justify-content: center; align-items: center;">
+            <aside class="col-lg-3">
+                <div class="card" style="border-radius: 15px; padding: 20px;">
+                    <div class="card-body text-center">
+                        <div class="mt-3 mb-4">
+                            <% if (user && user.image) { %>
+                                <img src="/userImage/<%= user.image %>" class="rounded-circle img-fluid" id="profileImage" style="width: 100px;" />
+                                <button class="btn btn-link p-0 mt-2">
+                                    <a href="/editProfileImage">Edit</a>
+                                </button>
+                            <% } else { %>
+                                <p>No user or user image found</p>
+                            <% } %>
+                        </div>
+
+                        <h6><b style="font-size: 110%;"><%= user.username %></b></h6>
+                        <h6><b style="font-size: 110%;"><%= user.email %></b></h6>
+
+                        <div class="mt-4">
+                            <a href="/wishlist" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">
+                                MY WISHLIST
+                            </a>
+                            <a href="/order-history" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">
+                                MY ORDERS
+                            </a>
+                            <a href="/address" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">
+                                ADDRESS
+                            </a>
+                            <a href="/loadcoupon" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">
+                                COUPONS
+                            </a>
+                            <a href="/wallet" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">
+                                WALLET
+                            </a>
+                        </div>
+
+                        <h4 class="mt-4">Your Referral Code:</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" id="referralCodeField" class="form-control" value="<%= user.referralCode %>" readonly>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyReferralCode()">Copy</button>
+                            </div>
+                        </div>
+
+                        <script>
+                            function copyReferralCode() {
+                                const referralCodeField = document.getElementById("referralCodeField");
+                                referralCodeField.select();
+                                document.execCommand("copy");
+                                alert("Referral code copied!");
+                            }
+                        </script>
+                    </div>
+                </div>
+            </aside>
+           <!-- Updated profile.ejs form structure -->
+            <div class="col-lg-6">
+                <form action="/updateProfile" method="post" id="editProfileForm" onsubmit="return validateForm()" class="p-4 shadow rounded">
+                    <div class="form-group">
+                        <label for="editName" style="font-weight: bold; font-size: 110%;">First Name</label>
+                        <input type="text" class="form-control" id="editName" name="username" value="<%= user.username %>" required>
+                        <span id="nameError" style="color: red;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editEmail" style="font-weight: bold; font-size: 110%;">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" value="<%= user.email %>" required>
+                        <span id="emailError" style="color: red;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editPhone" style="font-weight: bold; font-size: 110%;">Phone Number</label>
+                        <input type="text" class="form-control" id="editPhone" name="mobile" value="<%= user.mobile %>" required>
+                        <span id="phoneError" style="color: red;"></span>
+                    </div>
+                    <div class="form-group mt-3">
+                        <a href="/change-password" class="custom-blue-button">Change Password</a>
+                    </div>
+                    
+                    
+
+                    <div class="form-group mt-4">
+                        <input type="submit" class="btn btn-primary btn-block" value="Update Profile">
+                    </div>
+                </form>
+
+                <script>
+                    function validateForm() {
+                        var username = document.getElementById('editName').value;
+                        var email = document.getElementById('editEmail').value;
+                        var mobile = document.getElementById('editPhone').value;
+
+                        document.getElementById('nameError').innerHTML = '';
+                        document.getElementById('emailError').innerHTML = '';
+                        document.getElementById('phoneError').innerHTML = '';
+
+                        if (username.trim() === '') {
+                            document.getElementById('nameError').innerHTML = 'First Name is required';
+                            return false;
+                        } else if (!isValidName(username)) {
+                            document.getElementById('nameError').innerHTML = 'Invalid characters in the name';
+                            return false;
+                        }
+
+                        if (email.trim() === '') {
+                            document.getElementById('emailError').innerHTML = 'Email is required';
+                            return false;
+                        } else if (!isValidEmail(email)) {
+                            document.getElementById('emailError').innerHTML = 'Invalid email address';
+                            return false;
+                        }
+
+                        if (mobile.trim() === '') {
+                            document.getElementById('phoneError').innerHTML = 'Phone Number is required';
+                            return false;
+                        } else if (!isValidPhone(mobile)) {
+                            document.getElementById('phoneError').innerHTML = 'Invalid phone number';
+                            return false;
+                        }
+
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: 'Do you want to update your profile?',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, update it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('editProfileForm').submit();
+                            }
+                        });
+
+                        return false;
+                    }
+
+                    function isValidName(username) {
+                        return /^[a-zA-Z\s']*$/i.test(username);
+                    }
+
+                    function isValidEmail(email) {
+                        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        return emailRegex.test(email);
+                    }
+
+                    function isValidPhone(mobile) {
+                        var phoneRegex = /^(?:(?!0+$)\d{10})$/;
+                        return phoneRegex.test(mobile);
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("../../views/partials/user/footer") %>
