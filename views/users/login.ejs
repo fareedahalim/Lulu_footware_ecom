@@ -21,16 +21,22 @@
                 <form action="/login" method="POST" id="userLoginForm">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="hamna@gmail.com">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="azzamvkd@gmail.com">
                         <div id="emailError" class="error-message"></div>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" value="FAREEDA@00">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" value="fareeda00">
                         <div id="passwordError" class="error-message"></div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
+
+                <% if (typeof message !== 'undefined') { %>
+                    <div class="alert alert-info mt-3"><%= message %></div>
+                <% } %>
+
+                
                 <% if (typeof errorMessage !== 'undefined') { %>
                     <div class="alert alert-danger mt-3"><%= errorMessage %></div>
                 <% } %>

@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 const session=require("express-session")
 const mongoose = require("mongoose");
+// const morgan= require('morgan')
+const flash = require('connect-flash')
 
 const passport=require("./config/passport")
 mongoose.connect('mongodb://127.0.0.1:27017/Lulu_footwear')
@@ -15,7 +17,7 @@ const port = process.env.SERVER_PORT || 3001;
 
 app.set('view engine', 'ejs');
 app.set('views', 'views'); // Specify the views directory if needed
-
+// app.use(morgan())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -29,6 +31,15 @@ app.use(session({
         maxAge: 72 * 60 * 60 * 1000 // 72 hours
     }
 }));
+
+app.use(flash());
+
+// Middleware to make flash messages available to all views
+// Middleware to make flash messages available to all views
+app.use((req, res, next) => {
+    res.locals.error = req.flash('error'); // Store only the error messages
+    next(); // Don't forget to call next()
+});
 
 
 app.use(passport.initialize());

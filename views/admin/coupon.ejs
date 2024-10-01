@@ -1,0 +1,87 @@
+<%- include("../../views/partials/admin/header") %>
+<div class="page-header">
+
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">
+                    Coupon Management<br></h2>
+                <br><br>
+                <div class="container">
+
+                    <div class="row">
+
+                        <div class="content">
+
+
+                            <h5><a href="/admin/add-coupon" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px; text-decoration: none; display: inline-block;">Add Coupon</a>
+                            </h5>
+                            <br>
+                            <br>
+                            <div class="container">
+                               
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Coupon Code</th>
+                                            <th>Discount Value</th>
+                                            <th>Expiry Date</th>
+                                            <th>Min Purchase</th>
+                                            <th>Max Purchase</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (coupons.length > 0) { %>
+                                            <% coupons.forEach(coupon => { %>
+                                                <tr>
+                                                    <td><%= coupon.couponCode %></td>
+                                                    <td><%= coupon.discountValue %>%</td>
+                                                    <td><%= new Date(coupon.expiryDate).toLocaleDateString() %></td>
+                                                    <td><%= coupon.minPurchase  %></td>
+                                                    <td><%= coupon.maxPurchase %></td>
+                                                    <td>
+                                                        <% if (coupon.isActive) { %>
+                                                            <span class="badge badge-success" style="color: black;">Active</span>
+                                                        <% } else { %>
+                                                            <span class="badge badge-danger" style="color: black;">Inactive</span>
+                                                        <% } %>
+                                                    </td>
+                                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                                        <button class="btn" style="background-color: yellow; color: black; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer;">
+                                                            <a href="/admin/edit-coupon/<%= coupon._id %>" style="color: inherit; text-decoration: none;">Edit</a>
+                                                        </button>
+                                                        <button class="delete-button" data-id="<%= coupon._id %>" style="background-color: red; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 4px;">
+                                                            <a href="/admin/coupon/<%= coupon._id %>" style="color: inherit; text-decoration: none;">Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="6">No coupons available</td>
+                                            </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                    </div>
+                <br><br>
+                <a href="/admin/dashboard" 
+   style="background-color: black; 
+          color: white; 
+          padding: 2px 8px; 
+          border-radius: 3px;  
+          border: 1px solid #000; 
+          font-size: 8px;  
+          text-decoration: none; 
+          display: inline-block;
+          width: 100px;  
+          text-align: center;">Back To Home</a>
+
+            </div>
+            <script src="/js/scripts.js"></script>
+            <%- include("../../views/partials/admin/footer") %>

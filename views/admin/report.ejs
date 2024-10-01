@@ -1,0 +1,201 @@
+
+
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    
+      <!-- partial -->
+
+      <!-- partial -->
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+          <div class="page-header">
+
+
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <h2 class="card-title" style="color: rgb(19, 19, 19);text-align: center;">Sales Report</h2>
+                <div class="card-body">
+
+                  <p class="card-description"> <code></code>
+                  </p>
+                  <% if (messages.error) { %>
+                    <div class="text-danger">
+                      <%= messages.error %>
+                    </div>
+                  <% } %>
+                  <form id="filter-form" action="/admin/report" method="post">
+                    <div class="form-row">
+                      <label for="startDate">Start Date:</label>
+                      <input type="date" id="startDate" name="startDate">
+                      
+                    </div>
+                    <div class="form-row">
+                      <label for="endDate">End Date:</label>
+                      <input type="date" id="endDate" name="endDate">
+                    </div>
+                    <div class="form-row">
+                      <label for="report-type">Report Type:</label>
+                      <select id="report-type" name="type">
+                        <option value="pdf">PDF</option>
+                        <option value="excel">Excel</option>
+                      </select>
+                    </div>
+                    <button type="submit" class="btn-submit">Generate Report</button>
+                    <p id="error-message" style="color: red;"></p>
+                  </form>
+                  
+                  <div class="button-group">
+                    <button onclick="setDateRange('daily')">Daily</button>
+                    <button onclick="setDateRange('weekly')">Weekly</button>
+                    <button onclick="setDateRange('monthly')">Monthly</button>
+                    <button onclick="setDateRange('yearly')">Yearly</button>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <style>
+              .report-container {
+              
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+              }
+
+              .card {
+
+                background: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+              }
+
+              .card-header {
+                background: #007bff;
+                color: white;
+                padding: 10px 15px;
+              }
+
+              .card-header h4 {
+                margin: 0;
+              }
+
+              .card-body {
+                margin-left: 350px;
+                padding: 15px;
+              }
+
+              .card-title {
+                margin-right: 250px;
+                padding: 25px;
+              }
+
+              .form-row {
+                margin-bottom: 10px;
+              }
+
+              .form-row label {
+
+                display: block;
+              }
+
+              .form-row input,
+              .form-row select {
+                width: 40%;
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+              }
+
+              .btn-submit {
+                display: block;
+                width: 40%;
+                padding: 10px;
+                margin-top: 20px;
+                background: #c66;
+                color: white;
+                border-radius: 4px;
+                border: none;
+              }
+
+              .button-group button {
+                width: calc(10.7% - 10px);
+                padding: 10px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                background: #17a2b8;
+                color: white;
+                border-radius: 4px;
+                border: none;
+              }
+
+              @media (max-width: 768px) {
+                .button-group button {
+                  width: calc(50% - 10px);
+                }
+              }
+            </style>
+            <br>
+            <br>
+           
+          </div>
+         
+        </div>
+      </div>
+
+  </div>
+  </div>
+  <script src="/asset/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="/asset/vendors/chart.js/chart.umd.js"></script>
+  <script src="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="/asset/js/off-canvas.js"></script>
+  <script src="/asset/js/misc.js"></script>
+  <script src="/asset/js/settings.js"></script>
+  <script src="/asset/js/todolist.js"></script>
+  <script src="/asset/js/jquery.cookie.js"></script>
+  <!-- endinject -->
+  <script>
+    function setDateRange(range) {
+      const now = new Date();
+      let startDate, endDate;
+
+      switch (range) {
+        case 'daily':
+          startDate = endDate = now.toISOString().split('T')[0];
+          break;
+        case 'weekly':
+          const firstDayOfWeek = now.getDate() - now.getDay();
+          startDate = new Date(now.setDate(firstDayOfWeek)).toISOString().split('T')[0];
+          endDate = new Date(now.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
+          break;
+        case 'monthly':
+          startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+          endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+          break;
+        case 'yearly':
+          startDate = new Date(now.getFullYear(), 0, 1).toISOString().split('T')[0];
+          endDate = new Date(now.getFullYear(), 11, 31).toISOString().split('T')[0];
+          break;
+        default:
+          return;
+      }
+
+      document.getElementById('startDate').value = startDate;
+      document.getElementById('endDate').value = endDate;
+    }
+
+  </script>
+  
+
+
+  </body>
+
+  </html>
+  <!-- content-wrapper ends -->
+  <!-- partial:../../partials/_footer.html -->
+  

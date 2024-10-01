@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h2>Total Amount: ₹<%= amount %></h2>
+    
+    <button id="rzp-button">Pay Now</button>
+
+    <script>
+        document.getElementById('rzp-button').onclick = function (e) {
+            var options = {
+                "key": "<%= key_id %>", // Razorpay public key
+                "amount": "<%= amount * 100 %>", // Amount in paise
+                "currency": "INR",
+                "name": "Lulu Footwear",
+                "description": "Order Payment",
+                "order_id": "<%= orderId %>", // Razorpay Order ID
+                "handler": function (response) {
+                    // Success handler (when payment is completed)
+                    window.location.href = `/success-page`;  // Redirect to success page
+                },
+                "prefill": {
+                    "name": "<%= user.name %>",
+                    "email": "<%= user.email %>",
+                    "contact": "<%= user.mobile %>"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                },
+                "modal": {
+                    "ondismiss": function () {
+                        // Modal is closed without completing the payment
+                        window.location.href = "/payment-failed";  // Redirect to failed payment page
+                    }
+                }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>

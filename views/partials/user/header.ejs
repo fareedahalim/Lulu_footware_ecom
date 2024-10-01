@@ -58,6 +58,30 @@
         letter-spacing: 2px; /* Spacing between letters */
         text-transform: uppercase; /* Uppercase for emphasis */
     }
+	
+    .dropdown-toggle {
+        position: relative;
+        display: inline-block;
+        text-decoration: none;
+        color: #000; /* Adjust the color as needed */
+    }
+
+    .fa-shopping-cart {
+        font-size: 15px; /* Adjust the icon size as needed */
+    }
+
+    .cart-count {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 10px; /* Adjust the font size of the count */
+        font-weight: bold;
+    }
+
 
 	</style>
 	<!-- CSS files -->
@@ -76,6 +100,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  
 </head>
 
 <body>
@@ -120,13 +147,24 @@
 								<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
 								<li class="nav-item"><a class="nav-link" href="/signup">Sign Up</a></li>
 							<% } %>
+							<li class="nav-item"><a class="nav-link" href="/cartList"><i class="fas fa-shopping-cart"></i></li>
+								<!-- <span class="cart-count">4</span></a> -->
+                             
+							<li class="nav-item"><a class="nav-link" href="/wishlist"><i class="fas fa-heart" style="color: red; font-size: 20px;"></i></li>                                     
+								
+
 						</ul>
+
 					</div>
+					<!-- <a href="/cartlist" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+						<i class="fas fa-shopping-cart"></i>
+						<span class="cart-count">4</span>
+					</a> -->
 				</div>
 			</nav>
 		</div>
 	</header>
-	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 </body>
 </html>

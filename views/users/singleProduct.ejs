@@ -1,48 +1,63 @@
-
 <%-include("../../views/partials/user/header")%>
 <style>
     .review_box {
-    background-color: #f9f9f9; /* Light background color */
-    border: 1px solid #ddd; /* Light border */
-}
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+    }
 
-h2, h4 {
-    color: #333; /* Darker text color */
-}
+    h2, h4 {
+        color: #333;
+    }
 
-.btn-primary {
-    background-color: #ff6f61; /* Custom button color */
-    border-color: #ff6f61;
-}
+    .btn-primary {
+        background-color: #ff6f61;
+        border-color: #ff6f61;
+    }
 
-.btn-primary:hover {
-    background-color: #ff4f41; /* Darker hover color */
-    border-color: #ff4f41;
-}
-/* Hide the radio inputs */
-.star-input {
-    display: none;
-}
+    .btn-primary:hover {
+        background-color: #ff4f41;
+        border-color: #ff4f41;
+    }
 
-/* Style the labels as golden stars */
-.star-label {
-    font-size: 30px;
-    color: #ffd700; /* Gold color */
-    cursor: pointer;
-}
+    .star-input {
+        display: none;
+    }
 
-/* Add hover effect */
-.star-label:hover,
-.star-label:hover ~ .star-label {
-    color: #ffcc00; /* A lighter gold on hover */
-}
+    .star-label {
+        font-size: 30px;
+        color: #ffd700;
+        cursor: pointer;
+    }
 
-/* When a radio button is checked, color the stars up to that point */
-.star-input:checked ~ .star-label {
-    color: #ffd700;
-}
+    .star-label:hover,
+    .star-label:hover ~ .star-label {
+        color: #ffcc00;
+    }
 
+    .star-input:checked ~ .star-label {
+        color: #ffd700;
+    }
 
+    .product-image {
+        transition: transform 0.5s ease;
+        cursor: pointer;
+        position: relative; /* Added for proper positioning */
+    }
+
+    .product-image:hover {
+        transform: scale(1.2);
+        z-index: 10;
+    }
+
+    #zoom-lens {
+        display: none;
+        position: absolute;
+        border: 1px solid #000;
+        border-radius: 50%;
+        pointer-events: none;
+        /* Ensure it stays above other elements */
+        z-index: 1000;
+    }
 </style>
 
 <section class="banner-area organic-breadcrumb">
@@ -60,107 +75,132 @@ h2, h4 {
     </div>
 </section>
 
-    
-    
-    <main>
-      
-        
-
-        <div class="product_image_area">
-            <div class="container">
-                <div class="row s_product_inner">
-                    <div class="col-lg-6">
-                        <div class="s_Product_carousel">
-                      
-                            <div class="single-prd-item">
-                                <img class="img-fluid" src="<%=varient.images[0]%>" alt="Main Product Image">
-                            </div>
-                 
-                            <div class="single-prd-item">
-                                <img class="img-fluid" src="<%=varient.images[1]%>" alt="Additional Product Image 1">
-                            </div>
-                            <div class="single-prd-item">
-                                <img class="img-fluid" src="<%=varient.images[2]%>" alt="Additional Product Image 2">
-                            </div>
+<main>
+    <div class="product_image_area">
+        <div class="container">
+            <div class="row s_product_inner">
+                <div class="col-lg-6">
+                    <div class="s_Product_carousel" style="position: relative;">
+                        <div class="single-prd-item">
+                            <img class="img-fluid product-image" src="<%=varient.images[0]%>" alt="Main Product Image">
+                        </div>
+                        <div class="single-prd-item">
+                            <img class="img-fluid product-image" src="<%=varient.images[1]%>" alt="Additional Product Image 1">
+                        </div>
+                        <div class="single-prd-item">
+                            <img class="img-fluid product-image" src="<%=varient.images[2]%>" alt="Additional Product Image 2">
+                        </div>
+                        
+                    </div>
+                    <div id="zoom-lens"></div>
+                </div>
+                <div class="col-lg-5 offset-lg-1">
+                    <div class="s_product_text">
+                        <h3><%=product.productName%></h3>
+                        <% if (finalPrice < varient.price) { %>
+                            <h1><del style="color: red;">&#8377;<%= varient.price %></del></h1>
+                            <h2>&#8377;<%= finalPrice %></h2>
+                        <% } else { %>
+                            <h1>&#8377;<%= varient.price %></h1>
+                        <% } %>
+                        <div class="rating">
+                            <% for (let i = 5; i >= 1; i--) { %>
+                                <input type="radio" name="rating" value="<%= i %>" id="<%= i %>" class="star-input">
+                                <label for="<%= i %>" class="star-label">☆</label>
+                            <% } %>
+                        </div>
+                        <ul class="list">
+                            <li><a class="active" href="#"><span>Category</span> : <%=product.category.categoryName%></a></li>
+                            <li><a class="active" href="#"><span>Brand</span> : <%=product.brand.brandName%></a></li>
+                            <li><a class="active" href="#"><span>Stock</span> : <%= varient.stock%></a></li>
+                            <li><a class="active" href="#"><span>Size</span> : <%= varient.size%></a></li>
+                            <li><span>Availability</span> : <%= varient.stock > 0 ? "In Stock" : "Out of Stock" %></li>
+                        </ul>
+                        <p><%=product.description%></p>
+                        <span>other Varients</span>
+                        <% varientAll.forEach(vari=>{%>
+                            <% if (vari.productId.toString() === varient.productId.toString() && varient._id.toString() !== vari._id.toString()) { %>
+                                <li>
+                                    <a class="active" href="/product-details/<%= vari._id %>">
+                                        <span style="color: #000;"> <%= vari.color %>, <%= vari.size %></span>
+                                    </a>
+                                </li>
+                            <% } %>
+                      <%  }) %>
+                        <div class="card_area d-flex align-items-center">
+                            <a class="primary-btn" href="/add-to-cart/<%=varient._id%>">Add to Cart</a>
+                            <a class="icon_btn" href="/add-to-wishlist/<%=varient._id%>"><i class="lnr lnr lnr-heart"></i></a>
                         </div>
                     </div>
-                    <div class="col-lg-5 offset-lg-1">
-                        <div class="s_product_text">
-                            <h3><%=product.productName%></h3>
-                            
-                            <h1><del style="color: red;">&#8377;700</del></h1>
-
-
-                            <h2>&#8377;<%=varient.price%></h2>
-                            <div class="rating">
-                                <% for (let i = 5; i >= 1; i--) { %>
-                                    <input type="radio" name="rating" value="<%= i %>" id="<%= i %>" class="star-input">
-                                    <label for="<%= i %>" class="star-label">☆</label>
-                                <% } %>
-                            </div>
-                            
-                            
-                            <ul class="list">
-                                <li><a class="active" href="#"><span>Category</span> : <%=product.category.categoryName%></a></li>
-                                <li><a class="active" href="#"><span>Brand</span> : <%=product.brand.brandName%></a></li>
-                                <li><a class="active" href="#"><span>Stock</span> : <%= varient.stock%></a></li>
-                                <li><span>Availability</span> : <%= varient.stock > 0 ? "In Stock" : "Out of Stock" %></li>
-                                  
-                            </ul>
-                            <p><%=product.description%></p>
-                            <div class="product_count">
-                                <label for="qty">Quantity:</label>
-                                <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;" class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) && sst > 0 ) result.value--;return false;" class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                            </div>
-                            <div class="card_area d-flex align-items-center">
-                                <a class="primary-btn" href="#">Add to Cart</a>
-                                <a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
-                                <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-    <!-- review -->
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <h2 class="mb-4 text-center">Customer Reviews</h2>
-                <div class="review_list mb-5 text-center">
-                    <!-- Placeholder for when there are no reviews -->
-                    <p class="text-muted">No reviews yet. Be the first to review this product!</p>
-                </div>
-                <div class="review_box p-4 rounded shadow-sm">
-                    <h4 class="mb-4 text-center">Add a Review</h4>
-                    <form class="row contact_form" action="/submit-review" method="post" id="reviewForm">
-                        <div class="col-md-12 mb-3">
-                            <div class="form-group">
-                                <input type="text" class="form-control form-control-lg" name="username" placeholder="Your Full Name" required>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-4">
-                            <div class="form-group">
-                                <textarea class="form-control form-control-lg" name="comment" rows="4" placeholder="Your Review" required></textarea>
-                            </div>
-                        </div>
-                        <div class="col-md-12 text-center">
-                            <button type="submit" class="btn btn-primary btn-lg">Submit Now</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
-    
-    
 </main>
 
-</body>
-</html>
-
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="mb-4 text-center">Customer Reviews</h2>
+            <div class="review_list mb-5 text-center">
+                <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+            </div>
+            <div class="review_box p-4 rounded shadow-sm">
+                <h4 class="mb-4 text-center">Add a Review</h4>
+                <form class="row contact_form" action="/submit-review" method="post" id="reviewForm">
+                    <div class="col-md-12 mb-3">
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-lg" name="username" placeholder="Your Full Name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                        <div class="form-group">
+                            <textarea class="form-control form-control-lg" name="comment" rows="4" placeholder="Your Review" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">Submit Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <%-include("../../views/partials/user/footer")%>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = document.querySelectorAll('.product-image');
+        const lens = document.getElementById('zoom-lens');
+
+        images.forEach(image => {
+            image.addEventListener('mouseover', function() {
+                lens.style.display = 'block';
+                lens.style.width = '100px'; // Adjust size as needed
+                lens.style.height = '100px'; // Adjust size as needed
+                lens.style.backgroundImage = `url(${this.src})`;
+                lens.style.backgroundSize = `${this.offsetWidth * 2}px ${this.offsetHeight * 2}px`;
+            });
+
+            image.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                let x = e.clientX - rect.left - lens.offsetWidth / 2;
+                let y = e.clientY - rect.top - lens.offsetHeight / 2;
+
+                if (x < 0) x = 0;
+                if (y < 0) y = 0;
+                if (x > rect.width - lens.offsetWidth) x = rect.width - lens.offsetWidth;
+                if (y > rect.height - lens.offsetHeight) y = rect.height - lens.offsetHeight;
+
+                lens.style.left = `${x}px`;
+                lens.style.top = `${y}px`;
+                lens.style.backgroundPosition = `-${x * 2}px -${y * 2}px`;
+            });
+
+            image.addEventListener('mouseout', function() {
+                lens.style.display = 'none';
+            });
+        });
+    });
+</script>

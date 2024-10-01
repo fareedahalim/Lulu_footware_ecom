@@ -1,0 +1,133 @@
+<%- include("../../views/partials/admin/header") %>
+<div class="page-header">
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">
+                    Edit Coupon<br></h2>
+                <br><br>
+                <div class="container">
+                    <form action="/admin/update-coupon/<%= coupon._id %>" method="POST" onsubmit="return couponValidation(event)">
+                        <div class="form-group">
+                            <label for="couponCode">Coupon Code</label>
+                            <input type="text" class="form-control" id="couponCode" name="couponCode" value="<%= coupon.couponCode %>" required>
+                            <span id="codeError" class="errorMessage" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="discountValue">Discount Value (%)</label>
+                            <input type="number" class="form-control" id="discountValue" name="discountValue" value="<%= coupon.discountValue %>" min="0" max="100" required>
+                            <span id="discountValueError" class="errorMessage" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="date" class="form-control" id="expiryDate" name="expiryDate" value="<%= new Date(coupon.expiryDate).toISOString().split('T')[0] %>" required>
+                            <span id="expirationDateError" class="errorMessage" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="minPurchase">Min Purchase Amount</label>
+                            <input type="number" class="form-control" id="minPurchase" name="minPurchase" value="<%= coupon.minPurchase %>" min="0" required>
+                            <span id="minOrderAmountError" class="errorMessage" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxPurchase">Max Purchase Amount</label>
+                            <input type="number" class="form-control" id="maxPurchase" name="maxPurchase" value="<%= coupon.maxPurchase %>" min="0" required>
+                            <span id="maxOrderAmountError" class="errorMessage" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="isActive" name="isActive" value="true" <%= coupon.isActive ? 'checked' : '' %>>
+                                <label class="form-check-label" for="isActive">Active</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="isInactive" name="isActive" value="false" <%= !coupon.isActive ? 'checked' : '' %>>
+                                <label class="form-check-label" for="isInactive">Inactive</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Coupon</button>
+                    </form>
+                </div>
+                <br><br>
+                <a href="/admin/coupons" 
+                   style="background-color: black; 
+                          color: white; 
+                          padding: 2px 8px; 
+                          border-radius: 3px;  
+                          border: 1px solid #000; 
+                          font-size: 8px;  
+                          text-decoration: none; 
+                          display: inline-block;
+                          width: 100px;  
+                          text-align: center;">Back To List</a>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../../views/partials/admin/footer") %>
+
+<script>
+function couponValidation(event) {
+    var couponCode = document.getElementById('couponCode').value;
+    var discountValue = document.getElementById('discountValue').value;
+    var expiryDate = document.getElementById('expiryDate').value;
+    var minPurchase = document.getElementById('minPurchase').value;
+    var maxPurchase = document.getElementById('maxPurchase').value;
+
+    // Reset previous errors
+    resetCouponErrors();
+
+    var isValid = true;
+
+    // Validate coupon code
+    if (couponCode.trim() === '') {
+        document.getElementById('codeError').innerText = 'Please enter a coupon code';
+        isValid = false;
+    }
+
+    // Validate discount value
+    if (discountValue.trim() === '' || isNaN(discountValue) || discountValue <= 0) {
+        document.getElementById('discountValueError').innerText = 'Please enter a valid discount value';
+        isValid = false;
+    } else if (Number(discountValue) > 50) {
+        document.getElementById('discountValueError').innerHTML = 'Discount value cannot be greater than 50% for percentage type.';
+        isValid = false;
+    }
+
+    // Validate expiry date
+    if (expiryDate.trim() === '') {
+        document.getElementById('expirationDateError').innerText = 'Please select an expiry date';
+        isValid = false;
+    } else {
+        var selectedDate = new Date(expiryDate);
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) {
+            document.getElementById('expirationDateError').innerText = 'Expiry date cannot be in the past';
+            isValid = false;
+        }
+    }
+
+    // Validate minimum purchase amount
+    if (minPurchase.trim() === '' || isNaN(minPurchase) || minPurchase <= 0) {
+        document.getElementById('minOrderAmountError').innerText = 'Please enter a valid minimum purchase amount';
+        isValid = false;
+    }
+
+    // Validate maximum purchase amount
+    if (maxPurchase.trim() === '' || isNaN(maxPurchase) || maxPurchase <= 0) {
+        document.getElementById('maxOrderAmountError').innerText = 'Please enter a valid maximum purchase amount';
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// Function to reset error messages for coupon form
+function resetCouponErrors() {
+    var errorMessages = document.getElementsByClassName('errorMessage');
+    for (var i = 0; i < errorMessages.length; i++) {
+        errorMessages[i].innerText = '';
+    }
+}
+</script>

@@ -1,4 +1,9 @@
 <%-include("../../views/partials/user/header")%>
+<style> 
+.out-of-stock {
+    color: red;
+    font-weight: bold;
+}</style>
 	<!-- start banner Area -->
 	<section class="banner-area">
 		<div class="container">
@@ -51,10 +56,10 @@
 	<!-- End banner Area -->
 
 	<!-- start features Area -->
-	<section class="features-area section_gap">
+	<!-- <section class="features-area section_gap">
 		<div class="container">
 			<div class="row features-inner">
-				<!-- single features -->
+	
 				<div class="col-lg-3 col-md-6 col-sm-6">
 					<div class="single-features">
 						<div class="f-icon">
@@ -64,7 +69,7 @@
 						<p>Free Shipping on all order</p>
 					</div>
 				</div>
-				<!-- single features -->
+				
 				<div class="col-lg-3 col-md-6 col-sm-6">
 					<div class="single-features">
 						<div class="f-icon">
@@ -74,7 +79,7 @@
 						<p>Free Shipping on all order</p>
 					</div>
 				</div>
-				<!-- single features -->
+				
 				<div class="col-lg-3 col-md-6 col-sm-6">
 					<div class="single-features">
 						<div class="f-icon">
@@ -84,7 +89,7 @@
 						<p>Free Shipping on all order</p>
 					</div>
 				</div>
-				<!-- single features -->
+				
 				<div class="col-lg-3 col-md-6 col-sm-6">
 					<div class="single-features">
 						<div class="f-icon">
@@ -96,7 +101,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> -->
 	<!-- end features Area -->
 
 	<!-- Start category Area -->
@@ -194,27 +199,30 @@
 												</a>
 												<div class="product-details">
 													<h6><%= product.productName %></h6>
-													<div class="price">
-														<h6>$<%= variant.price %></h6>
-													</div>
+													<% if (variant.stock === 0) { %>
+														<p class="out-of-stock">Out of Stock</p>
+													<% } else { %>
+														<div class="price">
+															<% if (variant.finalPrice < variant.price) { %>
+																<h6><del style="color: red;">&#8377;<%= variant.price %></del></h6>
+																<h6>&#8377;<%= variant.finalPrice %></h6>
+															<% } else { %>
+																<h6>&#8377;<%= variant.price %></h6>
+															<% } %>
+														</div>
+														
+													<% } %>
 													
 													<div class="prd-bottom">
-														<a href="" class="social-info">
+														<a href="/add-to-cart/<%=variant._id%>" class="social-info">
 															<span class="ti-bag"></span>
 															<p class="hover-text">add to bag</p>
 														</a>
-														<a href="" class="social-info">
+														<a href="/add-to-wishlist/<%=variant._id%>" class="social-info">
 															<span class="lnr lnr-heart"></span>
 															<p class="hover-text">Wishlist</p>
 														</a>
-														<a href="" class="social-info">
-															<span class="lnr lnr-sync"></span>
-															<p class="hover-text">compare</p>
-														</a>
-														<a href="" class="social-info">
-															<span class="lnr lnr-move"></span>
-															<p class="hover-text">view more</p>
-														</a>
+														
 													</div>
 												</div>
 											</div>

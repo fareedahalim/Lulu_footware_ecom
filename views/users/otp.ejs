@@ -33,13 +33,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> -->
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Verification</title>
-    <!-- Include Bootstrap CSS for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .timer {
@@ -54,7 +53,7 @@
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <h2 class="text-center">OTP Verification</h2>
-                <!-- OTP Verification Form -->
+                
                 <form action="/verify-otp" method="POST">
                     <div class="mb-3">
                         <label for="otpInput" class="form-label">Enter OTP</label>
@@ -63,16 +62,16 @@
                     <button type="submit" class="btn btn-primary w-100">Verify OTP</button>
                 </form>
 
-                <!-- Display OTP Timer -->
+                
                 <div id="otp-timer" class="text-center mt-3 timer">OTP expires in <span id="time">01:00</span></div>
 
-                <!-- Resend OTP Button -->
+                
                 <form action="/resend-otp" method="POST" id="resend-form" style="display:none;">
                     <input type="hidden" name="email" value="<%= locals.user %>">
                     <button type="submit" class="btn btn-link w-100 mt-3">Resend OTP</button>
                 </form>
 
-                <!-- Display error message if OTP is incorrect -->
+                
                 <% if (typeof errorMessage !== 'undefined') { %>
                     <div class="alert alert-danger mt-3"><%= errorMessage %></div>
                 <% } %>
@@ -83,16 +82,16 @@
     <script>
         const timerElement = document.getElementById("time");
         const resendForm = document.getElementById("resend-form");
-        let timeLeft = 59;  // 5 minutes countdown in seconds
+        let timeLeft = 59;  
 
         function startTimer() {
     const timerInterval = setInterval(() => {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             timerElement.innerHTML = "00:00";
-            resendForm.style.display = "block";  // Show the Resend OTP button
+            resendForm.style.display = "block";  
             
-            // Disable the OTP input field when time expires
+            
             document.getElementById("otpInput").disabled = true;
         } else {
             const minutes = Math.floor(timeLeft / 60);
@@ -107,7 +106,104 @@
         window.onload = startTimer;
     </script>
 
-    <!-- Include Bootstrap JS -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OTP Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 400px; /* Center and limit width */
+            margin-top: 100px; /* Adjust for centering */
+        }
+        .alert {
+            display: none; /* Initially hide alert */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">OTP Verification</h2>
+        <!-- OTP Verification Form -->
+        <form id="otp-form" action="/verify-otp" method="POST">
+            <div class="mb-3">
+                <label for="otpInput" class="form-label">Enter OTP</label>
+                <input type="text" class="form-control" id="otpInput" name="otp" placeholder="Enter your OTP" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Verify OTP</button>
+        </form>
+
+        <!-- Display OTP Timer -->
+        <div id="otp-timer" class="text-center mt-3">OTP expires in <span id="time">01:00</span></div>
+
+        <!-- Resend OTP Button -->
+        <form action="/resend-otp" method="POST" id="resend-form" style="display:none;">
+            <input type="hidden" name="email" value="<%= locals.user %>">
+            <button type="submit" class="btn btn-link w-100 mt-3">Resend OTP</button>
+        </form>
+
+        <!-- Display error message if OTP is incorrect -->
+        <div id="error-message" class="alert alert-danger mt-3"></div>
+    </div>
+
+<script>
+    const timerElement = document.getElementById("time");
+    const resendForm = document.getElementById("resend-form");
+    const errorMessageDiv = document.getElementById("error-message");
+    let timeLeft = 59;
+
+    function startTimer() {
+        const timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerElement.innerHTML = "00:00";
+                resendForm.style.display = "block";
+                document.getElementById("otpInput").disabled = true;
+            } else {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.innerHTML = `${String(minutes).padStart(1, '0')}:${String(seconds).padStart(2, '0')}`;
+                timeLeft--;
+            }
+        }, 1000);
+    }
+
+    window.onload = startTimer;
+
+    // Handle OTP verification without reloading the page
+    document.getElementById("otp-form").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent the default form submission
+
+        const otp = document.getElementById("otpInput").value;
+
+        fetch("/verify-otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ otp: otp })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect;  // Redirect on success
+            } else {
+                // Show error message without reloading the page
+                errorMessageDiv.innerHTML = data.errorMessage;
+                errorMessageDiv.style.display = "block";
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    });
+</script>

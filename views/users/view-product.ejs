@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/path/to/your/styles.css">
+    <style>
+        /* Order Summary Styles */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            border-radius: 15px;
+        }
+
+        .order-details p,
+        .address-details p {
+            margin-bottom: 0.5rem;
+        }
+
+        .product-image {
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            text-align: left;
+        }
+
+        .btn-small {
+            width: 50%;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .shipping-section,
+        .order-summary-section {
+            text-align: left;
+        }
+
+        .section-divider {
+            border-right: 1px solid #ccc;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        /* Reduced header size */
+        .card-header h1 {
+            font-size: 1.75rem; /* Decreased size */
+        }
+
+        /* Responsive design to ensure good layout on smaller screens */
+        @media (max-width: 768px) {
+            .section-divider {
+                border-right: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white text-center">
+                <h1>Order Summary</h1> <!-- Reduced the font size in CSS -->
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Shipping Address Section (left side inside the same box) -->
+                    <div class="col-md-4 section-divider">
+                        <h4>Shipping Address</h4>
+                        <div class="address-details">
+                            <p><strong>Name:</strong> <%= order.address[0].username %></p>
+                            <p><strong>Mobile:</strong> <%= order.address[0].mobile %></p>
+                            <p><strong>City:</strong> <%= order.address[0].city %></p>
+                            <p><strong>State:</strong> <%= order.address[0].state %></p>
+                            <p><strong>Pincode:</strong> <%= order.address[0].pincode %></p>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary Section (right side inside the same box) -->
+                    <div class="col-md-8">
+                        <div class="order-details">
+                            <h4>Order Details</h4>
+                            <h5>Order ID: <%= order._id %></h5>
+                            <p><strong>Date Placed:</strong> <%= new Date(order.orderDate).toLocaleDateString() %></p>
+                            
+                            <p><strong>Total Amount:</strong> ₹<%= order.totalAmount.toFixed(2) %></p>
+                        </div>
+
+                        <h5 class="mt-4">Ordered Products</h5>
+                        <div class="product-list row">
+                            <% order.products.forEach(product => { %>
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="image-container" style="position: relative;"></div>
+
+                                        <% if (product.varientId && product.varientId.productId && product.varientId.images && product.varientId.images.length > 0) { %>
+                                            <img src="<%= product.varientId.images[0] %>"
+                                                alt="<%= product.varientId.productId.productName %>"
+                                                class="card-img-top product-image">
+                                        <% } else { %>
+                                            <p>Image not available</p>
+                                        <% } %>
+                                    
+                                        
+                                        <div class="card-body">
+                                            <h5 class="card-title"><%= product.varientId.productId ? product.varientId.productId.productName : 'Unknown Product' %></h5>
+                                            <p><strong>Color:</strong> <%= product.varientId.color %></p>
+                                            <p><strong>Size:</strong> <%= product.varientId.size %></p>
+                                            <p><strong>Price:</strong> ₹<%= product.finalPrice.toFixed(2) %></p>
+                                            <p><strong>Quantity:</strong> <%= product.quantity %></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+
+                        <h5 class="mt-4">Total Amount</h5>
+                        <p>Subtotal: ₹<%= order.totalAmount.toFixed(2) %></p>
+                    </div>
+                </div>
+                <!-- Reduced button size -->
+                <!-- <div class="text-center mt-4">
+                    <a href="/shop" class="btn btn-primary btn-small">Continue Shopping</a>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+<script>
+    const images = document.querySelectorAll('.product-image');
+const lens = document.getElementById('zoom-lens');
+
+images.forEach(image => {
+    image.addEventListener('mouseover', function() {
+        lens.style.display = 'block';
+        lens.style.width = '100px'; // Adjust size
+        lens.style.height = '100px'; // Adjust size
+        lens.style.backgroundImage = `url(${this.src})`;
+        lens.style.backgroundSize = `${this.width * 2}px ${this.height * 2}px`; // Zoom in 2x
+    });
+
+    image.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left - lens.offsetWidth / 2;
+        const y = e.clientY - rect.top - lens.offsetHeight / 2;
+        lens.style.left = `${x}px`;
+        lens.style.top = `${y}px`;
+        lens.style.backgroundPosition = `-${x * 2}px -${y * 2}px`; // Adjust background position
+    });
+
+    image.addEventListener('mouseout', function() {
+        lens.style.display = 'none';
+    });
+});
+
+</script>

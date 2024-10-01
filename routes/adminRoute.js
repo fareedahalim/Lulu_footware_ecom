@@ -5,15 +5,22 @@ const auth = require("../middlewares/adminAuth");
 const adminController = require("../controllers/adminController");
 const customerController = require("../controllers/customerController");
 const categoryController=require("../controllers/categoryController")
+const orderController=require("../controllers/orderController")
+const coupenController=require('../controllers/coupenController')
+const offerController=require('../controllers/OfferController');
 const multerMiddleware=require("../middlewares/multer").multerMiddleware
 router.use(nocache());
 
 router.get("/pageError", adminController.pageError);
 router.get("/login", auth.isLogout, adminController.loadLogin);
 router.post("/login", adminController.login);
-router.get("/", auth.isLogin, adminController.loadDashboard);
 router.get("/logout", adminController.logout);
 
+//dashboard
+router.get("/", auth.isLogin, adminController.loadDashboard);
+router.post("/dashboard",auth.isLogin, adminController.loadDashboard)
+router.get('/download-pdf',auth.isLogin,adminController.downloadPDF)
+router.get('/download-excel',auth.isLogin, adminController.downloadExcel);
 //user Management
 router.get("/users",auth.isLogin,customerController.customerInfo)
 router.get("/blockCustomer",auth.isLogin,customerController.customerBlocked)
@@ -48,14 +55,39 @@ router.post('/add-product',auth.isLogin,categoryController.addNewProduct)
 router.get('/edit-product/:prodectId',auth.isLogin,categoryController.loadEditProduct)
 router.post('/edit-product/:productId',auth.isLogin,categoryController.editProduct)
 router.post('/products/:productId/update-status',auth.isLogin,categoryController.updateProductStatus)
+// router.post('/delete-variant/:id', auth.isLogin,categoryController.deleteVariant);
+router.post('/delete-variant/:variantId', auth.isLogin,categoryController.deleteVariant);
+
 
 // router.get('/varient',auth.isLogin,categoryController)
 router.get('/add-varient/:productId',auth.isLogin,categoryController.loadAddVarient)
 router.post('/add-varient/:productId',auth.isLogin,multerMiddleware.array('images', 3), categoryController.addVarient);
 router.get('/varient/:productId',auth.isLogin,categoryController.loadVarient)
 router.get('/edit-varient/:varientId',auth.isLogin,categoryController.loadEditVarient)
-router.post('/edit-varient/:varientId',auth.isLogin,categoryController.editVarient)
+router.post('/edit-varient/:varientId',categoryController.editVarient)
+// router.post('/updateStock/:varientId',auth.isLogin,categoryController.editStock)
 
+//order management
+router.get('/orderList',auth.isLogin,orderController.loadOrder);
+router.post('/canceled-orders/:orderId',auth.isLogin, orderController.confirmOrderCancellation)
+router.post('/update-status/:orderId',auth.isLogin, orderController.updateStatus)
+
+//coupen management
+router.get('/coupon',coupenController.loadCoupon)
+router.get('/add-coupon',coupenController.loadAddCoupon)
+router.post('/add-coupon',coupenController.addCoupon)
+router.get('/edit-coupon/:couponId',coupenController.loadEditCoupon)
+router.post('/update-coupon/:couponId',coupenController.editCoupon)
+router.get('/coupon/:couponId',coupenController.deleteCoupon)
+//offer management
+router.get('/offers',offerController.listOffer);
+router.get('/add-offer',offerController.loadAddOffer)
+router.post('/add-offer',offerController.addOffer)
+router.get('/edit-offer/:offerId',offerController.loadEditOffer)
+router.post('/edit-offer/:offerId',offerController.editOffer)
+router.get('/delete-offer/:offerId',offerController.deleteOffer)
+//reoprt
+// router.get('/dashboard',adminController.loadReport)
 module.exports = router;
 
 

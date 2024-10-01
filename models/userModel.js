@@ -42,22 +42,30 @@ const userSchema = new mongoose.Schema({
       },
     cart: [
         {
-          product: {
-             type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-          //quantity: Number,
+          varient: {
+             type: mongoose.Schema.Types.ObjectId, ref: 'Varient' },
+            quantity: Number,
         }
       ],
-      wallet:[
+      wallet:
         {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Wishlist"
-        }
+          type: Number,
+          default: 0,
+        },
+        walletTransactions: [
+          {
+              type: { type: String, enum: ['credit', 'debit'], required: true },  // 'credit' for adding, 'debit' for subtracting
+              amount: { type: Number, required: true },
+              description: { type: String },  // e.g., "Refund from order #12345", "Payment for order #54321"
+              date: { type: Date, default: Date.now }
+          }
       ],
+      
       wishlist:[
         { 
-           product: { 
+          varient: { 
             type: mongoose.Schema.Types.ObjectId,
-             ref: 'Product'
+             ref: 'Varient'
              },
       
         }
@@ -66,15 +74,17 @@ const userSchema = new mongoose.Schema({
       referalCode:{
         type:String
       },
-      redeemed:{
-        type:Boolean
-      },
+      
       redeemUsers:[
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
         }
-      ]
+      ],
+      usedCoupons: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Coupon'
+    }]
       // ,
 //     otp:{
 

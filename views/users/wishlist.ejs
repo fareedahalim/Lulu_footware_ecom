@@ -1,0 +1,128 @@
+<%- include("../../views/partials/user/header") %>
+<style>
+    .page-content {
+        padding-top: 60px; /* Adjust the value based on the height of your navbar */
+    }
+    body {
+        padding-top: 60px; /* The same height as your fixed navbar */
+    }
+</style>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Wishlist</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="/wishlist">Wishlist</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="page-content">
+    <div class="cart">
+        <div class="container">
+            <div class="row">
+                <% if (user.wishlist.length > 0) { %>
+                    <div class="col-lg-12">
+                        <table class="table table-cart table-mobile" style="width: 95%; margin: 0 auto;">
+                            <thead style="background-color: #f2f2f2;">
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Stock Status</th>
+                                    <th>Add to Cart</th>
+                                    <th>Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% user.wishlist.forEach(wishlistitem => { %>
+                                    <tr>
+                                        <td>
+                                            <figure class="product-media">
+                                                <% if (wishlistitem.varient.images && wishlistitem.varient.images.length > 0) { %>
+                                                    <a href="/product/<%= wishlistitem.varient.productId._id %>">
+                                                        <img src="<%= wishlistitem.varient.images[0] %>" alt="Product image" style="width: 100px;">
+                                                    </a>
+                                                <% } else { %>
+                                                    <p>Image not available</p>
+                                                <% } %>
+                                            </figure>
+                                        </td>
+                                        <td>
+                                            <h3 class="product-title">
+                                                <a href="/product/<%= wishlistitem.varient.productId._id %>">
+                                                    <%= wishlistitem.varient.productId.productName || "Product Name Not Available" %>
+                                                </a>
+                                            </h3>
+                                        </td>
+                                        <td>Rs.<%= wishlistitem.varient.price || "Price Not Available" %></td>
+                                        <td>
+                                            <% if (wishlistitem.varient.stock > 0) { %>
+                                                <span class="in-stock">In Stock</span>
+                                            <% } else { %>
+                                                <span class="out-of-stock">Out of Stock</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (wishlistitem.varient.stock > 0) { %>
+                                                <a href="/add-to-cart/<%= wishlistitem.varient._id %>" class="btn-product btn-cart"><span>Add to Cart</span></a>
+                                            <% } else { %>
+                                                <span class="btn-product btn-out-of-stock"><span>Out of Stock</span></span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <button class="btn-remove" onclick="confirmRemoval('<%= wishlistitem.varient._id %>')">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+
+                        <!-- Buttons Below the Table -->
+                        <div class="summary summary-cart" style="margin-top: 20px; text-align: center;">
+                            <a href="/shop" class="btn btn-outline-dark btn-block"
+                               style="background-color: #ea8dd9; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-size: 16px; margin-top: 10px;">
+                               CONTINUE SHOPPING
+                            </a>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="col-lg-12">
+                        <div class="empty-cart-message" style="text-align: center; padding: 50px;">
+                            <p>Your wishlist is currently empty.</p>
+                            <a href="/shop" class="btn btn-primary">Go to Shop</a>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("../../views/partials/user/footer") %>
+
+<script>
+    // Function to confirm product removal
+    function confirmRemoval(varientId) {
+        Swal.fire({
+            title: 'Confirm Removal',
+            text: 'Are you sure you want to remove this product from your wishlist?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Remove'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href ='/wishlist/' + varientId;
+            }
+        });
+    }
+</script>

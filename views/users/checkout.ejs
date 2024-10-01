@@ -1,0 +1,521 @@
+
+<%- include("../../views/partials/user/header") %>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<style>
+     .page-content {
+        padding-top: 60px; /* Adjust the value based on the height of your navbar */
+    }
+    body {
+        padding-top: 60px;
+    }
+
+    .breadcrumb-area {
+        background-image: url('img/bg-img/breadcrumb.jpg');
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        padding: 60px 0;
+        margin-bottom: 40px;
+    }
+
+    .breadcrumb-area h2 {
+        font-size: 36px;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .checkout-area {
+        padding: 60px 0;
+        background-color: #f8f9fa;
+    }
+
+    .checkout-details,
+    .order-summary {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .checkout-details h5,
+    .order-summary h5 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .order-summary ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .order-summary ul li {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .order-summary ul li:last-child {
+        border-bottom: none;
+    }
+
+    .payment-method {
+        margin-top: 20px;
+    }
+    .address-box {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .address-box .card-body {
+        padding: 15px;
+    }
+
+    .address-box .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .address-box .card-title {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+
+    .address-box .card-text {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .address-box input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    .address-box label {
+        font-size: 0.875rem;
+    }
+    .error-message {
+            color: red;
+            font-size: 12px;
+        }
+</style>
+</head>
+<body>
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Checkout</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="/checkout">Checkout</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="address-box">
+                
+                <h4>Select Your Address</h4>
+<% if (error.length > 0) { %> <!-- Check if there's an error -->
+    <div class="alert alert-danger">
+        <%= error[0] %> <!-- Output the first error message -->
+    </div>
+<% } %>
+                
+                
+                 <form action="/saveAddress" method="post">  <!-- Repeat this block for each address -->
+                    <div class="row"> 
+                        <% if (Array.isArray(address) && address.length > 0) { %>
+                    <%address.forEach(i=>{%>
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <p class="card-title"><%=i.address[0].name%></p>
+                                    <p class="card-title"><%=i.address[0].address%></p>
+                                    <p class="card-title"><%=i.address[0].city%></p>
+                                    <p class="card-title"><%=i.address[0].pincode%></p>
+                                    <input type="radio" name="existing_address_id" value="<%= i._id %>" id="address_<%= i._id %>" required>
+                                   
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                    <% }) %>
+                    <% } else { %>
+                        <p style="color: red;">No address available.</p>
+                    <% } %>
+                    <!-- End repeat block -->
+                </div>
+                <%if(addressChecked==0){%>
+                <button type="submit" id="selectButton" class="btn btn-primary">Select address</button>
+                <%}%>
+            </form> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="checkout-area">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-7 mb-4">
+                
+                <div class="checkout-details">
+                    <h5>Billing Address</h5>
+                    <form method="POST" action="/buildingAddress" onsubmit="return checkoutValidation()">
+                        <div class="form-group">
+                            <label for="name">Name <span>*</span></label>
+                            <input type="text" class="form-control" name="name" id="name" >
+                            <span id="checkoutNameError" style="color: red;"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pincode">Mobile <span>*</span></label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" >
+                            <span id="checkoutMobileError" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Address<span>*</span></label>
+                            <input type="text" class="form-control" name="address" id="address" >
+                            <span id="checkoutAddressError" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address <span>*</span></label>
+                            <input type="email" class="form-control" name="email" id="email" >
+                            <span id="checkoutEmailError" style="color: red;"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">City <span>*</span></label>
+                            <input type="text" class="form-control" name="city" id="city" >
+                            <span id="checkoutCityError" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="landmark">pincode <span></span></label>
+                            <input type="text" class="form-control" name="pincode" id="pincode">
+                            <span id="checkoutPincodeError" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="landmark">District<span></span></label>
+                            <input type="text" class="form-control" name="district" id="district">
+                            <span id="checkoutDistrictError" style="color: red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="landmark">State<span></span></label>
+                            <input type="text" class="form-control" name="state" id="state">
+                            <span id="checkoutStateError" style="color: red;"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary">save</button>
+                    </form>
+                </div>
+            </div>
+         
+            <div class="col-lg-5">
+                <div class="order-summary">
+                    <h5>Your Order</h5>
+                    <ul>
+                        <li><span>Product</span> <span>Total</span></li>
+                        <!-- Repeat for each product -->
+                        <% userCart.cart.forEach(item=>{%> 
+                        <li>
+                            <span><%=item.varient.productId.productName%><span class="text-danger">x <%= item.quantity %> </span></span>
+                            <span><%= item.finalPrice* item.quantity %></span>
+                        </li>
+                        <% }) %>
+                        <!-- End repeat -->
+                        <li><span>Shipping</span> <span>Shipping Cost</span></li>
+                        <li><span>SubTotal</span> <span><%= sum%></span></li>
+                        <li><span>Coupon Discount</span> <span id="discount">- 0</span></li>
+                    </ul>
+                    <div class="coupon-field">
+                        <a href="/loadViewCoupon">View Coupons</a>
+                        <input type="text" class="form-control" id="coupon_code" placeholder="Enter coupon code">
+                        <button id="applyCoupon" class="btn btn-primary mt-2">Apply Coupon</button>
+                        <p id="couponMessage" class="text-danger"></p> <!-- For showing coupon errors -->
+                    </div>
+                    <li>
+                    
+                            
+                        
+                            <span >Total</span> <span id="sum"><%= sum%></span></li>
+                            
+                            <form id="orderForm" action="/placeOrder" method="POST">
+                                <div class="payment-method">
+                                    <h5>Payment Method</h5>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="cod" name="payment_method" value="COD" class="custom-control-input" required>
+                                        <label class="custom-control-label" for="cod">Cash on Delivery</label>
+                                        <div id="error5" class="error-message"></div> 
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="razorpay" name="payment_method" value="Razorpay" class="custom-control-input" required>
+                                        <label class="custom-control-label" for="razorpay">Razorpay</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="wallet" name="payment_method" value="Wallet" class="custom-control-input" required>
+                                        <label class="custom-control-label" for="wallet">Wallet</label>
+                                    </div>
+                                </div>
+                               
+                                
+                                
+                                <button type="submit" class="btn btn-primary">Place Order</button>
+                            </form>
+                            
+                    
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectButton = document.getElementById('selectButton');
+
+        // Function to update button text based on selected address
+        function updateButtonText() {
+            const radioButtons = document.querySelectorAll('input[name="existing_address_id"]');
+            const isChecked = Array.from(radioButtons).some(radio => radio.checked);
+
+            if (addressChecked==1) {
+                selectButton.textContent = 'Address Selected';
+            } else {
+                selectButton.textContent = 'Select any address';
+            }
+        }
+
+        // Listen for changes on the radio buttons
+        document.querySelectorAll('input[name="existing_address_id"]').forEach(radio => {
+            radio.addEventListener('change', updateButtonText);
+        });
+
+        // Initialize button text based on the initial state
+        updateButtonText();
+    });
+
+
+
+
+    document.getElementById('applyCoupon').addEventListener('click', function(event) {
+    event.preventDefault();
+    const sums = document.getElementById('sum')
+    
+    const couponCode = document.getElementById('coupon_code').value;
+    const originalTotal = <%= sum %>; // Use EJS to inject the correct value from the server
+    console.log("originalTotal------------",originalTotal)
+    const discountElement = document.getElementById('discount');
+    const totalElement = document.querySelector('.order-summary ul li:nth-last-child(2) span:last-child');
+    console.log("discountElement------------",discountElement)
+    console.log("totalElement------------",totalElement)
+   
+    // Updated to target the correct total display
+    const couponMessage = document.getElementById('couponMessage');
+    console.log("couponMessage------------",couponMessage)
+    // Make an AJAX request to validate the coupon
+    fetch('/applyCoupon', {
+        
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ couponCode: couponCode }),
+    
+})
+.then(response => {
+    console.log(response);  // Log the entire response
+    return response.json(); // Try to parse it as JSON
+})
+    .then(data => {
+        if (data.success) {
+            const discount = (originalTotal * data.coupon.discountPercentage) / 100;
+            console.log("discount",discount)
+            
+            discountElement.textContent = discount;
+            
+            const newTotal = originalTotal - discount;
+            console.log("newTotal",newTotal)
+
+            sums.textContent = newTotal
+          
+            // discountElement.textContent = `- ${discount.toFixed(2)}`;  // Show the discount
+            totalElement.textContent = newTotal.toFixed(2);  // Update the total
+            couponMessage.textContent = "Coupon applied successfully!";
+            couponMessage.style.color = 'green';
+        } else {
+            couponMessage.textContent = "Invalid coupon code!";
+            couponMessage.style.color = 'red';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        couponMessage.textContent = "Something went wrong!";
+        couponMessage.style.color = 'red';
+    });
+});
+//
+function checkoutValidation() {
+        var name = document.getElementById('name').value;
+        var mobile = document.getElementById('mobile').value;
+        var address = document.getElementById('address').value;
+        var email = document.getElementById('email').value;
+        var city = document.getElementById('city').value;
+        var pincode = document.getElementById('pincode').value;
+        var district = document.getElementById('district').value;
+        var state = document.getElementById('state').value;
+
+        // Clear previous error messages
+        document.getElementById('checkoutNameError').innerText = "";
+        document.getElementById('checkoutMobileError').innerText = "";
+        document.getElementById('checkoutAddressError').innerText = "";
+        document.getElementById('checkoutEmailError').innerText = "";
+        document.getElementById('checkoutCityError').innerText = "";
+        document.getElementById('checkoutPincodeError').innerText = "";
+        document.getElementById('checkoutDistrictError').innerText = "";
+        document.getElementById('checkoutStateError').innerText = "";
+
+        // Validate Name
+        if (name.trim() === "") {
+            document.getElementById('checkoutNameError').innerText = "Name is required";
+            return false;
+        }
+        if (!/^[a-zA-Z\s]+$/.test(name)) {
+            document.getElementById('checkoutNameError').innerText = "Name must contain only letters";
+            return false;
+        }
+
+        // Validate Mobile
+        if (mobile.trim() === '') {
+            document.getElementById('checkoutMobileError').innerText = 'Mobile number is required.';
+            return false;
+        }
+        var phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(mobile)) {
+            document.getElementById('checkoutMobileError').innerText = 'Invalid mobile number format.';
+            return false;
+        }
+
+        // Validate Address
+        if (address.trim() === "") {
+            document.getElementById('checkoutAddressError').innerText = "Address is required";
+            return false;
+        }
+
+        // Validate Email
+        if (email.trim() === "") {
+            document.getElementById('checkoutEmailError').innerText = "Email is required";
+            return false;
+        }
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            document.getElementById('checkoutEmailError').innerText = "Invalid email format";
+            return false;
+        }
+
+        // Validate City
+        if (city.trim() === "") {
+            document.getElementById('checkoutCityError').innerText = "City is required";
+            return false;
+        }
+        if (!/^[a-zA-Z\s]+$/.test(city)) {
+            document.getElementById('checkoutCityError').innerText = "City must contain only letters";
+            return false;
+        }
+
+        // Validate Pincode
+        if (pincode.trim() === "") {
+            document.getElementById('checkoutPincodeError').innerText = "Pincode is required";
+            return false;
+        } else {
+            var pincodeRegex = /^\d{6}$/; // Assuming pincode is 6 digits
+            if (!pincodeRegex.test(pincode)) {
+                document.getElementById('checkoutPincodeError').innerText = 'Pincode must be a 6 digit number';
+                return false;
+            }
+        }
+
+        // Validate District
+        if (district.trim() === "") {
+            document.getElementById('checkoutDistrictError').innerText = "District is required";
+            return false;
+        }
+        if (!/^[a-zA-Z\s]+$/.test(district)) {
+            document.getElementById('checkoutDistrictError').innerText = "District must contain only letters";
+            return false;
+        }
+
+        // Validate State
+        if (state.trim() === "") {
+            document.getElementById('checkoutStateError').innerText = "State is required";
+            return false;
+        }
+        if (!/^[a-zA-Z\s]+$/.test(state)) {
+            document.getElementById('checkoutStateError').innerText = "State must contain only letters";
+            return false;
+        }
+
+        // All validations passed
+        return true;
+    }
+//
+document.getElementById('orderForm').addEventListener('submit', function(event) {
+    const total = parseFloat(document.getElementById('sum').innerText.replace('₹', '').replace(',', ''));
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+    if (paymentMethod === 'COD' && total > 1000) {
+        event.preventDefault();  // Prevent form submission
+        document.getElementById('error5').innerText = 'COD is not allowed for orders above ₹1000. Please select another payment method.';
+    } else {
+        document.getElementById('error5').innerText = ''; // Clear any previous error
+    }
+});
+
+<% if (error.length > 0) { %>
+            toastr.error('<%= error[0] %>', 'Error'); // Use the first error message
+  <% } %>
+    </script>
+   
+    
+    
+    <%- include("../../views/partials/user/footer") %>
+

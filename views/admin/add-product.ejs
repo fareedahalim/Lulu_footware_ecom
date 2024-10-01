@@ -32,6 +32,10 @@
         background-color: rgba(0, 0, 0, 0.6);
         border-radius: 10px;
     }
+    .error-message {
+            color: red;
+            font-size: 12px;
+        }
 </style>
 
 <div class="main-panel">
@@ -40,7 +44,7 @@
             <div class="card-body">
                 <h2 class="card-title text-center" style="color: #0A6DAA; font-weight: bold;">Add Product</h2>
                 <% if (typeof errorMessage !== 'undefined') { %>
-                    <div class="alert alert-danger" role="alert">
+                    <div style="color: red; font-size: 0.875rem;">
                         <%= errorMessage %>
                     </div>
                 <% } %>

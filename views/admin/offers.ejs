@@ -1,0 +1,75 @@
+<%- include("../../views/partials/admin/header") %>
+<div class="page-header">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">
+                    Offer Management<br>
+                </h2>
+                <br><br>
+                <div class="container">
+                    <div class="row">
+                        <div class="content">
+                            <h5>
+                                <a href="/admin/add-offer" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px; text-decoration: none; display: inline-block;">Add Offer</a>
+                            </h5>
+                            <br>
+                            <br>
+                            <div class="container">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Entity</th>
+                                            <th>Discount</th>
+                                            <th>Valid From</th>
+                                            <th>Valid To</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (offers.length > 0) { %>
+                                            <% offers.forEach(offer => { %>
+                                                <tr>
+                                                    <td><%= offer.offerType %></td>
+
+                                                    <td>
+                                                        <% if (offer.offerType === 'product') { %>
+                                                            <%= offer.entityId.productName %>
+                                                        <% } else if (offer.offerType === 'brand') { %>
+                                                            <%= offer.entityId.brandName %>
+                                                        <% } %>
+                                                    </td>
+                                                    
+                                                    <td><%= offer.discountPercentage %> %</td>
+                                                    <td><%= new Date(offer.validFrom).toLocaleDateString() %></td>
+                                                    <td><%= new Date(offer.validTo).toLocaleDateString() %></td>
+                                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                                        <button class="btn" style="background-color: yellow; color: black; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer;">
+                                                            <a href="/admin/edit-offer/<%= offer._id %>" style="color: inherit; text-decoration: none;">Edit</a>
+                                                        </button>
+                                                        <button class="delete-button" data-id="<%= offer._id %>" style="background-color: red; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 4px;">
+                                                            <a href="/admin/delete-offer/<%= offer._id %>" style="color: inherit; text-decoration: none;">Delete</a>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="6" style="text-align: center;">No offers available</td>
+                                            </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+                <a href="/admin/dashboard" style="background-color: black; color: white; padding: 2px 8px; border-radius: 3px; border: 1px solid #000; font-size: 8px; text-decoration: none; display: inline-block; width: 100px; text-align: center;">Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/scripts.js"></script>
+<%- include("../../views/partials/admin/footer") %>

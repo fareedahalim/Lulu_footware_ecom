@@ -1,0 +1,287 @@
+<%- include("../../views/partials/admin/header") %>
+<style>
+    /* General Form Styling */
+    .container-scroller {
+        background-color: #f4f4f9;
+        padding: 30px 15px;
+        min-height: 100vh;
+    }
+
+    .main-panel {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 30px;
+        text-align: center;
+        color: #0a6daa;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-size: 15px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .form-control {
+        font-size: 14px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #0a6daa;
+        box-shadow: 0px 0px 8px rgba(10, 109, 170, 0.3);
+    }
+
+    .btn-primary {
+        background-color: #0a6daa;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #084e82;
+    }
+
+    .errorMessage, .error-message {
+        color: red;
+        font-size: 0.875rem;
+    }
+
+    .form-group select {
+        height: 45px;
+    }
+
+    /* Button styling */
+    .form-group button {
+        width: 100%;
+        background-color: #0a6daa;
+        color: #fff;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-group button:hover {
+        background-color: #084e82;
+        cursor: pointer;
+    }
+
+    /* Responsive design */
+    @media screen and (max-width: 768px) {
+        .main-panel {
+            padding: 20px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+        }
+
+        .form-control {
+            font-size: 13px;
+        }
+
+        .form-group button {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+    .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Adds space between the columns */
+}
+
+.col-md-4 {
+    flex: 1; /* Ensures each column takes equal space */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 0.875rem;
+}
+
+</style>
+
+<div class="container-scroller">
+    <div class="main-panel">
+      <h2 style="color: rgb(10, 109, 170); text-align: center;">Add Coupon</h2>
+  
+      <div class="col-md-12 grid-margin stretch-card">
+        <form action="/admin/add-coupon" method="POST" id="add_user" onsubmit="return couponValidation(event)">
+          <div class="new_user">
+            <!-- Coupon Code -->
+            <div class="form-group">
+                <label for="couponCode">Coupon Code:</label>
+                <input type="text" id="couponCode" name="couponCode" >
+              <span id="codeError" style="color: red;"></span>
+              <% if (typeof errorMessage !== 'undefined') { %>
+                <div style="color: red; font-size: 0.875rem;">
+                    <%= errorMessage %>
+                </div>
+            <% } %>
+            </div>
+  
+            <!-- Discount Type and Value -->
+            <div class="form-group col-md-4">
+                <label for="discountType">Discount Type:</label>
+                <input type="text" id="discountType" name="discountType" class="form-control" value="percentage" readonly>
+            </div>
+            
+  
+              <div class="form-group col-md-4">
+                <label for="discountValue">Discount Value:</label>
+                <input type="number" id="discountValue" name="discountValue" class="form-control" placeholder="Enter discount value">
+                <span id="discountValueError" style="color: red;"></span>
+              </div>
+            </div>
+  
+            <!-- Expiration Date -->
+            <div class="form-group">
+              
+            <label for="expiryDate">Expiry Date:</label>
+           <input type="date" id="expiryDate" name="expiryDate">
+              <span id="expirationDateError" style="color: red;"></span>
+            </div>
+  
+            <!-- Min and Max Order Amount -->
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="minOrderAmount">Min Order Amount:</label>
+                  <input type="number" id="minOrderAmount" name="minPurchase" class="form-control" placeholder="Enter Min Order Amount">
+                  <span id="minOrderAmountError" class="errorMessage"></span>
+                </div>
+              </div>
+  
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="maxOrderAmount">Max Order Amount:</label>
+                  <input type="number" id="maxOrderAmount" name="maxPurchase" class="form-control" placeholder="Enter Max Order Amount">
+                  <span id="maxOrderAmountError" class="errorMessage"></span>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Description -->
+            <div class="form-group">
+              <label for="description">Description:</label>
+              <textarea name="description" id="description" cols="50" rows="10" class="form-control"></textarea>
+              <span id="descriptionError" style="color: red;"></span>
+            </div>
+  
+            <!-- Submit Button -->
+            <div class="form-group">
+              <button type="submit" class="btn text-dark update">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <script>
+  
+    function couponValidation(event) {
+        var couponCode = document.getElementById('couponCode').value;
+        var discountValue = document.getElementById('discountValue').value;
+        var expiryDate = document.getElementById('expiryDate').value;
+        var minOrderAmount = document.getElementById('minOrderAmount').value;
+        var maxOrderAmount = document.getElementById('maxOrderAmount').value;
+        var description = document.getElementById('description').value;
+
+        // Reset previous errors
+        resetCouponErrors();
+
+        var isValid = true;
+
+        // Validate coupon code
+        if (couponCode.trim() === '') {
+            document.getElementById('codeError').innerText = 'Please enter a coupon code';
+            isValid = false;
+        }
+
+        // Validate discount value
+        if (discountValue.trim() === '' || isNaN(discountValue) || discountValue <= 0) {
+            document.getElementById('discountValueError').innerText = 'Please enter a valid discount value';
+            isValid = false;
+        }   else if (Number(discountValue) > 50) {
+            document.getElementById('discountValueError').innerHTML = 'Discount value cannot be greater than 50% for percentage type.';
+            isValid=false
+          }else {
+             var discountValueRegex = /^\d+$/;
+            if (!discountValueRegex.test(discountValue) || parseInt(discountValue) <= 0) {
+        document.getElementById('discountValueError').innerHTML = 'Discount Value must be a valid positive integer';
+        event.preventDefault();
+          }
+        }
+
+
+        // Validate expiry date
+        if (expiryDate.trim() === '') {
+        document.getElementById('expirationDateError').innerText = 'Please select an expiry date';
+        isValid = false;
+        } else {
+        // Check if the expiry date is in the past
+        var selectedDate = new Date(expiryDate);
+        var today = new Date();
+        today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
+        if (selectedDate < today) {
+            document.getElementById('expirationDateError').innerText = 'Expiry date cannot be in the past';
+            isValid = false;
+        }
+    }
+
+        // Validate minimum order amount
+        if (minOrderAmount.trim() === '' || isNaN(minOrderAmount) || minOrderAmount <= 0) {
+            document.getElementById('minOrderAmountError').innerText = 'Please enter a valid minimum order amount';
+            isValid = false;
+        }
+
+        // Validate maximum order amount
+        if (maxOrderAmount.trim() === '' || isNaN(maxOrderAmount) || maxOrderAmount <= 0) {
+            document.getElementById('maxOrderAmountError').innerText = 'Please enter a valid maximum order amount';
+            isValid = false;
+        }
+
+        // Validate description
+        if (description.trim() === '') {
+            document.getElementById('descriptionError').innerText = 'Please enter a description';
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    // Function to reset error messages for coupon form
+    function resetCouponErrors() {
+        var errorMessages = document.getElementsByClassName('errorMessage');
+        for (var i = 0; i < errorMessages.length; i++) {
+            errorMessages[i].innerText = '';
+        }
+    }
+
+
+    </script>
+  <%- include("../../views/partials/admin/footer") %>

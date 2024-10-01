@@ -133,7 +133,8 @@
                         <h2 class="card-title">Add Product Details</h2>
 
                         <form action="/admin/add-varient/<%= product._id %>" method="POST" enctype="multipart/form-data"
-                            id="add_product_form" onsubmit="return varientValidation()">
+                            id="add_product_form" onsubmit="return varientValidation(event)">
+                         
                             <div class="form-group">
                                 <label for="stock">Stock</label>
                                 <input type="number" name="stock" id="stock" placeholder="Enter stock">
@@ -163,9 +164,10 @@
                                 <label for="image1">Image 1</label>
                                 <img id="previewImage1" class="image-preview" />
                                 <input type="file" name="images" id="image1" accept="image/*"
-                                    onchange="previewImage(event, 1)">
+                                    onchange="previewImage(event, 1)" >
                                 <button type="button" id="removeImage1" class="btn btn-secondary" style="display: none;"
                                     onclick="removeImage(1)">Remove</button>
+                                    <p id="image1Error" class="error-message"></p>
                             </div>
 
                             
@@ -177,6 +179,7 @@
                                     onchange="previewImage(event, 2)">
                                 <button type="button" id="removeImage2" class="btn btn-secondary" style="display: none;"
                                     onclick="removeImage(2)">Remove</button>
+                                    <p id="image2Error" class="error-message"></p>
                             </div>
 
                             <div class="form-group">
@@ -186,6 +189,7 @@
                                     onchange="previewImage(event, 3)">
                                 <button type="button" id="removeImage3" class="btn btn-secondary" style="display: none;"
                                     onclick="removeImage(3)">Remove</button>
+                                    <p id="image3Error" class="error-message"></p>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Save Product</button>
@@ -206,22 +210,21 @@
     </div>
     <script>
 
-        function varientValidation() {
-
-
+        function varientValidation(event) {
+            // event.preventDefault()
+            
             var size = document.getElementById('size').value;
             var price = document.getElementById('price').value;
             var stock = document.getElementById('stock').value;
             var color = document.getElementById('color').value;
-            var image1 = document.getElementById('image1').value;
-            var image2 = document.getElementById('image2').value;
-            var image3 = document.getElementById('image3').value;
+            var image1 = document.getElementById('image1').files[0]; // Update for file validation
+    var image2 = document.getElementById('image2').files[0]; // Update for file validation
+    var image3 = document.getElementById('image3').files[0]; // Update for file validation
 
-            // Reset previous errors
-            resetErrors();
+           resetErrors();
 
             var isValid = true;
-
+            var validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
 
 
             if (size === '') {
@@ -260,9 +263,10 @@
 
             if (image1.trim() === '') {
                 document.getElementById('image1Error').innerText = 'Please upload image 1';
+
                 isValid = false;
             }
-
+            
             if (image2.trim() === '') {
                 document.getElementById('image2Error').innerText = 'Please upload image 2';
                 isValid = false;
@@ -272,10 +276,30 @@
                 document.getElementById('image3Error').innerText = 'Please upload image 3';
                 isValid = false;
             }
+            if (!validateImage(image1, 'image1Error', validExtensions)) {
+        isValid = false;
+    }
+
+    // Validate image 2
+    if (!validateImage(image2, 'image2Error', validExtensions)) {
+        isValid = false;
+    }
+
+    // Validate image 3
+    if (!validateImage(image3, 'image3Error', validExtensions)) {
+        isValid = false;
+    }
+           
 
             return isValid;
         }
 
+        function validateImage(file, errorElementId, validExtensions) {
+    if (!file) {
+        document.getElementById(errorElementId).innerText = 'Please upload an image';
+        return false;
+    }
+}
         function resetErrors() {
             var errorMessages = document.getElementsByClassName('error-message');
             for (var i = 0; i < errorMessages.length; i++) {
@@ -285,7 +309,7 @@
 
 
 
-
+        
 
 
         function previewImage(event, index) {

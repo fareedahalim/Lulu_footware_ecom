@@ -10,7 +10,7 @@ const varientSchema = new mongoose.Schema({
     stock:
      { 
         type: Number, 
-        // required: true 
+        
     },
     color:
      { 
@@ -36,6 +36,7 @@ const varientSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    
     images: [String]
     
 })

@@ -1,0 +1,223 @@
+<%- include("../../views/partials/admin/header") %>
+<div class="main-panel">
+    <div class="page-header">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">Order List</h2>
+                    
+                    <!-- Search Form -->
+                    <form action="" method="GET" style="margin-bottom: 20px; text-align: center;">
+                        <input type="text" name="search" value="<%= search %>" placeholder="Search by Name" style="padding: 8px; border-radius: 5px; border: 2px solid #000;">
+                        <button type="submit" style="background-color: rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; border: none;">Search</button>
+                    </form>
+                
+                    <div class="table-responsive">
+                        <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
+                            <thead>
+                                <tr style="background-color: #f6c2c2; color: rgb(27, 26, 26);">
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Order ID</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Order Date</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Shipped Address</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Payment Method</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Grand Total</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Order Status</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Payment Status</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (orderData.length === 0) { %>
+                                    <tr>
+                                        <td colspan="8" class="text-center" style="border: 1px solid #ddd; padding: 8px;">No orders found.</td>
+                                    </tr>
+                                <% } else { %>
+                                    <% orderData.forEach(order => { %>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order._id %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.orderDate.toLocaleDateString() %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.address[0].username %>, <%= order.address[0].city %>, <%= order.address[0].mobile %>, <%= order.address[0].pincode %>, <%= order.address[0].state %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.payment %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">Rs.<%= order.totalAmount %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.status %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.paymentStatus %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">
+                                                <% if (order.status === 'Delivered') { %>
+                                                    <p>Product Delivered</p>
+                                                <% } else if (order.status === 'Returned') { %>
+                                                    <p>Order Returned</p>
+                                                <% } else if (order.status === 'Cancelled') { %>
+                                                    <p>Order Cancelled</p>
+                                                <% } else { %>
+                                                    <% if (order.paymentStatus === 'Failed') { %>
+                                                        <button class="btn btn-primary" id="retryPaymentBtn" style="padding: 8px 16px; border-radius: 5px;">Retry Payment</button>
+                                                    <% } else { %>
+                                                        <form action="/admin/update-status/<%=order._id %>" method="POST" style="display: flex; align-items: center; gap: 10px;">
+                                                            <select name="newStatus" style="padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px; background-color: white; color: black;">
+                                                                <option value="" disabled selected>Choose</option>
+                                                                <option value="cancelled">Cancelled</option>
+                                                                <option value="shipped">Shipped</option>
+                                                                <option value="delivered">Delivered</option>
+                                                            </select>
+                                                            <button type="submit" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px;">
+                                                                Update Status
+                                                            </button>
+                                                        </form>
+                                                    <% } %>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" style="margin-top: 20px;">
+                        <ul style="display: flex; justify-content: center; list-style: none; padding: 0;">
+                            <% if (currentPage > 1) { %>
+                                <li style="margin: 0 10px;"><a href="?page=<%= currentPage - 1 %>" style="padding: 10px 15px; background-color: #343a40; color: white; text-decoration: none; border-radius: 5px;">Previous</a></li>
+                            <% } %>
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li style="margin: 0 10px;">
+                                    <a href="?page=<%= i %>" style="padding: 10px 15px; <%= i === currentPage ? 'background-color: #007bff; color: white;' : 'background-color: #f1f1f1; color: black;' %> border-radius: 5px;">
+                                        <%= i %>
+                                    </a>
+                                </li>
+                            <% } %>
+                            <% if (currentPage < totalPages) { %>
+                                <li style="margin: 0 10px;"><a href="?page=<%= currentPage + 1 %>" style="padding: 10px 15px; background-color: #343a40; color: white; text-decoration: none; border-radius: 5px;">Next</a></li>
+                            <% } %>
+                        </ul>
+                    </div>
+                    
+                      
+                    <br><br>
+                    <a href="/admin" style="background-color: rgb(10, 109, 170); color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 10px; text-decoration: none; display: inline-block;">Back To Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("../../views/partials/admin/footer") %>
+
+<style>
+    .table-responsive {
+        margin-top: 20px;
+    }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .thead-dark th {
+        background-color: #343a40;
+        color: #ffffff;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        padding: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #dee2e6;
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 5px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 5px;
+    }
+
+    .btn-dark {
+        background-color: #343a40;
+        border-color: #343a40;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 5px;
+    }
+
+    .btn-primary:hover, .btn-danger:hover, .btn-dark:hover {
+        opacity: 0.9;
+    }
+
+    /* Add responsiveness */
+    @media (max-width: 768px) {
+        .table-responsive {
+            overflow-x: auto;
+        }
+    }
+   
+    .pagination {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    /* Center the pagination */
+  }
+
+  .pagination .page-item {
+    display: inline-block;
+    margin: 0 5px;
+  }
+
+  .pagination .page-link {
+    background-color: #ffffff;
+    color: #007bff;
+    border: 1px solid #dee2e6;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .pagination .page-link:hover {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  .pagination .active .page-link {
+    background-color: #007bff;
+    color: #ffffff;
+    border-color: #007bff;
+  }
+
+  .pagination .page-link span {
+    font-weight: bold;
+  }
+
+  @media (max-width: 768px) {
+    .pagination {
+      text-align: center;
+    }
+  }
+</style>

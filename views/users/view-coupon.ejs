@@ -1,0 +1,89 @@
+
+<style>
+    .card {
+    background-color: #ffffff;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #eaeaea;
+}
+
+.btn-primary {
+    background-color: #5a88ca;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #4a78b2;
+}
+
+</style>
+<%- include("../../views/partials/user/header") %>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Coupons</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="/loadcoupon">Coupons</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="page-content">
+    <div class="checkout">
+        <div class="container d-flex justify-content-center">
+            
+            <div class="col-lg-9">
+                <div class="card" style="border-radius: 15px; padding: 20px;">
+                    <div class="card-body">
+                        <h2 class="text-center">Available Coupons</h2>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Coupon Code</th>
+                                    <th>Discount Value</th>
+                                    <th>Expiry Date</th>
+                                    <th>Min Purchase</th>
+                                    <th>Max Purchase</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (coupons.length > 0) { %>
+                                    <% coupons.forEach(coupon => { %>
+                                        <tr>
+                                            <td><%= coupon.couponCode %></td>
+                                            <td><%= coupon.discountValue %>%</td>
+                                            <td><%= new Date(coupon.expiryDate).toLocaleDateString() %></td>
+                                            <td><%= coupon.minPurchase %></td>
+                                            <td><%= coupon.maxPurchase %></td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="5" class="text-center">No coupons available</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <div class="text-center mt-3">
+                            <button onclick="location.href='/checkout'" class="btn btn-primary" style="border-radius: 20px; padding: 10px 20px; font-size: 16px;">
+                                Go Back To Checkout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("../../views/partials/user/footer") %>

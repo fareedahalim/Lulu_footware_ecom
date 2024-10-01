@@ -1,127 +1,128 @@
 <%- include("../../views/partials/admin/header") %>
 
 <style>
-   .main-panel {
-            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU');
-            background-size: cover;
-            background-position: center;
-            min-height: 100vh;
-            padding-top: 20px;
-        }
+    /* Reuse the styles from addVarient.ejs */
+    .main-panel {
+        background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU');
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        padding-top: 20px;
+    }
 
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: rgba(255, 255, 255, 0.9);
-        }
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.9);
+    }
 
-        .card-title {
-            color: rgb(10, 109, 170);
-            text-align: center;
-            font-weight: 700;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
+    .card-title {
+        color: rgb(10, 109, 170);
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    .form-group {
+        margin-bottom: 20px;
+    }
 
-        .form-group label {
-            font-weight: 600;
-            color: #333;
-        }
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+    }
 
-        .form-group input,
-        .form-group select {
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    .form-group input,
+    .form-group select {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: rgb(10, 109, 170);
-            outline: none;
-            box-shadow: 0 0 5px rgba(10, 109, 170, 0.5);
-        }
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: rgb(10, 109, 170);
+        outline: none;
+        box-shadow: 0 0 5px rgba(10, 109, 170, 0.5);
+    }
 
-        .btn-primary {
-            background-color: rgb(10, 109, 170);
-            border-color: rgb(10, 109, 170);
-            padding: 10px 20px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.3s;
-            border-radius: 5px;
-            width: 100%;
-        }
+    .btn-primary {
+        background-color: rgb(10, 109, 170);
+        border-color: rgb(10, 109, 170);
+        padding: 10px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.3s;
+        border-radius: 5px;
+        width: 100%;
+    }
 
-        .btn-primary:hover {
-            background-color: rgb(8, 88, 137);
-            transform: translateY(-2px);
-        }
+    .btn-primary:hover {
+        background-color: rgb(8, 88, 137);
+        transform: translateY(-2px);
+    }
 
-        .error-message {
-            color: red;
-            font-size: 12px;
-        }
+    .error-message {
+        color: red;
+        font-size: 12px;
+    }
 
-        .image-preview {
-            max-width: 100px;
-            max-height: 100px;
-            margin-bottom: 10px;
-            display: block;
-        }
+    .image-preview {
+        max-width: 100px;
+        max-height: 100px;
+        margin-bottom: 10px;
+        display: block;
+    }
 
-        .btn {
-            margin-top: 10px;
-            display: inline-block;
-            text-align: center;
-        }
+    .btn {
+        margin-top: 10px;
+        display: inline-block;
+        text-align: center;
+    }
 
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
 
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
 
-        .content-wrapper {
-            padding: 40px;
-        }
+    .content-wrapper {
+        padding: 40px;
+    }
 
-        #cropperModal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    #cropperModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            position: relative;
-        }
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        position: relative;
+    }
 
-        #imageToCrop {
-            max-width: 100%;
-            max-height: 500px;
-        }
+    #imageToCrop {
+        max-width: 100%;
+        max-height: 500px;
+    }
 </style>
 
 <div class="main-panel">
@@ -131,54 +132,42 @@
                 <div class="card-body">
                     <h2 class="card-title">Edit Product Variant</h2>
 
-                    <form action="/admin/edit-varient/<%= varient._id %>" method="POST" enctype="multipart/form-data"
-                        id="edit_varient_form" onsubmit="return varientValidation()">
+                    <form action="/admin/edit-varient/<%= varient._id %>" method="POST" 
+                        id="edit_varient_form" onsubmit="return varientValidation(event)">
+                         
                         <div class="form-group">
                             <label for="stock">Stock</label>
-                            <input type="number" name="stock" id="stock" placeholder="Enter stock" value="<%= varient.stock %>">
+                            <input type="number" name="stock" id="stock" value="<%= varient.stock %>" placeholder="Enter stock">
                             <p id="stockError" class="error-message"></p>
                         </div>
 
                         <div class="form-group">
                             <label for="color">Color</label>
-                            <input type="text" name="color" id="color" class="form-control" placeholder="Enter color" value="<%= varient.color %>">
+                            <input type="text" name="color" id="color" class="form-control"
+                                value="<%= varient.color %>" placeholder="Enter color">
                             <p id="colorError" class="error-message"></p>
                         </div>
 
                         <div class="form-group">
                             <label for="price">Price</label>
-                            <input type="number" name="price" id="price" placeholder="Enter price" value="<%= varient.price %>">
+                            <input type="number" name="price" id="price" value="<%= varient.price %>" placeholder="Enter price">
                             <p id="priceError" class="error-message"></p>
                         </div>
 
                         <div class="form-group">
                             <label for="size">Size</label>
-                            <input type="number" name="size" id="size" placeholder="Enter size" value="<%= varient.size %>">
+                            <input type="number" name="size" id="size" value="<%= varient.size %>" placeholder="Enter size">
                             <p id="sizeError" class="error-message"></p>
                         </div>
 
-                        <!-- Image preview and upload handling -->
-                        <% for (let i = 1; i <= 3; i++) { %>
-                        <div class="form-group">
-                            <label for="image<%= i %>">Image <%= i %></label>
-                            <img id="previewImage<%= i %>" class="image-preview" src="<%= varient.images[i-1] ? varient.images[i-1].url : '' %>" />
-                            <input type="file" name="images" id="image<%= i %>" accept="image/*" onchange="previewImage(event, <%= i %>)">
-                            <button type="button" id="removeImage<%= i %>" class="btn btn-secondary" style="<%= varient.images[i-1] ? 'display:inline-block;' : 'display:none;' %>" onclick="removeImage(<%= i %>)">Remove</button>
-                        </div>
-                        <% } %>
-
-                        <button type="submit" class="btn btn-primary">Update Variant</button>
+                        
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
 
-                    <div id="cropperModal" style="display: none;">
-                        <div class="modal-content">
-                            <img id="imageToCrop" src="" style="max-width: 100%;" />
-                            <button id="cropButton" class="btn btn-primary">Crop & Save</button>
-                        </div>
-                    </div>
+                  
 
                     <br>
-                    <a href="/admin/varient" class="btn btn-secondary">Back to Products</a>
+                    <a href="/admin/products" class="btn btn-secondary">Back to Products</a>
                 </div>
             </div>
         </div>
@@ -186,144 +175,76 @@
 </div>
 
 <script>
-   function varientValidation() {
 
 
-var size = document.getElementById('size').value;
-var price = document.getElementById('price').value;
-var stock = document.getElementById('stock').value;
-var color = document.getElementById('color').value;
-var image1 = document.getElementById('image1').value;
-var image2 = document.getElementById('image2').value;
-var image3 = document.getElementById('image3').value;
+    // Reuse the JavaScript functions from addVarient.ejs
+   
+    function varientValidation(event) {
+        // Prevent form submission
+        event.preventDefault();
 
-// Reset previous errors
-resetErrors();
+        // Get form elements
+        const stock = document.getElementById('stock').value.trim();
+        const color = document.getElementById('color').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const size = document.getElementById('size').value.trim();
 
-var isValid = true;
+        let isValid = true;
 
+        // Clear previous error messages
+        document.getElementById('stockError').innerText = "";
+        document.getElementById('colorError').innerText = "";
+        document.getElementById('priceError').innerText = "";
+        document.getElementById('sizeError').innerText = "";
 
-
-if (size === '') {
-    document.getElementById('sizeError').innerText = 'Please select a size';
-    isValid = false;
-}
-
-if (price.trim() === '') {
-    document.getElementById('priceError').innerText = 'Please enter price';
-    isValid = false;
-} else if (isNaN(price)) {
-    document.getElementById('priceError').innerText = 'Only numbers are allowed';
-    isValid = false;
-} else if (price <= 0) {
-    document.getElementById('priceError').innerText = 'Price should be positive';
-    isValid = false;
-}
-
-
-if (stock.trim() === '') {
-    document.getElementById('stockError').innerText = 'Please enter stock';
-    isValid = false;
-} else if (isNaN(stock)) {
-    document.getElementById('stockError').innerText = 'Only numbers are allowed';
-    isValid = false;
-} else if (stock <= 0) {
-    document.getElementById('stockError').innerText = 'stock should be positive';
-    isValid = false;
-}
-if (color === '') {
-    document.getElementById('colorError').innerText = 'Please enter color';
-    isValid = false;
-}
-
-
-
-if (image1.trim() === '') {
-    document.getElementById('image1Error').innerText = 'Please upload image 1';
-    isValid = false;
-}
-
-if (image2.trim() === '') {
-    document.getElementById('image2Error').innerText = 'Please upload image 2';
-    isValid = false;
-}
-
-if (image3.trim() === '') {
-    document.getElementById('image3Error').innerText = 'Please upload image 3';
-    isValid = false;
-}
-
-return isValid;
-}
-
-function resetErrors() {
-var errorMessages = document.getElementsByClassName('error-message');
-for (var i = 0; i < errorMessages.length; i++) {
-    errorMessages[i].innerText = '';
-}
-}
-
-
-
-
-
-function previewImage(event, previewId) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function () {
-            const imageElement = document.getElementById('imageToCrop');
-            imageElement.src = reader.result;
-            imageElement.onload = function () {
-                // Initialize Cropper.js on the image
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(imageElement, {
-                    aspectRatio: 1, // Adjust the aspect ratio as needed
-                    viewMode: 1,
-                });
-                // Show the modal
-                document.getElementById('cropperModal').style.display = 'block';
-            }
+        // Validate stock (positive integer including zero)
+        if (!/^\d+$/.test(stock)) {
+            document.getElementById('stockError').innerText = "Stock must be a non-negative integer.";
+            isValid = false;
         }
-        reader.readAsDataURL(file);
-        currentImageInput = event.target;
 
-        // Show the remove button
-        const removeButton = document.getElementById(`removeImage${previewId}`);
-        removeButton.style.display = 'inline-block';
+        // Validate color (alphabetic characters only, both upper and lowercase allowed)
+        if (!/^[a-zA-Z]+$/.test(color)) {
+            document.getElementById('colorError').innerText = "Color must contain only letters.";
+            isValid = false;
+        }
+
+        // Validate price (positive integer including zero)
+        if (!/^\d+$/.test(price)) {
+            document.getElementById('priceError').innerText = "Price must be a non-negative integer.";
+            isValid = false;
+        }
+
+        // Validate size (optional, assuming you want to validate for positive integers as well)
+        if (size && !/^\d+$/.test(size)) {
+            document.getElementById('sizeError').innerText = "Size must be a non-negative integer if provided.";
+            isValid = false;
+        }
+
+        // If the form is valid, submit it
+        if (isValid) {
+            document.getElementById('edit_varient_form').submit();
+        }
     }
-}
 
 
-document.getElementById('cropButton').addEventListener('click', function () {
-console.log('hi fareeda beegum')
-const canvas = cropper.getCroppedCanvas();
-const croppedImageDataUrl = canvas.toDataURL('image/jpeg');
 
-// Set the cropped image as the input value
-const inputId = currentImageInput.id;
-const previewImage = document.getElementById(`previewImage${inputId.replace('image', '')}`);
-previewImage.src = croppedImageDataUrl;
-previewImage.style.display = 'block';
-currentImageInput.value = ''; // Clear the file input
+    function resetErrors() {
+        var errorMessages = document.getElementsByClassName('error-message');
+        for (var i = 0; i < errorMessages.length; i++) {
+            errorMessages[i].innerText = '';
+        }
+    }
 
-// Hide the modal and destroy the cropper instance
-document.getElementById('cropperModal').style.display = 'none';
-cropper.destroy();
-});
+    function previewImage(event, index) {
+        // Similar image preview and cropping functionality as in addVarient.ejs
+    }
 
-function removeImage(imageNumber) {
-const previewImage = document.getElementById(`previewImage${imageNumber}`);
-previewImage.src = '';
-previewImage.style.display = 'none';
-const input = document.getElementById(`image${imageNumber}`);
-input.value = ''; // Clear the file input
-}
-</script>
-
-
+    function removeImage(index) {
+        document.getElementById('image' + index).value = '';
+        document.getElementById('previewImage' + index).src = '';
+        document.getElementById('removeImage' + index).style.display = 'none';
+    }
 </script>
 
 <%- include("../../views/partials/admin/footer") %>

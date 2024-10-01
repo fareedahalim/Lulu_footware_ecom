@@ -1,0 +1,96 @@
+<%- include("../../views/partials/admin/header") %>
+<div class="page-header">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">
+                    Edit Offer<br>
+                </h2>
+                <br><br>
+                <div class="container">
+                    <div class="row">
+                        <div class="content">
+                            <form action="/admin/edit-offer/<%= offer._id %>" method="POST">
+                                <div class="form-group">
+                                    <label for="offerType" style="font-weight: bold;">Offer Type</label>
+                                    <select name="offerType" id="offerType" class="form-control" required>
+                                        <option value="product" <%= offer.offerType === 'product' ? 'selected' : '' %>>Product</option>
+                                        <option value="brand" <%= offer.offerType === 'brand' ? 'selected' : '' %>>Brand</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="entityId" style="font-weight: bold;">Select Entity</label>
+                                    <select name="entityId" id="entityId" class="form-control" required>
+                                        <% products.forEach(product => { %>
+                                            <option value="<%= product._id %>" <%= offer.entityId === product._id ? 'selected' : '' %>><%= product.productName %></option>
+                                        <% }) %>
+                                        <% brands.forEach(brand => { %>
+                                            <option value="<%= brand._id %>" <%= offer.entityId === brand._id ? 'selected' : '' %>><%= brand.brandName %></option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="discountPercentage" style="font-weight: bold;">Discount Percentage</label>
+                                    <input type="number" name="discountPercentage" class="form-control" value="<%= offer.discountPercentage %>" placeholder="Enter discount percentage" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="validFrom" style="font-weight: bold;">Valid From</label>
+                                    <input type="date" name="validFrom" class="form-control" value="<%= offer.validFrom.toISOString().split('T')[0] %>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="validTo" style="font-weight: bold;">Valid To</label>
+                                    <input type="date" name="validTo" class="form-control" value="<%= offer.validTo.toISOString().split('T')[0] %>" required>
+                                </div>
+                                <button type="submit" class="btn" style="background-color: yellow; color: black; padding: 10px 20px; font-size: 16px; cursor: pointer;">
+                                    Save Changes
+                                </button>
+                            </form>
+                            <br><br>
+                            <a href="/admin/offers" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px; text-decoration: none; display: inline-block;">Back to Offers</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Store products and brands in JavaScript variables
+    const products = <%- JSON.stringify(products) %>;
+    const brands = <%- JSON.stringify(brands) %>;
+
+    const offerTypeSelect = document.getElementById('offerType');
+    const entityIdSelect = document.getElementById('entityId');
+
+    // Function to populate the select field based on offer type
+    function populateEntities(offerType) {
+        entityIdSelect.innerHTML = ''; // Clear the current options
+
+        if (offerType === 'product') {
+            // Populate with product names
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product._id;
+                option.textContent = product.productName;
+                entityIdSelect.appendChild(option);
+            });
+        } else if (offerType === 'brand') {
+            // Populate with brand names
+            brands.forEach(brand => {
+                const option = document.createElement('option');
+                option.value = brand._id;
+                option.textContent = brand.brandName;
+                entityIdSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Event listener for offer type change
+    offerTypeSelect.addEventListener('change', function() {
+        populateEntities(this.value);
+    });
+
+    // Initially populate with the current offer type
+    populateEntities(offerTypeSelect.value);
+</script>
+<%- include("../../views/partials/admin/footer") %>

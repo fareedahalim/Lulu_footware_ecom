@@ -358,13 +358,29 @@ const editBrand = async (req, res) => {
 ////product-management
 const loadproduct=async(req,res)=>{
     try{
+        const searchQuery=req.query.search || "";
+        const page=parseInt(req.query.page)||1;
+        const limit=5;
+        const skip=(page-1)*limit;
+        const searchCondition = [
+            { productName: new RegExp(searchQuery, 'i') } 
+          ];
+      
         
-        const products=await Product.find().populate('brand').populate('category')
+          const products = await Product.find({
+            $or: searchCondition, 
+          })
+          .populate('brand')
+          .populate('category')
+          .skip(skip)
+          .limit(limit)
+          .exec();
     
-        // console.log(`products:${products}`)
-    
-
-        res.render('admin/products',{products})
+        const totalProducts=await Product.countDocuments({
+            $or:searchCondition
+        })
+        const totalPages=Math.ceil(totalProducts/limit);
+        res.render('admin/products',{products,searchQuery,currentPage:page,totalPages})
 
     }
     catch(error){
@@ -453,6 +469,7 @@ const editProduct=async(req,res)=>{
     
         try {
             const productId = req.params.productId;
+            console.log(productId)
             const { productName, description, brand, category, gender } = req.body;
     
             console.log('Received Product Data:', { productName, description, brand, category, gender });
@@ -520,8 +537,10 @@ const editProduct=async(req,res)=>{
 //Varient
 const loadAddVarient=async(req,res)=>{
     try {
+        console.log("loading add varient page")
         const productId=req.params.productId;
         const product=await Product.findById(productId)
+        console.log(product,"product")
          res.render('admin/add-varient',{product})
     } catch (error) {
         console.error('Error in rendering the add varient pafge')
@@ -531,7 +550,7 @@ const loadAddVarient=async(req,res)=>{
 
 
 const addVarient=async(req,res)=>{
-    console.log(req.files)
+    console.log(req.files,"jghjgjhghjg")
     try {
         const productId=req.params.productId;
         console.log(productId)
@@ -569,7 +588,7 @@ const loadVarient = async (req, res) => {
         const productId=req.params.productId;
 
         const variants = await Varient.find({productId:productId}); // Fetching all variants
-        console.log(variants)
+        
         res.render('admin/varient', { variants,productId }); // Render the variant page with the data
     } catch (error) {
         console.error('Error rendering variant page:', error.message);
@@ -596,9 +615,10 @@ const loadEditVarient=async(req,res)=>{
     }
 }
 const editVarient=async(req,res)=>{
-    
+           
         try {
             const varientId = req.params.varientId;
+           
             const { stock, color, price, size } = req.body;
             let images = [];
     
@@ -617,19 +637,56 @@ const editVarient=async(req,res)=>{
                 },
                 { new: true } // Return the updated variant
             );
-    
+            console.log(updatedVarient.productId,'ID')
             if (!updatedVarient) {
                 return res.status(404).send('Variant not found');
             }
     
-            res.redirect(`/admin/varient/${updatedVarient._id}/edit`);
+            res.redirect(`/admin/varient/${updatedVarient.productId}`);
         } catch (error) {
             console.error('Error updating variant:', error.message);
             res.status(500).send('Internal Server Error');
         }
     };
     
+// const editStock=async(req,res)=>{
+//     try {
+//         const varientId=req.params.verientId;
+//         const {stock}=req.body;
+//         await Varient.findByIdAndUpdate(varientId,{stock:stock});
+//         res.redirect('/varients');
 
+//     } catch (error) {
+//         console.error("Error",error)
+//         res.status(500).send('Error updating stock');
+//     }
+// }
+
+
+// Load variants for a specific product
+
+
+// Delete a specific variant
+const deleteVariant = async (req, res) => {
+    try {
+        const variantId = req.params.variantId;
+
+        // Find the variant by its ID and delete it
+        await Varient.findByIdAndDelete(variantId);
+
+        req.flash('success', 'Variant deleted successfully');
+        res.redirect('/admin/varient/' + req.body.productId); // Redirect back to the product's variants list page
+    } catch (error) {
+        console.error("Error deleting variant:", error.message);
+        req.flash('error', 'Failed to delete variant');
+        res.redirect('/admin/varient/' + req.body.productId); // Redirect back to variants page on failure
+    }
+};
+
+module.exports = {
+    loadVarient,
+    deleteVariant,
+};
 
     module.exports={
     category,
@@ -655,7 +712,9 @@ const editVarient=async(req,res)=>{
     loadVarient,
     updateProductStatus,
     loadEditVarient,
-    editVarient
+    editVarient,
+    deleteVariant
+    // editStock
     
 
 

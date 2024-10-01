@@ -1,0 +1,152 @@
+<%- include("../../views/partials/admin/header") %>
+<div class="page-header">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">
+                    Add Offer<br>
+                </h2>
+                <br><br>
+                <div class="container">
+                    <div class="row">
+                        <div class="content">
+                            <form action="/admin/add-offer" method="POST">
+                                <div class="form-group">
+                                    <label for="offerType" style="font-weight: bold;">Offer Type</label>
+                                    <select name="offerType" id="offerType" class="form-control" >
+                                        <option value="product">Product</option>
+                                        <option value="brand">Brand</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="entityId" style="font-weight: bold;">Select Entity</label>
+                                    <select name="entityId" id="entityId" class="form-control">
+                                        <option value="">Select a Product or Brand</option>
+                                        
+                                        <% filteredProducts.forEach(product => { %>
+                                            <option value="<%= product._id %>"><%= product.productName %></option>
+                                        <% }) %>
+                                
+                                        <% filteredBrands.forEach(brand => { %>
+                                            <option value="<%= brand._id %>"><%= brand.brandName %></option>
+                                        <% }) %>
+                                        
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="discountPercentage" style="font-weight: bold;">Discount Percentage</label>
+                                    <input type="number" name="discountPercentage" class="form-control" placeholder="Enter discount percentage" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="validFrom" style="font-weight: bold;">Valid From</label>
+                                    <input type="date" name="validFrom" class="form-control" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="validTo" style="font-weight: bold;">Valid To</label>
+                                    <input type="date" name="validTo" class="form-control" >
+                                </div>
+                                <button type="submit" class="btn" style="background-color: yellow; color: black; padding: 10px 20px; font-size: 16px; cursor: pointer;">
+                                    Add Offer
+                                </button>
+                            </form>
+                            <br><br>
+                            <a href="/admin/offers" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px; text-decoration: none; display: inline-block;">Back to Offers</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Store products and brands in JavaScript variables
+   // Store filtered products and brands in JavaScript variables
+const filteredProducts = <%- JSON.stringify(filteredProducts) %>;
+const filteredBrands = <%- JSON.stringify(filteredBrands) %>;
+
+const offerTypeSelect = document.getElementById('offerType');
+const entityIdSelect = document.getElementById('entityId');
+
+// Function to populate the select field based on offer type
+function populateEntities(offerType) {
+    entityIdSelect.innerHTML = ''; // Clear the current options
+
+    if (offerType === 'product') {
+        // Populate with filtered product names
+        filteredProducts.forEach(product => {
+            const option = document.createElement('option');
+            option.value = product._id;
+            option.textContent = product.productName;
+            entityIdSelect.appendChild(option);
+        });
+    } else if (offerType === 'brand') {
+        // Populate with filtered brand names
+        filteredBrands.forEach(brand => {
+            const option = document.createElement('option');
+            option.value = brand._id;
+            option.textContent = brand.brandName;
+            entityIdSelect.appendChild(option);
+        });
+    }
+}
+
+// Event listener for offer type change
+offerTypeSelect.addEventListener('change', function() {
+    populateEntities(this.value);
+});
+
+// Initially populate with products (since "Product" is the first option)
+populateEntities(offerTypeSelect.value);
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const offerType = document.getElementById('offerType');
+        const entityId = document.getElementById('entityId');
+        const discountPercentage = document.querySelector('input[name="discountPercentage"]');
+        const validFrom = document.querySelector('input[name="validFrom"]');
+        const validTo = document.querySelector('input[name="validTo"]');
+
+        form.addEventListener('submit', function (event) {
+            let valid = true;
+            const messages = [];
+
+            // Offer type and entity validation
+            if (!offerType.value) {
+                messages.push('Please select an offer type.');
+                valid = false;
+            }
+
+            if (!entityId.value) {
+                messages.push('Please select a product or brand.');
+                valid = false;
+            }
+
+            // Discount validation
+            const discount = parseFloat(discountPercentage.value);
+            if (isNaN(discount) || discount <= 0 || discount > 100) {
+                messages.push('Discount percentage must be between 1 and 100.');
+                valid = false;
+            }
+
+            // Date validation
+            const fromDate = new Date(validFrom.value);
+            const toDate = new Date(validTo.value);
+
+            if (!validFrom.value || !validTo.value || fromDate > toDate) {
+                messages.push('Valid From date should be before Valid To date.');
+                valid = false;
+            }
+
+            // Show error messages
+            if (!valid) {
+                event.preventDefault();  // Prevent form submission
+                alert(messages.join('\n'));  // Display validation errors
+            }
+        });
+    });
+</script>
+
+<%- include("../../views/partials/admin/footer") %>

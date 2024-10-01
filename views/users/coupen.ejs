@@ -1,0 +1,90 @@
+<%- include("../../views/partials/user/header") %>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Coupons</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="/loadcoupon">Coupons</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="page-content">
+    <div class="checkout">
+        <div class="container" style="display: flex; justify-content: center; align-items: center;">
+            <aside class="col-lg-3">
+                <div class="card" style="border-radius: 15px; padding: 20px;">
+                    <div class="card-body text-center">
+                        <div class="mt-3 mb-4">
+                            <% if (user && user.image) { %>
+                                <img src="/userImage/<%= user.image %>" class="rounded-circle img-fluid" id="profileImage" style="width: 100px;" />
+                                <button class="btn btn-link p-0 mt-2">
+                                    <a href="/editProfileImage">Edit</a>
+                                </button>
+                            <% } else { %>
+                                <p>No user or user image found</p>
+                            <% } %>
+                        </div>
+
+                        <h6><b style="font-size: 110%;"><%= user.username %></b></h6>
+                        <h6><b style="font-size: 110%;"><%= user.email %></b></h6>
+
+                        <div class="mt-4">
+                            <a href="/wishlist" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">MY WISHLIST</a>
+                            <a href="/order-history" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">MY ORDERS</a>
+                            <a href="/address" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">ADDRESS</a>
+                            <a href="/loadcoupon" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">COUPONS</a>
+                            <a href="/wallet" class="btn btn-primary btn-rounded btn-lg mb-3" style="width: 100%;">WALLET</a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="col-lg-9">
+                <div class="card" style="border-radius: 15px; padding: 20px;">
+                    <div class="card-body">
+                        <h2 class="text-center">Available Coupons</h2>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Coupon Code</th>
+                                    <th>Discount Value</th>
+                                    <th>Expiry Date</th>
+                                    <th>Min Purchase</th>
+                                    <th>Max Purchase</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (coupons.length > 0) { %>
+                                    <% coupons.forEach(coupon => { %>
+                                        <tr>
+                                            <td><%= coupon.couponCode %></td>
+                                            <td><%= coupon.discountValue %>%</td>
+                                            <td><%= new Date(coupon.expiryDate).toLocaleDateString() %></td>
+                                            <td><%= coupon.minPurchase %></td>
+                                            <td><%= coupon.maxPurchase %></td>
+                                           
+                                          
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="7" class="text-center">No coupons available</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("../../views/partials/user/footer") %>

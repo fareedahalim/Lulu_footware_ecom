@@ -1,4 +1,11 @@
 <%- include("../../views/partials/admin/header") %>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Bundle JS (includes Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="/asset/vendors/chart.js/chart.umd.js"></script>
 <section class="content-main">
     <div class="content-header">
         <div>
@@ -6,5 +13,542 @@
         </div>
        
     </div>
-</section>
+<div>
+  <canvas id="salesChart" width="400" height="200"></canvas>
+
+</div>
+
+
+<div class="container-scroller">
+   
+      <div class="main-panel">
+        <!-- <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;"> -->
+          <div class="page-header">
+
+            <div>
+              <canvas id="salesChart" width="400" height="200"></canvas>
+            
+            </div>
+            <div class="container mt-4">
+              <div class="row">
+                  <!-- Top 10 Best-Selling Products Card -->
+                  <div class="col-md-4">
+                      <div class="card">
+                          <div class="card-body text-center">
+                              <h3>Top 10 Best-Selling Products</h3>
+                              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productsModal">
+                                  View Details
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+          
+                  <!-- Top 10 Best-Selling Brands Card -->
+                  <div class="col-md-4">
+                      <div class="card">
+                          <div class="card-body text-center">
+                              <h3>Top 10 Best-Selling Brands</h3>
+                              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#brandsModal">
+                                  View Details
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+          
+                  <!-- Top 10 Best-Selling Categories Card -->
+                  <div class="col-md-4">
+                      <div class="card">
+                          <div class="card-body text-center">
+                              <h3>Top 10 Best-Selling Categories</h3>
+                              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoriesModal">
+                                  View Details
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Modal for Best-Selling Products -->
+          <div class="modal fade" id="productsModal" tabindex="-1" aria-labelledby="productsModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="productsModalLabel">Top 10 Best-Selling Products</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <table class="table table-bordered">
+                              <thead>
+                                  <tr>
+                                      <th>Product Name</th>
+                                      <th>Quantity Sold</th>
+                                      <!-- <th>Image</th> -->
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <% top10Products.forEach(product => { %>
+                                      <tr>
+                                          <td><%= product.name %></td>
+                                          <td><%= product.quantitySold %></td>
+                                          <!-- <td><img src="/path/to/images/<%= product.image %>" alt="<%= product.name %>" width="50" /></td> -->
+                                      </tr>
+                                  <% }) %>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Modal for Best-Selling Brands -->
+          <div class="modal fade" id="brandsModal" tabindex="-1" aria-labelledby="brandsModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="brandsModalLabel">Top 10 Best-Selling Brands</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <table class="table table-bordered">
+                              <thead>
+                                  <tr>
+                                      <th>Brand Name</th>
+                                      <th>Quantity Sold</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <% top10Brands.forEach(brand => { %>
+                                      <tr>
+                                          <td><%= brand.name %></td>
+                                          <td><%= brand.quantitySold %></td>
+                                      </tr>
+                                  <% }) %>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Modal for Best-Selling Categories -->
+          <div class="modal fade" id="categoriesModal" tabindex="-1" aria-labelledby="categoriesModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="categoriesModalLabel">Top 10 Best-Selling Categories</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <table class="table table-bordered">
+                              <thead>
+                                  <tr>
+                                      <th>Occasion Name</th>
+                                      <th>Quantity Sold</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <% top10Occasions.forEach(occ => { %>
+                                      <tr>
+                                          <td><%= occ.name %></td>
+                                          <td><%= occ.quantitySold %></td>
+                                      </tr>
+                                  <% }) %>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <h2 class="card-title" style="color: rgb(19, 19, 19);text-align: center;">Sales Report</h2>
+                <div class="card-body-1">
+
+                  <p class="card-description"> <code></code>
+                  </p>
+
+
+                  <form id="filter-form" action="/admin/dashboard" method="post">
+                    <div class="form-row">
+                      <label for="startDate">Start Date:</label>
+                      <input type="date" id="startDate" name="startDate">
+                      
+                    </div>
+                    <div class="form-row">
+                      <label for="endDate">End Date:</label>
+                      <input type="date" id="endDate" name="endDate">
+                    </div>
+                    
+                    <!-- <div class="form-row">
+                      <label for="report-type">Report Type:</label>
+                      <select id="report-type" name="type">
+                        <option value="pdf">PDF</option>
+                        <option value="excel">Excel</option>
+                      </select>
+                    </div> -->
+                    <button type="submit" class="btn-submit">Generate Report</button>
+                    <p id="error-message" style="color: red;"></p>
+                  </form>
+                  
+                  <div class="button-group">
+                    <button onclick="setDateRange('daily')">Daily</button>
+                    <button onclick="setDateRange('weekly')">Weekly</button>
+                    <button onclick="setDateRange('monthly')">Month</button>
+                    <button onclick="setDateRange('yearly')">Yearly</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sales-cards row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>Total Sales Count</h3>
+                        <p><%= totalSalesCount %></p>
+                    </div>
+                </div>
+            
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>Total Order Amount</h3>
+                        <p><%= totalOrderAmount %></p>
+                    </div>
+                </div>
+            
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>Total Discount</h3>
+                        <p><%= totalDiscount %></p>
+                    </div>
+                </div>
+            </div>
+            
+           
+<p class="card-description"></p>
+
+<% if (totalSalesCount > 0) { %> <!-- Check if totalSalesCount is greater than zero -->
+  <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">Sales Report</h2>
+    <div class="table-responsive">
+        <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
+            <thead>
+                <tr style="background-color: #f6c2c2; color: rgb(27, 26, 26);">
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Order ID</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Order Date</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Customer</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Amount</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Discount</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Grand Total</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.forEach(order => { %>
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 8px;"><%= order._id %></td>
+                        <td style="border: 1px solid #ddd; padding: 8px;"><%= order.orderDate.toLocaleDateString() %></td>
+                        <td style="border: 1px solid #ddd; padding: 8px;"><%= order.address[0].username %></td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">
+                            Rs.<%= (order.totalAmount || 0) + (order.discountAmount || 0) %>
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">Rs.<%= order.discountAmount %></td>
+                        <td style="border: 1px solid #ddd; padding: 8px;"><%= order.totalAmount %></td>
+                        <td style="border: 1px solid #ddd; padding: 8px;"><%= order.status %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+            
+        </table>
+      
+      
+        <div class="button-group"> <!-- Add some space between the table and buttons -->
+            <button class="blue-button">
+                <a href="/admin/download-pdf" style="color: inherit; text-decoration: none;">Download PDF</a>
+            </button>
+            <button class="blue-button">
+                <a href="/admin/download-excel" style="color: inherit; text-decoration: none;">Download Excel</a>
+            </button>
+        </div>
+    </div>
+<% } else { %> <!-- If totalSalesCount is zero, show a message -->
+    <p style="text-align: center; color: red;">No sales data available.</p>
+<% } %>
+ 
+                              
+                               
+                            
+            <style>
+              .report-container {
+              
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+              }
+
+              .card {
+
+                background: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+              }
+
+              .card-header {
+                background: #007bff;
+                color: white;
+                padding: 10px 15px;
+              }
+
+              .card-header h4 {
+                margin: 0;
+              }
+
+              .card-body-1 {
+                margin-left: 350px;
+                padding: 15px;
+              }
+
+              .card-title {
+                margin-right: 250px;
+                padding: 25px;
+              }
+
+              .form-row {
+                margin-bottom: 10px;
+              }
+
+              .form-row label {
+
+                display: block;
+              }
+
+              .form-row input,
+              .form-row select {
+                width: 40%;
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+              }
+
+              .btn-submit {
+                display: block;
+                width: 40%;
+                padding: 10px;
+                margin-top: 20px;
+                background: #c66;
+                color: white;
+                border-radius: 4px;
+                border: none;
+              }
+
+              .button-group button {
+                width: calc(10.7% - 10px);
+                padding: 10px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                background: #17a2b8;
+                color: white;
+                border-radius: 4px;
+                border: none;
+              }
+
+              @media (max-width: 768px) {
+                .button-group button {
+                  width: calc(50% - 10px);
+                }
+              }
+
+              .table-responsive {
+        margin-top: 20px;
+    }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .thead-dark th {
+        background-color: #343a40;
+        color: #ffffff;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        padding: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #dee2e6;
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 5px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 5px;
+    }
+
+    .btn-dark {
+        background-color: #343a40;
+        border-color: #343a40;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 5px;
+    }
+
+    .btn-primary:hover, .btn-danger:hover, .btn-dark:hover {
+        opacity: 0.9;
+    }
+
+    /* Add responsiveness */
+    @media (max-width: 768px) {
+        .table-responsive {
+            overflow-x: auto;
+        }
+    }
+    .blue-button {
+    background-color: #007bff; /* Blue color */
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding for size */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+  }
+
+  .blue-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+              
+            </style>
+            <br>
+            <br>
+           
+          </div>
+         
+        </div>
+      </div>
+
+  </div>
+  </div>
+  <script src="/asset/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="/asset/vendors/chart.js/chart.umd.js"></script>
+  <script src="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="/asset/js/off-canvas.js"></script>
+  <script src="/asset/js/misc.js"></script>
+  <script src="/asset/js/settings.js"></script>
+  <script src="/asset/js/todolist.js"></script>
+  <script src="/asset/js/jquery.cookie.js"></script>
+  <!-- endinject -->
+  <script>
+    function setDateRange(range) {
+      const now = new Date();
+      let startDate, endDate;
+
+      switch (range) {
+        case 'daily':
+          startDate = endDate = now.toISOString().split('T')[0];
+          break;
+        case 'weekly':
+          const firstDayOfWeek = now.getDate() - now.getDay();
+          startDate = new Date(now.setDate(firstDayOfWeek)).toISOString().split('T')[0];
+          endDate = new Date(now.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
+          break;
+        case 'monthly':
+          startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+          endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+          break;
+        case 'yearly':
+          startDate = new Date(now.getFullYear(), 0, 1).toISOString().split('T')[0];
+          endDate = new Date(now.getFullYear(), 11, 31).toISOString().split('T')[0];
+          break;
+        default:
+          return;
+      }
+
+      document.getElementById('startDate').value = startDate;
+      document.getElementById('endDate').value = endDate;
+    }
+
+  </script>
+  
+
+
+  </body>
+
+  </html>
+  <!-- content-wrapper ends -->
+  <!-- partial:../../partials/_footer.html -->
+  </section>
+  
+  <script>
+   document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesData = <%- JSON.stringify(salesData) %>; // Ensure this is correctly passed
+
+        // Check if salesData is available
+        console.log('Sales Data:', salesData);
+
+        // Prepare labels and data for the chart
+        const labels = salesData.map(data => data.orderDate);
+        const totalAmounts = salesData.map(data => data.totalAmount);
+        const discountAmounts = salesData.map(data => data.discountAmount);
+
+        const salesChart = new Chart(ctx, {
+            type: 'bar', // or 'line', 'pie', etc.
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Amount',
+                    data: totalAmounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Discount Amount',
+                    data: discountAmounts,
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
 <%- include("../../views/partials/admin/footer") %>

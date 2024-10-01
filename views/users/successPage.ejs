@@ -1,0 +1,83 @@
+<%- include("../../views/partials/user/header") %>
+
+<style>
+    h2 {
+        text-align: center;
+        color: darkred;
+        margin-top: 2rem;
+    }
+
+    #card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid black;
+        padding: 2rem;
+        margin: 2rem auto;
+        width: 50%;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+        gap: 2rem; /* Adds space between the buttons */
+    }
+
+    .btn, #btn1 {
+        background-color: rgb(74, 70, 70);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn:hover, #btn1:hover {
+        background-color: darkred;
+    }
+
+    img {
+        width: 150px;
+        height: auto;
+        margin: 2rem auto;
+        display: block;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #card {
+            width: 80%;
+        }
+
+        .btn, #btn1 {
+            width: 80%;
+            padding: 0.8rem 1.5rem;
+        }
+
+        .btn-container {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Success Page</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="card">
+    <h2>Your Order Placed Successfully !!!</h2>
+   
+    <div class="btn-container">
+        <a href="/shop"><button class="btn" type="submit">Continue Shopping</button></a>
+        <a href="/order-history"><button class="btn" id="btn1" type="submit">View Order Details</button></a>
+    </div>
+</div>

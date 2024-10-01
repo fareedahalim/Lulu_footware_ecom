@@ -85,6 +85,16 @@ const deleteAddress=async (req,res)=>{
         console.log(error.message);
     }
 };
+
+const chooseAddress=async(req,res)=>{
+    try {
+        const userId=req.session.user;
+        const addresses=await Address.find({user:userId});
+        res.render('users/choose')
+    } catch (error) {
+        
+    }
+}
 module.exports={
 
     loadAddress,
@@ -92,6 +102,7 @@ module.exports={
     addAddress,
     loadEditAddress,
     updateAddress,
-    deleteAddress
+    deleteAddress,
+    chooseAddress
     
 }
