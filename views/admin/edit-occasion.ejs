@@ -1,7 +1,7 @@
 <%- include("../../views/partials/admin/header") %>
 
 <div class="main-panel">
-    <!-- <div class="content-wrapper" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;"> -->
+    
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
@@ -31,8 +31,7 @@
 
 <script>
     document.getElementById("edit_occasion").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent the default form submission
-    
+    event.preventDefault(); 
     const categoryName = document.getElementById("categoryName").value.trim();
     const categoryNameError = document.getElementById("categoryNameError");
     categoryNameError.innerText = "";
@@ -47,7 +46,7 @@
         return;
     }
 
-    const formData = new FormData(this); // Create FormData object from form
+    const formData = new FormData(this); 
 
     try {
         const response = await fetch('/admin/edit-occasion/<%= occasion._id %>', {
@@ -58,21 +57,21 @@
             body: JSON.stringify({categoryName}),
         });
 
-        const result = await response.json(); // Parse the JSON response
+        const result = await response.json(); 
 
         if (response.ok) {
-            window.location.href = '/admin/occasion'; // Redirect to the correct URL
+            window.location.href = '/admin/occasion'; 
         } else {
             const errorElement = document.querySelector('.alert');
             if (errorElement) {
-                errorElement.textContent = result.message; // Show error message
+                errorElement.textContent = result.message; 
             }
         }
     } catch (error) {
         console.error('Error:', error);
         const errorElement = document.querySelector('.alert');
         if (errorElement) {
-            errorElement.textContent = 'An error occurred. Please try again.'; // Show generic error message
+            errorElement.textContent = 'An error occurred. Please try again.'; 
         }
     }
 });
@@ -82,23 +81,7 @@
 
 
 
-//     async function checkCategoryNameUnique(occasionName) {
-//         try {
-//             const response = await fetch('/admin/check-category-unique', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify({ occasionName })
-//             });
 
-//             const result = await response.json();
-//             return result.isUnique;
-//         } catch (error) {
-//             console.error('Error checking category name uniqueness:', error);
-//             return false;
-//         }
-//     }
-// </script>
+</script>
 
 <%- include("../../views/partials/admin/footer") %>

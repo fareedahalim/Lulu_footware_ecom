@@ -3,53 +3,30 @@ const Occasion=require("../models/occasionModel")
 const Product=require("../models/productModel")
 const Varient=require("../models/varientModel")
 const Order=require("../models/orderModel")
-// const loadOrder = async (req, res) => {
-//     try {
-//       const { page = 1, limit = 6 } = req.query;
-  
-    
-//       const orderData = await Order.find()
-//         .skip((page - 1) * limit) 
-//         .limit(parseInt(limit)); 
-  
-//       const totalOrders = await Order.countDocuments(); 
-//       const totalPages = Math.ceil(totalOrders / limit); 
-  
-//       // Render the page with pagination
-//       res.render('admin/order', {
-//         orderData,
-//         currentPage: parseInt(page),
-//         totalPages
-//       });
-  
-//     } catch (error) {
-//       console.log("Error:", error);
-//       res.status(500).send("Internal Server Error");
-//     }
-//   };
+
   
 const loadOrder = async (req, res) => {
     try {
       const { page = 1, limit = 6, search = '' } = req.query;
   
-      // Construct a query to search by name
+      
       const query = search ? { "address.username": { $regex: search, $options: 'i' } } : {};
   
-      // Get the orders with the search query and sort them by orderDate descending
+      
       const orderData = await Order.find(query)
-        .sort({ orderDate: -1 }) // Sort by orderDate in descending order
+        .sort({ orderDate: -1 }) 
         .skip((page - 1) * limit)
         .limit(parseInt(limit));
   
-      const totalOrders = await Order.countDocuments(query); // Count documents based on the search query
+      const totalOrders = await Order.countDocuments(query);
       const totalPages = Math.ceil(totalOrders / limit);
   
-      // Render the page with pagination and search results
+      
       res.render('admin/order', {
         orderData,
         currentPage: parseInt(page),
         totalPages,
-        search // Pass the search query to the view
+        search 
       });
     } catch (error) {
       console.log("Error:", error);
@@ -82,7 +59,7 @@ const confirmOrderCancellation=async (req,res)=>{
 const updateStatus = async (req, res) => {
     try {
         
-        // const varient=await Order.findById(orderById).populate('')
+        
         const orderId = req.params.orderId;
         const order = await Order.findById(orderId);
 
@@ -110,7 +87,7 @@ const updateStatus = async (req, res) => {
 
         await order.save();
 
-        console.log("Order status updated to:", order.status);
+        
         return res.redirect('/admin/orderList');
     } catch (error) {
         console.error('Error updating order status:', error);

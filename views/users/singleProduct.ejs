@@ -58,6 +58,53 @@
         /* Ensure it stays above other elements */
         z-index: 1000;
     }
+    .other-variants-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.other-variants-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.variant-card {
+    width: 120px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.variant-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.variant-thumbnail {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+}
+
+.variant-info {
+    padding: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.variant-info span {
+    font-weight: bold;
+    color: #333;
+}
+
 </style>
 
 <section class="banner-area organic-breadcrumb">
@@ -66,8 +113,8 @@
             <div class="col-first">
                 <h1>Product Details Page</h1>
                 <nav class="d-flex align-items-center">
-                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="">Shop<span class="lnr lnr-arrow-right"></span></a>
                     <a href="single-product.html">Product Details</a>
                 </nav>
             </div>
@@ -117,18 +164,29 @@
                             <li><span>Availability</span> : <%= varient.stock > 0 ? "In Stock" : "Out of Stock" %></li>
                         </ul>
                         <p><%=product.description%></p>
-                        <span>other Varients</span>
-                        <% varientAll.forEach(vari=>{%>
-                            <% if (vari.productId.toString() === varient.productId.toString() && varient._id.toString() !== vari._id.toString()) { %>
-                                <li>
-                                    <a class="active" href="/product-details/<%= vari._id %>">
-                                        <span style="color: #000;"> <%= vari.color %>, <%= vari.size %></span>
-                                    </a>
-                                </li>
-                            <% } %>
-                      <%  }) %>
+                        <% const hasOtherVariants = varientAll.some(vari => vari.productId.toString() === varient.productId.toString() && varient._id.toString() !== vari._id.toString()); %>
+
+<% if (hasOtherVariants) { %>
+    <h4 class="other-variants-title">Explore Other Variants</h4>
+    <div class="other-variants-container">
+        <% varientAll.forEach(vari => { %>
+            <% if (vari.productId.toString() === varient.productId.toString() && varient._id.toString() !== vari._id.toString()) { %>
+                <div class="variant-card">
+                    <a href="/product-details/<%= vari._id %>">
+                        <img class="variant-thumbnail" src="<%= vari.images[0] %>" alt="<%= vari.color %> - <%= vari.size %>">
+                        <div class="variant-info">
+                            <span><%= vari.color %> - <%= vari.size %></span>
+                        </div>
+                    </a>
+                </div>
+            <% } %>
+        <% }) %>
+    </div>
+<% } %>
+
+                        
                         <div class="card_area d-flex align-items-center">
-                            <a class="primary-btn" href="/add-to-cart/<%=varient._id%>">Add to Cart</a>
+                            <a class="primary-btn add-to-cart-btn" href="javascript:void(0)" data-stock="<%= varient.stock %>" data-id="<%= varient._id %>">Add to Cart</a>
                             <a class="icon_btn" href="/add-to-wishlist/<%=varient._id%>"><i class="lnr lnr lnr-heart"></i></a>
                         </div>
                     </div>
@@ -142,20 +200,41 @@
     <div class="row">
         <div class="col-lg-12">
             <h2 class="mb-4 text-center">Customer Reviews</h2>
-            <div class="review_list mb-5 text-center">
+            <% if (reviews.length > 0) { %>
+                <div class="review_list mb-5">
+                    <% reviews.forEach(review => { %>
+                        <div class="review_item">
+                            <h5><%= review.username %> <small>(<%= review.rating %> stars)</small></h5>
+                            <p><%= review.comment %></p>
+                            <p><small><%= new Date(review.createdAt).toLocaleDateString() %></small></p>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
                 <p class="text-muted">No reviews yet. Be the first to review this product!</p>
-            </div>
+            <% } %>
             <div class="review_box p-4 rounded shadow-sm">
                 <h4 class="mb-4 text-center">Add a Review</h4>
-                <form class="row contact_form" action="/submit-review" method="post" id="reviewForm">
+                <form class="row contact_form" action="/product-details/<%= varient._id %>/submit-review" method="post" id="reviewForm">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
                             <input type="text" class="form-control form-control-lg" name="username" placeholder="Your Full Name" required>
                         </div>
                     </div>
-                    <div class="col-md-12 mb-4">
+                    <div class="col-md-12 mb-3">
                         <div class="form-group">
                             <textarea class="form-control form-control-lg" name="comment" rows="4" placeholder="Your Review" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                        <div class="form-group">
+                            <label for="rating">Rating:</label>
+                            <div class="rating">
+                                <% for (let i = 5; i >= 1; i--) { %>
+                                    <input type="radio" name="rating" value="<%= i %>" id="rating-<%= i %>" class="star-input" required>
+                                    <label for="rating-<%= i %>" class="star-label">☆</label>
+                                <% } %>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-12 text-center">
@@ -168,8 +247,29 @@
 </div>
 
 <%-include("../../views/partials/user/footer")%>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const stock = this.getAttribute('data-stock');
+            const productId = this.getAttribute('data-id');
+
+            // Check if product is out of stock
+            if (stock == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'The product is out of stock!',
+                    confirmButtonText: 'Okay'
+                });
+            } else {
+                // Redirect to add to cart if in stock
+                window.location.href = `/add-to-cart/${productId}`;
+            }
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const images = document.querySelectorAll('.product-image');
         const lens = document.getElementById('zoom-lens');

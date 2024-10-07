@@ -54,9 +54,9 @@ const userSchema = new mongoose.Schema({
         },
         walletTransactions: [
           {
-              type: { type: String, enum: ['credit', 'debit'], required: true },  // 'credit' for adding, 'debit' for subtracting
+              type: { type: String, enum: ['credit', 'debit'], required: true },  
               amount: { type: Number, required: true },
-              description: { type: String },  // e.g., "Refund from order #12345", "Payment for order #54321"
+              description: { type: String },  
               date: { type: Date, default: Date.now }
           }
       ],
@@ -84,29 +84,27 @@ const userSchema = new mongoose.Schema({
       usedCoupons: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Coupon'
-    }]
-      // ,
-//     otp:{
-
-//     type: String
-// },
-//     otpExpires: Date
+    }],
+     reviews: [{ 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review'
+  }]
+ 
 });
 
-// Middleware to hash password before saving
+
 userSchema.pre('save', async function(next) {
     if (this.isModified('password')) {
-        // Hash password
+        
         this.password = await bcrypt.hash(this.password, 12);
-        // Ensure confirmPassword is also hashed
+        
         this.confirmPassword = this.password;
     }
     next();
 });
 
-// Method to validate password
 userSchema.methods.isValidPassword = async function(password) {
     return await bcrypt.compare(password, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);  // Corrected module.exports
+module.exports = mongoose.model('User', userSchema);  

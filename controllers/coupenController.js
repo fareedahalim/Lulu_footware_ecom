@@ -16,38 +16,27 @@ const loadAddCoupon=async(req,res)=>{
         console.log(error.message)
     }
 }
-const addCoupen=async(req,res)=>{
-    try {
-        
-    } catch (error) {
-        
-    }
-}
 
 
-// Function to add a new coupon
+
 const addCoupon = async (req, res) => {
     try {
         const { couponCode, discountValue, expiryDate, minPurchase, maxPurchase } = req.body;
-        // console.log(couponCode,'couponCode=====')
-        // console.log(discountValue,'discountValue=====')
-        // console.log(expiryDate,'expiryDate=====')
-        // console.log(minPurchase,'minPurchase=====')
-        // console.log(maxPurchase,'maxPurchase=====')
+        
         
 
         if (!couponCode || couponCode.trim() === '') {
             return res.status(400).send('Coupon code is required.');
         }
 
-        // Check if the couponCode is already in use
+    
         const existingCoupon = await Coupon.findOne({ couponCode });
         if (existingCoupon) {
-            // return res.status(400).send('Coupon code already exists.');
+            
             return res.render('admin/add-coupon',{errorMessage:'coupon is already existing'})
         }
 
-        // Create a new coupon
+        
         const newCoupon = new Coupon({
             couponCode,
             discountValue,
@@ -56,12 +45,12 @@ const addCoupon = async (req, res) => {
             maxPurchase
         });
         
-        console.log(newCoupon,'newCoupon=----------------')
-        // Save the coupon to the database
+        
+        
         await newCoupon.save();
         return res.redirect('/admin/coupon')
 
-        res.status(201).send('Coupon added successfully.');
+    
     } catch (error) {
         console.error('Error adding coupon:', error);
         res.status(500).send('Server error');
@@ -95,7 +84,7 @@ const editCoupon=async(req,res)=>{
             maxPurchase,
             isActive: isActive === 'true'
         }, { new: true });
- console.log("updatedCoupon-----",updatedCoupon)
+ 
         if (!updatedCoupon) {
             return res.status(404).send('Coupon not found');
         }

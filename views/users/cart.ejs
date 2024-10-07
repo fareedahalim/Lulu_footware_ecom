@@ -46,9 +46,9 @@
                                         <td>
                                             <figure class="product-media">
                                                 <% if (cartItem.varient.images && cartItem.varient.images.length > 0) { %>
-                                                    <a href="/product/<%= cartItem.varient.productId._id %>">
+                                                  
                                                         <img src="<%= cartItem.varient.images[0] %>" alt="Product image" style="width: 100px;">
-                                                    </a>
+                                                   
                                                 <% } else { %>
                                                     <p>Image not available</p>
                                                 <% } %>
@@ -56,9 +56,9 @@
                                         </td>
                                         <td>
                                             <h3 class="product-title">
-                                                <a href="/product/<%= cartItem.varient.productId._id %>">
+                                               
                                                     <%= cartItem.varient.productId.productName || "Product Name Not Available" %>
-                                                </a>
+                                               
                                             </h3>
                                         </td>
                                         <td><%= cartItem.finalPrice || "Price Not Available" %></td>
@@ -160,10 +160,19 @@
             input.addEventListener('change', function () {
                 const productId = this.getAttribute('data-product-id');
                 const currentQuantity = parseInt(this.value, 10);
+                const maxStock = parseInt(this.getAttribute('max'), 10);
                 
-                
+                if (currentQuantity > maxStock) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Stock Limit Reached',
+                        text: `You cannot increase the quantity beyond ${maxStock}.`,
+                    });
+                    this.value = maxStock;
                 updateCartTotal();
-                 console.log("zxvzxv")
+                return;
+                }
+                updateCartTotal();
                 
                 $.ajax({
                     url: `/updateCartQuantity/${productId}`,  

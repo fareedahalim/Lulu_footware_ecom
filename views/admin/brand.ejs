@@ -29,15 +29,12 @@
                           <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">
                               <label class="control control--checkbox"></label>
                           </th>
-                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">No</th> -->
+                          
                           <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Brand</th>
-                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Discription</th> -->
-                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Amount</th> -->
-                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Type</th> -->
-                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer End Date</th> -->
+                          
                           <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Status</th>
                           <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
-                          <!-- <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Delete</th> -->
+                          
                       </tr>
                   </thead>
                   <tbody>
@@ -45,7 +42,7 @@
                           <tr>
                               <td style="border: 1px solid #ddd; padding: 8px;"><%= i+1 %></td>
                               <td style="border: 1px solid #ddd; padding: 8px;"><%= brands[i].brandName %></td>
-                              <!-- <td style="border: 1px solid #ddd; padding: 8px;"><%= brands[i].Discription %></td> -->
+                              
                              
                              
                               <td style="border: 1px solid #ddd; padding: 8px;">
@@ -79,15 +76,7 @@
   </div>
 </div>
 </div>
-<!-- <script>
-function confirmDelete(categoryId) {
-  var confirmDelete = confirm("Are you sure you want to delete this category?");
-  if (confirmDelete) {
-      window.location.href = "/admin/category/" + categoryId;
-    
-  }
-}
-</script> -->
+
 <script>
 function confirmBlock(brandId) {
   Swal.fire({
@@ -100,21 +89,20 @@ function confirmBlock(brandId) {
       confirmButtonText: 'Yes, block/unblock it!'
   }).then((result) => {
       if (result.isConfirmed) {
-          // Submit the form if user confirms
+          
           document.getElementById('blockForm_' + brandId).submit();
       }
   });
 
-  // Prevent the form from submitting automatically
+  
   return false;
 }
 </script>
 </div> 
 </div> 
 </div> 
-<!-- Footer End -->
 </div>
-<!-- Content End -->
+
 
 <script>
 
@@ -128,40 +116,11 @@ navLinks.forEach(function(link) {
 link.classList.remove('active');
 
 if (link.getAttribute('href') === path) {
-// Add the "active" class to the matching link
+
 link.classList.add('active');
 }
 });
 </script>
-
-<!-- <script>
-function confirmDelete(categoryId, row) {
-    var confirmDelete = confirm("Are you sure you want to delete this category?");
-    if (confirmDelete) {
-        fetch(`/admin/category/${categoryId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            else{
-              location.reload();
-            }
-            // Remove the deleted row from the table
-            row.remove();
-           
-        })
-        .catch(error => {
-            console.error('Error deleting category:', error);
-            // Handle error, e.g., display error message to the user
-        });
-    }
-}
-</script>     -->
 
 
 <%- include("../../views/partials/admin/footer") %>

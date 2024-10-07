@@ -21,26 +21,46 @@
                                 <div class="form-group">
                                     <label for="entityId" style="font-weight: bold;">Select Entity</label>
                                     <select name="entityId" id="entityId" class="form-control" required>
-                                        <% products.forEach(product => { %>
-                                            <option value="<%= product._id %>" <%= offer.entityId === product._id ? 'selected' : '' %>><%= product.productName %></option>
-                                        <% }) %>
-                                        <% brands.forEach(brand => { %>
-                                            <option value="<%= brand._id %>" <%= offer.entityId === brand._id ? 'selected' : '' %>><%= brand.brandName %></option>
-                                        <% }) %>
+                                        <% if (offer.entityType === 'product') { %>
+                                            <!-- Show the selected product first -->
+                                            <option value="<%= offer.entityId %>" selected><%= offer.entityName %></option>
+                                            <% products.forEach(product => { %>
+                                                <% if (product._id !== offer.entityId) { %>
+                                                    <option value="<%= product._id %>"><%= product.productName %></option>
+                                                <% } %>
+                                            <% }) %>
+                                            <% brands.forEach(brand => { %>
+                                                <option value="<%= brand._id %>"><%= brand.brandName %></option>
+                                            <% }) %>
+                                        <% } else if (offer.entityType === 'brand') { %>
+                                            <!-- Show the selected brand first -->
+                                            <option value="<%= offer.entityId %>" selected><%= offer.entityName %></option>
+                                            <% brands.forEach(brand => { %>
+                                                <% if (brand._id !== offer.entityId) { %>
+                                                    <option value="<%= brand._id %>"><%= brand.brandName %></option>
+                                                <% } %>
+                                            <% }) %>
+                                            <% products.forEach(product => { %>
+                                                <option value="<%= product._id %>"><%= product.productName %></option>
+                                            <% }) %>
+                                        <% } else { %>
+                                            <!-- Default dropdown when no offer is selected -->
+                                            <option value="" disabled selected>Select an entity</option>
+                                            <% products.forEach(product => { %>
+                                                <option value="<%= product._id %>"><%= product.productName %></option>
+                                            <% }) %>
+                                            <% brands.forEach(brand => { %>
+                                                <option value="<%= brand._id %>"><%= brand.brandName %></option>
+                                            <% }) %>
+                                        <% } %>
                                     </select>
+                                    
                                 </div>
                                 <div class="form-group">
                                     <label for="discountPercentage" style="font-weight: bold;">Discount Percentage</label>
                                     <input type="number" name="discountPercentage" class="form-control" value="<%= offer.discountPercentage %>" placeholder="Enter discount percentage" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="validFrom" style="font-weight: bold;">Valid From</label>
-                                    <input type="date" name="validFrom" class="form-control" value="<%= offer.validFrom.toISOString().split('T')[0] %>" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="validTo" style="font-weight: bold;">Valid To</label>
-                                    <input type="date" name="validTo" class="form-control" value="<%= offer.validTo.toISOString().split('T')[0] %>" required>
-                                </div>
+                                
                                 <button type="submit" class="btn" style="background-color: yellow; color: black; padding: 10px 20px; font-size: 16px; cursor: pointer;">
                                     Save Changes
                                 </button>
@@ -55,19 +75,19 @@
     </div>
 </div>
 <script>
-    // Store products and brands in JavaScript variables
+    
     const products = <%- JSON.stringify(products) %>;
     const brands = <%- JSON.stringify(brands) %>;
 
     const offerTypeSelect = document.getElementById('offerType');
     const entityIdSelect = document.getElementById('entityId');
 
-    // Function to populate the select field based on offer type
+    
     function populateEntities(offerType) {
-        entityIdSelect.innerHTML = ''; // Clear the current options
+        entityIdSelect.innerHTML = ''; 
 
         if (offerType === 'product') {
-            // Populate with product names
+            
             products.forEach(product => {
                 const option = document.createElement('option');
                 option.value = product._id;
@@ -75,7 +95,7 @@
                 entityIdSelect.appendChild(option);
             });
         } else if (offerType === 'brand') {
-            // Populate with brand names
+        
             brands.forEach(brand => {
                 const option = document.createElement('option');
                 option.value = brand._id;
@@ -85,12 +105,12 @@
         }
     }
 
-    // Event listener for offer type change
+    
     offerTypeSelect.addEventListener('change', function() {
         populateEntities(this.value);
     });
 
-    // Initially populate with the current offer type
+    
     populateEntities(offerTypeSelect.value);
 </script>
 <%- include("../../views/partials/admin/footer") %>

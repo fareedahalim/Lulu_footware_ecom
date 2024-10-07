@@ -38,14 +38,8 @@
                                     <label for="discountPercentage" style="font-weight: bold;">Discount Percentage</label>
                                     <input type="number" name="discountPercentage" class="form-control" placeholder="Enter discount percentage" >
                                 </div>
-                                <div class="form-group">
-                                    <label for="validFrom" style="font-weight: bold;">Valid From</label>
-                                    <input type="date" name="validFrom" class="form-control" >
-                                </div>
-                                <div class="form-group">
-                                    <label for="validTo" style="font-weight: bold;">Valid To</label>
-                                    <input type="date" name="validTo" class="form-control" >
-                                </div>
+                               
+                               
                                 <button type="submit" class="btn" style="background-color: yellow; color: black; padding: 10px 20px; font-size: 16px; cursor: pointer;">
                                     Add Offer
                                 </button>
@@ -60,20 +54,19 @@
     </div>
 </div>
 <script>
-    // Store products and brands in JavaScript variables
-   // Store filtered products and brands in JavaScript variables
+   
 const filteredProducts = <%- JSON.stringify(filteredProducts) %>;
 const filteredBrands = <%- JSON.stringify(filteredBrands) %>;
 
 const offerTypeSelect = document.getElementById('offerType');
 const entityIdSelect = document.getElementById('entityId');
 
-// Function to populate the select field based on offer type
+
 function populateEntities(offerType) {
-    entityIdSelect.innerHTML = ''; // Clear the current options
+    entityIdSelect.innerHTML = ''; 
 
     if (offerType === 'product') {
-        // Populate with filtered product names
+       
         filteredProducts.forEach(product => {
             const option = document.createElement('option');
             option.value = product._id;
@@ -81,7 +74,7 @@ function populateEntities(offerType) {
             entityIdSelect.appendChild(option);
         });
     } else if (offerType === 'brand') {
-        // Populate with filtered brand names
+        
         filteredBrands.forEach(brand => {
             const option = document.createElement('option');
             option.value = brand._id;
@@ -91,12 +84,11 @@ function populateEntities(offerType) {
     }
 }
 
-// Event listener for offer type change
 offerTypeSelect.addEventListener('change', function() {
     populateEntities(this.value);
 });
 
-// Initially populate with products (since "Product" is the first option)
+
 populateEntities(offerTypeSelect.value);
 
 </script>
@@ -113,7 +105,7 @@ populateEntities(offerTypeSelect.value);
             let valid = true;
             const messages = [];
 
-            // Offer type and entity validation
+            
             if (!offerType.value) {
                 messages.push('Please select an offer type.');
                 valid = false;
@@ -124,14 +116,14 @@ populateEntities(offerTypeSelect.value);
                 valid = false;
             }
 
-            // Discount validation
+            
             const discount = parseFloat(discountPercentage.value);
             if (isNaN(discount) || discount <= 0 || discount > 100) {
                 messages.push('Discount percentage must be between 1 and 100.');
                 valid = false;
             }
 
-            // Date validation
+
             const fromDate = new Date(validFrom.value);
             const toDate = new Date(validTo.value);
 
@@ -140,10 +132,10 @@ populateEntities(offerTypeSelect.value);
                 valid = false;
             }
 
-            // Show error messages
+            
             if (!valid) {
-                event.preventDefault();  // Prevent form submission
-                alert(messages.join('\n'));  // Display validation errors
+                event.preventDefault();  
+                alert(messages.join('\n'));  
             }
         });
     });

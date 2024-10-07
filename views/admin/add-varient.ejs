@@ -211,15 +211,15 @@
     <script>
 
         function varientValidation(event) {
-            // event.preventDefault()
+            
             
             var size = document.getElementById('size').value;
             var price = document.getElementById('price').value;
             var stock = document.getElementById('stock').value;
             var color = document.getElementById('color').value;
-            var image1 = document.getElementById('image1').files[0]; // Update for file validation
-    var image2 = document.getElementById('image2').files[0]; // Update for file validation
-    var image3 = document.getElementById('image3').files[0]; // Update for file validation
+            var image1 = document.getElementById('image1').files[0]; 
+    var image2 = document.getElementById('image2').files[0]; 
+    var image3 = document.getElementById('image3').files[0]; 
 
            resetErrors();
 
@@ -280,12 +280,12 @@
         isValid = false;
     }
 
-    // Validate image 2
+    
     if (!validateImage(image2, 'image2Error', validExtensions)) {
         isValid = false;
     }
 
-    // Validate image 3
+    
     if (!validateImage(image3, 'image3Error', validExtensions)) {
         isValid = false;
     }
@@ -322,7 +322,7 @@
             imgElement.src = e.target.result;
             document.getElementById('removeImage' + index).style.display = 'inline-block';
 
-            // Show cropper modal
+            
             document.getElementById('cropperModal').style.display = 'flex';
             var imageToCrop = document.getElementById('imageToCrop');
             imageToCrop.src = e.target.result;

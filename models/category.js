@@ -13,14 +13,7 @@ const categorySchema = new mongoose.Schema({
         unique:true,
         trim:true
     },
-    //  status: {
-    //     type: Boolean,
-    //     default: true
-    // }, 
-    // blocked: {
-    //     type: Boolean,
-    //     default: false
-    // },
+   
     createdAt: {
         type: Date,
         default: Date.now

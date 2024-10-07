@@ -14,12 +14,12 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            /* background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); */
+           
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
         }
-        /* Reset some default styles */
+       
         body,
         h1,
         h2,
@@ -87,7 +87,7 @@
     </style>
     <form action="/add-Address" method=POST id="add_user" onsubmit="return addressValidation()">
         <div class="new_uaer">
-            <h2>Add Delivery Address</h2> <br>
+            <h2>Add Address</h2> <br>
             <div class="form-group">
                 <label for="name" class="text-light">Name</label>
                 <input type="hidden" name="id" value="">
@@ -152,7 +152,7 @@
         function addressValidation() {
             var name = document.getElementById('name').value;
             var mobile = document.getElementById('mobile').value;
-            var city = document.getElementById('city').value; // Corrected variable name
+            var city = document.getElementById('city').value;
             var pincode = document.getElementById('pincode').value;
             var district = document.getElementById('district').value;
             var state = document.getElementById('state').value;
@@ -161,7 +161,7 @@
             // Clear previous error messages
             document.getElementById('NameError').innerText = "";
             document.getElementById('mobileError').innerText = "";
-            document.getElementById('cityError').innerText = ""; // Corrected variable name
+            document.getElementById('cityError').innerText = ""; 
             document.getElementById('pincodeError').innerText = "";
             document.getElementById('districtError').innerText = "";
             document.getElementById('stateError').innerText = "";

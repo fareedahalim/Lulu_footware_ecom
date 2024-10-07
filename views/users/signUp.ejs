@@ -10,7 +10,17 @@
     <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-C8f41J4fH+elcFRWqFL9uQaf8UIaX8+5ynmbbP0Udd2xLklSTABFJG0pOQU5hFFcERKnkIDwXK7GQUjKDmF0hA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="stylesheet" href="css/linearicons.css">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/nouislider.min.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  </head>
 
     <style>
       .error-message{
@@ -27,9 +37,181 @@
         outline: none;
         box-shadow: none;
     }
+    form {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: auto;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+.form-control {
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  font-size: 16px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.google-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 25px;
+  color: #333;
+  border: 1px solid #ddd;
+  background-color: white;
+  font-weight: bold;
+  width: 100%;
+  transition: box-shadow 0.3s ease;
+}
+
+.google-button img {
+  margin-right: 10px;
+}
+
+.google-button:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.d-flex {
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  form {
+    padding: 20px;
+  }
+
+  button[type="submit"], .google-button {
+    font-size: 16px;
+    padding: 8px 15px;
+  }
+}
+.header_area {
+    background-color: #FF8C00; /* Dark orange color */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow for a subtle effect */
+}
+
+
+.logo-title {
+    color: #333; /* Darker text color for contrast */
+    font-size: 24px; /* Adjust the size of your logo text */
+    font-weight: bold;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #333; /* Darker color for navigation links for readability */
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.navbar-toggler {
+    border-color: #FFA500; /* Border color for the toggler button */
+}
+
+.navbar-toggler .icon-bar {
+    background-color: #333; /* Darker lines in the toggler for contrast */
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #FF7F00; /* Slightly darker orange on hover */
+}
+
+@media (max-width: 768px) {
+    .logo-title {
+        font-size: 20px; /* Adjust the font size for smaller screens */
+    }
+
+    .navbar-nav .nav-link {
+        font-size: 14px; /* Adjust link font size on smaller screens */
+    }
+}
+
     </style>
 </head>
 <body>
+  
+	<header class="header_area sticky-header">
+		<div class="main_menu">
+			<nav class="navbar navbar-expand-lg navbar-light main_box">
+				<div class="container">
+					
+                    <h1 class="logo-title">Lulu Footwear</h1>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					
+					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+						<ul class="nav navbar-nav menu_nav ml-auto">
+							<li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
+							
+						</ul>
+						
+					</div>
+				</div>
+			</nav>
+		</div>
+		
+	</header>
+	
     <section class="h-100">
         <div class="container h-100">
           <div class="row justify-content-sm-center h-100">
@@ -42,86 +224,68 @@
               </div>
               <div class="card shadow-lg my-5">
                 <div class="card-body p-5 mt">
-                  <h1 class="fs-4 card-title fw-bold mb-4 text-center">
-                    Sign Up
-                  </h1>
+                 
     
-                  <form  id="signform" method="POST" class="needs-validation" action="/signup">
+                  <form id="signform" method="POST" class="needs-validation" action="/signup">
                     <% if (locals.message) { %>
                       <div class="alert alert-danger text-center" id="enterUsername">
                         <%= message %>
                       </div>
                     <% } %>
-    
+                  
+                    <h2>Sign Up</h2>
+                  
                     <div class="mb-3">
                       <label class="mb-2 text-muted" for="username">Username</label>
-                      <input id="username" type="text" class="form-control" name="username"  />
-                     <div id="error1" class="error-message"></div> 
+                      <input id="username" type="text" class="form-control" name="username" />
+                      <div id="error1" class="error-message"></div>
                     </div>
-    
+                  
                     <div class="mb-3">
                       <label class="mb-2 text-muted" for="email">Email</label>
-                      <input id="email" type="email" class="form-control" name="email"  />
-                      <div id="error2" class="error-message"></div> 
+                      <input id="email" type="email" class="form-control" name="email" />
+                      <div id="error2" class="error-message"></div>
                     </div>
-    
+                  
                     <div class="mb-3">
                       <label class="mb-2 text-muted" for="mobile">Mobile</label>
-                      <input id="mobile" type="text" class="form-control" name="mobile"  />
-                      <div id="error3" class="error-message"></div> 
+                      <input id="mobile" type="text" class="form-control" name="mobile" />
+                      <div id="error3" class="error-message"></div>
                     </div>
-    
+                  
                     <div class="mb-3">
-                      <div class="mb-2 w-100">
-                        <label class="text-muted" for="password">Password</label>
-                      </div>
-                      <input id="password" type="password" class="form-control" name="password"  />
-                      <div id="error4" class="error-message"></div> 
+                      <label class="text-muted" for="password">Password</label>
+                      <input id="password" type="password" class="form-control" name="password" />
+                      <div id="error4" class="error-message"></div>
                     </div>
-                    
+                  
                     <div class="mb-3">
-                      <div class="mb-2 w-100">
-                        <label class="text-muted" for="confirmPassword">Confirm Password</label>
-                      </div>
+                      <label class="text-muted" for="confirmPassword">Confirm Password</label>
                       <input id="confirmPassword" type="password" class="form-control" name="confirmPassword" />
-                      <div id="error5" class="error-message"></div> 
+                      <div id="error5" class="error-message"></div>
                     </div>
-
+                  
                     <div class="mb-3">
-                      <label class="mb-2 text-muted" for="referralCode">Referral Code (Optional)</label>
+                      <label class="text-muted" for="referralCode">Referral Code (Optional)</label>
                       <input id="referralCode" type="text" class="form-control" name="referralCode" />
                     </div>
-    
+                  
                     <div class="d-flex align-items-center justify-content-center">
                       <button type="submit" class="btn btn-primary mt-3" id="signup">
                         Continue
                       </button>
                     </div>
-
-                    <!-- Sign Up with Google Button -->
-                    <!-- <div class="text-center mt-3">
-                      <p>or sign up with</p>
-                      <div id="g_id_onload"
-                        data-client_id="YOUR_GOOGLE_CLIENT_ID"
-                        data-context="signup"
-                        data-ux_mode="popup"
-                        data-login_uri="/google-signup"
-                        data-auto_prompt="false">
-                      </div>
-                      <div class="g_id_signin" data-type="standard"></div>
-                    </div> -->
-                    <div class="text-center mt-3">
-                      <!-- <p>or sign up with</p> -->
-                      <a href="/auth/google">
-                          <button class="btn btn-outline-primary btn-block mb-2 google-button" type="button">
-                              <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo" width="20px" height="20px" class="mr-2">
-                              or sign up with Google
-                          </button>
-                      </a>
-                  </div>
                   
-
+                    <div class="text-center mt-3">
+                      <a href="/auth/google">
+                        <button class="btn btn-outline-primary btn-block mb-2 google-button" type="button">
+                          <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo" width="20px" height="20px" class="mr-2">
+                          or sign up with Google
+                        </button>
+                      </a>
+                    </div>
                   </form>
+                  
                 </div>
                 <div class="card-footer py-3 border-0">
                   <div class="text-center">
@@ -234,5 +398,9 @@
         }
       });
     </script>
-</body>
-</html>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    </body>
+    
+    </html>

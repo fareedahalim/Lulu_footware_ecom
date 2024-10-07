@@ -100,8 +100,9 @@
         }
 
         .custom-button {
-            background-color: yellow;
-            color: black;
+            background-color:  #007bff;
+
+            color: white;
             border: none;
             padding: 10px 20px;
             text-align: center;
@@ -140,7 +141,7 @@
                     <h1>Profile</h1>
                     <nav class="d-flex align-items-center">
                         <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <!-- <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a> -->
+
                         <a href="single-product.html">profile</a>
                     </nav>
                 </div>
@@ -161,7 +162,9 @@
                                         <a href="/editProfileImage">Edit</a>
                                     </button>
                                     <% } else { %>
-                                        <p>No user or user image found</p>
+                                        <p>No user image found<i class="fas fa-user-circle ml-2"
+                                                style="color: black;"></i>
+                                        </p>
                                         <% } %>
                             </div>
 
@@ -239,20 +242,21 @@
                         </button>
                     </div>
                 </div>
+
                 <script>
-                     document.getElementById("whatsappShare").addEventListener("click", function() {
-        // Get the referral code from the input field
-        const referralCode = document.getElementById('referralCodeField').value;
+                    document.getElementById("whatsappShare").addEventListener("click", function () {
+                        // Get the referral code from the input field
+                        const referralCode = document.getElementById('referralCodeField').value;
 
-        // Construct the message including the referral code
-        const message = encodeURIComponent(`Hey! Check out this amazing product! Use my referral code: ${referralCode} to get some exclusive offers!`);
+                        // Construct the message including the referral code
+                        const message = encodeURIComponent(`Hey! Check out this amazing product! Use my referral code: ${referralCode} to get some exclusive offers!`);
 
-        // Create the WhatsApp sharing URL with the custom message
-        const url = `https://wa.me/?text=${message}`;
-        
-        // Open WhatsApp in a new tab with the pre-filled message
-        window.open(url, "_blank");
-    });
+                        // Create the WhatsApp sharing URL with the custom message
+                        const url = `https://wa.me/?text=${message}`;
+
+                        // Open WhatsApp in a new tab with the pre-filled message
+                        window.open(url, "_blank");
+                    });
 
 
 

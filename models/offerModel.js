@@ -3,18 +3,18 @@ const mongoose = require('mongoose');
 
 const offerSchema = new mongoose.Schema({
     offerType: {
-        type: String, // Can be 'product', 'brand', 'occasion', etc.
+        type: String, 
         required: true
     },
     entityId: {
-        type: mongoose.Schema.Types.ObjectId, // This refers to the product, brand, or occasion ID
+        type: mongoose.Schema.Types.ObjectId, 
         required: true,
-        refPath: 'onModel' // Dynamic reference based on the offer type
+        refPath: 'onModel' 
     },
     onModel: {
         type: String,
         required: true,
-        enum: ['Product', 'Brand', 'Occasion'] // Reference models
+        enum: ['Product', 'Brand', 'Occasion'] 
     },
     discountPercentage: {
         type: Number,
@@ -29,7 +29,7 @@ const offerSchema = new mongoose.Schema({
         required: true
     },
     status: {
-        type: Boolean, // True if offer is active
+        type: Boolean, 
         default: true
     }
 });

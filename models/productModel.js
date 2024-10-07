@@ -27,35 +27,7 @@ const productSchema=new mongoose.Schema({
     enum: ["Men", "Women", "Unisex"],
     required: true
 },
-//    regularPrice:{
-//     type:Number,
-//     require:true
-//     },
-//    salesPrice:{
-//     type:Number,
-//     require:true
-//    },
-//    productOffer:{
-//     type:Number,
-//     default:true
-//    },
-//    quantity:{
-//     type:Number,
-//     defalt:true
-//    },
-//    stock:{
-//     type:Number,
-//     required: true,
-//     min: 0, 
-// },
-//    colour:{
-//     type:String,
-//     required:true
-//    },
-//    productImage:{
-//     type:[String],
-//     required:true
-//    },
+
    isBlocked:{
     type:Boolean,
     default:false

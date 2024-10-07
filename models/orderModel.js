@@ -27,7 +27,7 @@ const orderSchema = new mongoose.Schema({
 
   products: [
     {
-      varientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Varient' },  // Reference to variant
+      varientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Varient' },  
       quantity: Number,
       productPrice:Number,
       finalPrice: Number
@@ -62,18 +62,18 @@ const orderSchema = new mongoose.Schema({
     default:Date.now
   },
   razorpayOrderId: {
-    type: String,  // Add a field to store the Razorpay Order ID
+    type: String,  
   },
   paymentStatus:{
     type:Boolean,
     default:false,
   },
   paymentId: {
-    type: String,  // Razorpay Payment ID, will be populated upon success
+    type: String,  
   },
   deliveredAt: {
     type: Date,
-    // default: Date.now
+    
   },
 });
 

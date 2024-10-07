@@ -1,11 +1,12 @@
-
-<%- include("../../views/partials/user/header") %><!DOCTYPE html>
+<%- include("../../views/partials/user/header") %>
+<!DOCTYPE html> 
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Address</title>
+    
 </head>
 
 <body>
@@ -25,7 +26,7 @@
         font-family: 'Arial', sans-serif;
         margin: 0;
         padding: 0;
-        /* background-image: url('https://img.freepik.com/premium-photo/full-size-photo-young-attractive-woman-happy-positive-smile-wear-casual-outfit-isolated-pink-color-background_525549-6199.jpg?w=740'); */
+       
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center top; /* Adjusted background position */
@@ -85,7 +86,7 @@
     <form action="/update-address/<%= userAddress._id %>" method=POST id="add_user"
         onsubmit="return addressValidation()">
         <div class="new_uaer">
-            <h2>Add Delivery Address</h2> <br>
+            <h2>Edit Address</h2> <br>
             <div class="form-group">
                 <label for="name" class="text-light">Name</label>
                 <input type="hidden" name="id" value="">

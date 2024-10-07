@@ -24,8 +24,8 @@
             <div class="col-first">
                 <h1>Profile</h1>
                 <nav class="d-flex align-items-center">
-                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <!-- <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a> -->
+                    <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+                  
                     <a href="/profile">profile<span class="lnr lnr-arrow-right"></span></a>
                     <a href="/address">address</a>
                 </nav>
@@ -40,7 +40,7 @@
                 </a>
               </h4>
             <div class="card-body" style=" margin: 50px; border: 2px solid black; padding: 3rem;">
-                <% console.log("Addresses:", addresses); %>
+                
                     <% if (addresses && addresses.length> 0) { %>
                         <% addresses.forEach((userAddress)=> { %>
                             <div class="address-details"
@@ -68,7 +68,7 @@
                                     <%= userAddress.address[0].state || 'No name found' %>
                                 </p>
                                 <div class="form-group">
-                                    <a href="/update-address/<%= userAddress._id %>">
+                                    <a href="/edit-address/<%= userAddress._id %>">
                                         <button type="submit" class="btn btn-primary text-dark update-btn" style="background-color: #ea8dd9; color: white;">Edit</button>
 
                                     </a>

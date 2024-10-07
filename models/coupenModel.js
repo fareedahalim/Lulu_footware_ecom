@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Define the coupon schema
+
 const couponSchema = new mongoose.Schema({
 
     
@@ -9,14 +9,14 @@ const couponSchema = new mongoose.Schema({
         required: true,
         unique: true,
         trim: true,
-        uppercase: true // Ensures that coupon code is stored in uppercase
+        uppercase: true 
     },
     discountValue: {
         type: Number,
         required: true,
         validate: {
             validator: function(value) {
-                return value > 0 && value <= 50; // Limits discount to a maximum of 50%
+                return value > 0 && value <= 50; 
             },
             message: 'Discount value must be between 1 and 50 percent'
         }
@@ -26,7 +26,7 @@ const couponSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: function(value) {
-                return value > Date.now(); // Ensures that expiry date is in the future
+                return value > Date.now(); 
             },
             message: 'Expiry date must be a future date'
         },
@@ -34,15 +34,15 @@ const couponSchema = new mongoose.Schema({
     },
     minPurchase: {
         type: Number,
-        default: 0, // Minimum purchase amount for the coupon to be valid
+        default: 0, 
     },
     maxPurchase: {
         type: Number,
-        default: 0, // Max discount amount in case of percentage-based coupons
+        default: 0, 
     },
     isActive: {
         type: Boolean,
-        default: true // Indicates if the coupon is active or not
+        default: true 
     },
     usedBy:[{
         type:mongoose.Schema.Types.ObjectId,
@@ -52,5 +52,5 @@ const couponSchema = new mongoose.Schema({
 
 
 
-// Create and export the model
+
 module.exports = mongoose.model('Coupon', couponSchema);

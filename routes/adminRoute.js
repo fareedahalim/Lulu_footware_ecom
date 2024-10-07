@@ -55,11 +55,11 @@ router.post('/add-product',auth.isLogin,categoryController.addNewProduct)
 router.get('/edit-product/:prodectId',auth.isLogin,categoryController.loadEditProduct)
 router.post('/edit-product/:productId',auth.isLogin,categoryController.editProduct)
 router.post('/products/:productId/update-status',auth.isLogin,categoryController.updateProductStatus)
-// router.post('/delete-variant/:id', auth.isLogin,categoryController.deleteVariant);
-router.post('/delete-variant/:variantId', auth.isLogin,categoryController.deleteVariant);
+
+// router.post('/delete-variant/:variantId', auth.isLogin,categoryController.deleteVariant);
 
 
-// router.get('/varient',auth.isLogin,categoryController)
+
 router.get('/add-varient/:productId',auth.isLogin,categoryController.loadAddVarient)
 router.post('/add-varient/:productId',auth.isLogin,multerMiddleware.array('images', 3), categoryController.addVarient);
 router.get('/varient/:productId',auth.isLogin,categoryController.loadVarient)
@@ -86,8 +86,8 @@ router.post('/add-offer',offerController.addOffer)
 router.get('/edit-offer/:offerId',offerController.loadEditOffer)
 router.post('/edit-offer/:offerId',offerController.editOffer)
 router.get('/delete-offer/:offerId',offerController.deleteOffer)
-//reoprt
-// router.get('/dashboard',adminController.loadReport)
+
+
 module.exports = router;
 
 

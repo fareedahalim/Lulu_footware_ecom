@@ -4,12 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Failed</title>
+    <style>
+        h2 {
+            text-align: center;
+            color: darkred;
+            margin-top: 2rem;
+        }
+
+        #card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid black;
+            padding: 2rem;
+            margin: 2rem auto;
+            width: 50%;
+            background-color: white; /* Adding background color for consistency */
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 2rem; /* Adds space between the buttons */
+        }
+
+        .btn {
+            background-color: rgb(74, 70, 70);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: darkred;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #card {
+                width: 80%;
+            }
+
+            .btn {
+                width: 80%;
+                padding: 0.8rem 1.5rem;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
+
+<%- include("../../views/partials/user/header") %>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Payment Failed</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="card">
     <h2>Payment Failed</h2>
     <p>Your payment was not completed. Please try again or continue shopping.</p>
-    
-    <button onclick="window.location.href='/order-history'">View Order History</button>
-    <button onclick="window.location.href='/shop'">Continue Shopping</button>
+   
+    <div class="btn-container">
+        <a href="/order-history"><button class="btn" type="button">View Order History</button></a>
+        <a href="/shop"><button class="btn" type="button">Continue Shopping</button></a>
+    </div>
+</div>
+
 </body>
 </html>
+

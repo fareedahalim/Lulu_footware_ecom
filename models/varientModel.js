@@ -15,17 +15,17 @@ const varientSchema = new mongoose.Schema({
     color:
      { 
         type: String, 
-        // required: true 
+        
     },
     price:
      { 
         type: Number, 
-        // required: true 
+    
     },
     size:
      { 
         type: Number,
-        //  required: true
+        
     },
     createdAt:
      {

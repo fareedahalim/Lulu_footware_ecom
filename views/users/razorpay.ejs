@@ -1,48 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Page</title>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-</head>
-<body>
-    <h2>Total Amount: ₹<%= amount %></h2>
-    
-    <button id="rzp-button">Pay Now</button>
+<%- include("../../views/partials/user/header") %>
 
-    <script>
-        document.getElementById('rzp-button').onclick = function (e) {
-            var options = {
-                "key": "<%= key_id %>", // Razorpay public key
-                "amount": "<%= amount * 100 %>", // Amount in paise
-                "currency": "INR",
-                "name": "Lulu Footwear",
-                "description": "Order Payment",
-                "order_id": "<%= orderId %>", // Razorpay Order ID
-                "handler": function (response) {
-                    // Success handler (when payment is completed)
-                    window.location.href = `/success-page`;  // Redirect to success page
-                },
-                "prefill": {
-                    "name": "<%= user.name %>",
-                    "email": "<%= user.email %>",
-                    "contact": "<%= user.mobile %>"
-                },
-                "theme": {
-                    "color": "#3399cc"
-                },
-                "modal": {
-                    "ondismiss": function () {
-                        // Modal is closed without completing the payment
-                        window.location.href = "/payment-failed";  // Redirect to failed payment page
-                    }
-                }
-            };
-            var rzp = new Razorpay(options);
-            rzp.open();
-            e.preventDefault();
+<style>
+    h2 {
+        text-align: center;
+        color: darkred;
+        margin-top: 2rem;
+    }
+
+    #card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid black;
+        padding: 2rem;
+        margin: 2rem auto;
+        width: 50%;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+        gap: 2rem; /* Adds space between the buttons */
+    }
+
+    .btn, #rzp-button {
+        background-color: rgb(74, 70, 70);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn:hover, #rzp-button:hover {
+        background-color: darkred;
+    }
+
+    img {
+        width: 150px;
+        height: auto;
+        margin: 2rem auto;
+        display: block;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #card {
+            width: 80%;
         }
-    </script>
-</body>
-</html>
+
+        .btn, #rzp-button {
+            width: 80%;
+            padding: 0.8rem 1.5rem;
+        }
+
+        .btn-container {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Payment Page</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="card">
+    <h2>Total Amount: ₹<%= amount %></h2>
+
+    <div class="btn-container">
+        <button id="rzp-button" type="button">Pay Now</button>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    document.getElementById('rzp-button').onclick = function (e) {
+        var options = {
+            "key": "<%= key_id %>", // Razorpay public key
+            "amount": "<%= amount * 100 %>", // Amount in paise
+            "currency": "INR",
+            "name": "Lulu Footwear",
+            "description": "Order Payment",
+            "order_id": "<%= orderId %>", // Razorpay Order ID
+            "handler": function (response) {
+                
+                window.location.href = `/success-page`;  // Redirect to success page
+            },
+            "prefill": {
+                "name": "<%= user.name %>",
+                "email": "<%= user.email %>",
+                "contact": "<%= user.mobile %>"
+            },
+            "theme": {
+                "color": "#3399cc"
+            },
+            "modal": {
+                "ondismiss": function () {
+                    
+                    window.location.href = "/payment-failed";  // Redirect to failed payment page
+                }
+            }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+        e.preventDefault();
+    }
+</script>

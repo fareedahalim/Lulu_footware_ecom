@@ -1,16 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<%- include("../../views/partials/user/header") %>
+
+    
     <title>Retry Payment</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-</head>
-<body>
-    <h2>Total Amount: ₹<%= amount %></h2>
     
-    <button id="rzp-button">Retry Payment</button>
+    <style>
+        h2 {
+        text-align: center;
+        color: darkred;
+        margin-top: 2rem;
+    }
 
+    #card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid black;
+        padding: 2rem;
+        margin: 2rem auto;
+        width: 50%;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+        gap: 2rem; /* Adds space between the buttons */
+    }
+
+    .btn, #rzp-button {
+        background-color: rgb(74, 70, 70);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn:hover, #rzp-button:hover {
+        background-color: darkred;
+    }
+
+    img {
+        width: 150px;
+        height: auto;
+        margin: 2rem auto;
+        display: block;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #card {
+            width: 80%;
+        }
+
+        .btn, #rzp-button {
+            width: 80%;
+            padding: 0.8rem 1.5rem;
+        }
+
+        .btn-container {
+            flex-direction: column;
+        }
+    }
+    </style>
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Payment Page</h1>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="card">
+    <h2>Total Amount: ₹<%= amount %></h2>
+    <div class="btn-container">
+    <button id="rzp-button">Retry Payment</button>
+    </div>
+</div>
     <script>
         document.getElementById('rzp-button').onclick = function (e) {
             var options = {

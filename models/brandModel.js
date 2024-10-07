@@ -7,10 +7,7 @@ const brandSchema = new mongoose.Schema({
         unique: true,
         trim: true,
     },
-    // brandDiscription:{
-    //     type:String,
-    //     required:true
-    // },
+    
     status: {
         type: Boolean,
         default: true

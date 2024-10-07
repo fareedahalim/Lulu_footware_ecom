@@ -4,17 +4,17 @@
     margin-top: 20px;
   }
   
-    .blue-button {
-        background-color: blue;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 4px;
-    }
+  .blue-button {
+    background-color: #FF8C00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
 
     .blue-button a {
         color: inherit;
@@ -22,24 +22,28 @@
     }
 
 
-  .table {
+    .table {
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
     background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-  }
+    box-shadow: 0 0 20px #a8af60;
+    /* Remove border-radius to avoid curved corners */
+    border-radius: 0;
+}
 
   .thead-dark th {
-    background-color: #343a40;
+    background-color: #4DB6AC;
     color: #ffffff;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
     padding: 12px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-  }
+    /* Remove rounded corners */
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+
 
   .table-hover tbody tr:hover {
     background-color: #f8f9fa;
@@ -58,7 +62,7 @@
   }
 
   .btn-primary {
-    background-color: #007bff;
+    background-color: #FF8C00;
     border-color: #007bff;
     color: #ffffff;
     padding: 8px 16px;
@@ -202,13 +206,13 @@
                 <% } else { %>
                   <% orderData.forEach(order => { %>
                     <tr>
-                      
                       <td class="text-center"><%= order.orderDate.toLocaleDateString() %></td>
                       <td class="text-center">
                         <%= order.address[0].username %>, <%= order.address[0].city %>, 
                         <%= order.address[0].mobile %>, <%= order.address[0].pincode %>, <%= order.address[0].state %>
                       </td>
                       <td class="text-center">Rs.<%= order.totalAmount %></td>
+                      
                       <% if (order.paymentStatus == false) { %>
                         <td class="text-center">Failed</td>
                       <% } else { %>
@@ -218,13 +222,16 @@
                       <td class="text-center">
                         <a href="/view-order/<%= order._id %>" class="btn btn-dark">View Products</a>
                       </td>
+                      
                       <td class="text-center">
-                        <% if (order.paymentStatus === false && order.status==='Pending') { %>
+                        <% if (order.paymentStatus === false && order.status === 'Pending') { %>
                           <button class="btn btn-warning" onclick="retryPayment('<%= order._id %>')">Retry</button>
                         <% } else if (order.status === 'Delivered') { %>
                           <a href="/return-order/<%= order._id %>/returned">
                             <button class="btn btn-danger">Return Order</button>
                           </a>
+                        <% } else if (order.status === 'Returned') { %> <!-- Corrected condition for Returned -->
+                          <p>You returned the order</p>
                         <% } else if (order.status === 'Cancelled') { %>
                           <p>Order Cancelled</p>
                         <% } else { %>
@@ -232,6 +239,7 @@
                             <button class="btn btn-danger">Cancel Order</button>
                           </a>
                         <% } %>
+              
                         <% if (order.status === 'Delivered' || order.status === 'Returned') { %>
                           <td class="text-center">
                             <a href="/order/<%= order._id %>/invoice">
@@ -241,11 +249,12 @@
                         <% } else { %>
                           <td class="text-center">-</td>
                         <% } %>
-                      </tr>
+                      </td>
                     </tr>
                   <% }) %>
                 <% } %>
               </tbody>
+              
               
             
               
@@ -283,11 +292,11 @@
 
             </ul>
           </nav>
-        </div><!-- End .col-lg-12 -->
-      </div><!-- End .row -->
-    </div><!-- End .container -->
-  </div><!-- End .cart -->
-</div><!-- End .page-content -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
 <!-- Toastr JS -->
@@ -303,6 +312,8 @@
   <% } %>
     </script>
 
-  </script>
+
+
+
   
 <%- include("../../views/partials/user/footer") %>

@@ -12,46 +12,36 @@ const listOffer=async(req,res)=>{
     }
 }
 
-// const loadAddOffer=async(req,res)=>{
 
-//     try {
-//          const products=await Product.find();
-//          const brands=await Brand.find();
-//          res.render('admin/add-offer',{products,brands})
-//     } catch (error) {
-//         console.error(message.error)
-//         res.status(500).send("Error fetching offers");
-//     }
-// }
 
 
 const loadAddOffer = async (req, res) => {
     try {
-        const products = await Product.find(); // Fetch all products
-        const brands = await Brand.find(); // Fetch all brands
-        const existingOffers = await Offer.find(); // Fetch all existing offers
+        const products = await Product.find(); 
+        const brands = await Brand.find(); 
+        const existingOffers = await Offer.find(); 
 
-        // Create sets to track existing product and brand IDs that already have offers
+        
         const productIdsWithOffers = new Set(
             existingOffers
-                .filter(offer => offer.onModel === 'Product') // Filter offers for products
-                .map(offer => offer.entityId.toString())      // Extract product IDs
+                .filter(offer => offer.onModel === 'Product') 
+                .map(offer => offer.entityId.toString())      
         );
 
         const brandIdsWithOffers = new Set(
             existingOffers
-                .filter(offer => offer.onModel === 'Brand')   // Filter offers for brands
-                .map(offer => offer.entityId.toString())      // Extract brand IDs
+                .filter(offer => offer.onModel === 'Brand')   
+                .map(offer => offer.entityId.toString())      
         );
 
-        // Filter products and brands that do not have offers
+        
         const filteredProducts = products.filter(product => !productIdsWithOffers.has(product._id.toString()));
         const filteredBrands = brands.filter(brand => !brandIdsWithOffers.has(brand._id.toString()));
 
-        // Render the add-offer page with the filtered products and brands
+        
         res.render('admin/add-offer', {
-            filteredProducts,   // Only products without existing offers
-            filteredBrands      // Only brands without existing offers
+            filteredProducts,  
+            filteredBrands      
         });
     } catch (error) {
         console.error(error);
@@ -60,7 +50,7 @@ const loadAddOffer = async (req, res) => {
 };
 
 const addOffer=async(req,res)=>{
-    console.log("add offer............req.body-----------",req.body)
+    
     const { offerType, entityId, discountPercentage, validFrom, validTo } = req.body;
     try {
         const existingEntityId= await Offer.findById(entityId)
@@ -96,7 +86,7 @@ const loadEditOffer=async(req,res)=>{
 }
 
 const editOffer=async(req,res)=>{
-console.log("req.body-----------",req.body)
+
     const { offerType, entityId, discountPercentage, validFrom, validTo } = req.body;
 
     try {

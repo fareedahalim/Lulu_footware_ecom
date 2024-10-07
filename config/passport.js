@@ -10,15 +10,15 @@ passport.use(new GoogleStrategy({
     callbackURL: '/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log(profile);
-        await User.deleteMany({ googleId: null });
-        // Ensure the profile ID is valid
+        
+        
         if (!profile.id) {
             return done(new Error("Google ID is missing or invalid"));
         }
 
-        // Check if user already exists
+        
         let user = await User.findOne({ googleId: profile.id });
+        
         if (user) {
             return done(null, user);
         } else {
@@ -28,7 +28,7 @@ passport.use(new GoogleStrategy({
                 email: profile.emails[0].value,
                 googleId: profile.id,  // Ensure this is not null
             });
-            await user.create();
+            await user.save();
             return done(null, user);
         }
     } catch (error) {
@@ -37,17 +37,21 @@ passport.use(new GoogleStrategy({
 }));
 
 
-passport.serializeUser((user,done)=>{
-
-    done(null,user.id)
-})
-passport.deserializeUser((id,done)=>{
-    User.findById(id)
-    .then(user=>{
-        done(null,user)
-    })
-    .catch(err=>{
-        done(err,null)
-    })
-})
+passport.serializeUser((user, done) => {
+    
+    done(null, user.id);  
+  });
+  
+  passport.deserializeUser((id, done) => {
+    
+    User.findById(id)  
+      .then(foundUser => {
+        
+        done(null, foundUser);
+      })
+      .catch(err => {
+        done(err, null);
+      });
+  });
+  
 module.exports=passport;

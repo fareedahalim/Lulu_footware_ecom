@@ -70,17 +70,66 @@
         font-size: 15px; /* Adjust the icon size as needed */
     }
 
-    .cart-count {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        background-color: red;
-        color: white;
-        border-radius: 50%;
-        padding: 2px 6px;
-        font-size: 10px; /* Adjust the font size of the count */
-        font-weight: bold;
-    }
+    /* Dropdown Link Styling */
+.custom-dropdown {
+	color: #333;
+	font-weight: bold;
+	font-size: 18px;
+	display: flex;
+	align-items: center;
+}
+
+.custom-dropdown i {
+	font-size: 24px;
+	color: #007bff;
+	transition: transform 0.3s ease-in-out;
+}
+
+.custom-dropdown:hover i {
+	transform: rotate(360deg);
+}
+
+/* Dropdown Menu Styling */
+.custom-dropdown-menu {
+	background-color: #f9f9f9;
+	border-radius: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s ease-in-out;
+}
+
+.custom-dropdown-menu .nav-item {
+	padding: 10px 20px;
+}
+
+.custom-dropdown-menu .nav-item a {
+	color: #706e6e;
+	font-weight: 600;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.custom-dropdown-menu .nav-item a:hover {
+	background-color:HEX#eeb067;
+	color: white;
+}
+
+/* Hover effect for Dropdown */
+.nav-item.dropdown:hover .custom-dropdown-menu {
+	display: block;
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.custom-dropdown-menu {
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(20px);
+	position: absolute;
+	transition: all 0.3s ease-in-out;
+}
+
+
 
 
 	</style>
@@ -112,19 +161,16 @@
 		<div class="main_menu">
 			<nav class="navbar navbar-expand-lg navbar-light main_box">
 				<div class="container">
-					<!-- <img src="/lulu-logo.webp"  -->
-					<!-- alt="Lulu Footwear Logo" style="width:70px; height: auto;"> -->
-					
+					<!-- Logo Title -->
 					<h1 class="logo-title">Lulu Footwear</h1>
-
-					<!-- Brand and toggle get grouped for better mobile display -->
-					<!-- <a class="navbar-brand logo_h" href="/"><img src="img/logo.png" alt=""></a> -->
+	
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
 						aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
+	
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
 						<ul class="nav navbar-nav menu_nav ml-auto">
@@ -132,39 +178,53 @@
 							<li class="nav-item"><a class="nav-link" href="/shop">Shop</a></li>
 	
 							<% if (user) { %>
-								<!-- If user is logged in, display their name with dropdown -->
+								<!-- If user is logged in, display their name with a dropdown -->
 								<li class="nav-item dropdown">
-									<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+									<a href="#" class="nav-link dropdown-toggle custom-dropdown" data-toggle="dropdown">
 										<%= user.username %>
+										
+
+ 
 									</a>
-									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
-										<li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+									<ul class="dropdown-menu custom-dropdown-menu">
+										<li class="nav-item">
+											<a class="nav-link" href="/profile">
+												<i class="fas fa-user mr-2"></i> Profile
+											</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" href="/logout">
+												<i class="fas fa-sign-out-alt mr-2"></i> Logout
+											</a>
+										</li>
 									</ul>
 								</li>
+								
 							<% } else { %>
 								<!-- If user is not logged in, show Login and Sign Up links -->
 								<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
 								<li class="nav-item"><a class="nav-link" href="/signup">Sign Up</a></li>
 							<% } %>
-							<li class="nav-item"><a class="nav-link" href="/cartList"><i class="fas fa-shopping-cart"></i></li>
-								<!-- <span class="cart-count">4</span></a> -->
-                             
-							<li class="nav-item"><a class="nav-link" href="/wishlist"><i class="fas fa-heart" style="color: red; font-size: 20px;"></i></li>                                     
-								
-
+	
+							<!-- Cart Link with Cart Count -->
+							<li class="nav-item">
+								<a class="nav-link" href="/cartList">
+									<i class="fas fa-shopping-cart"></i>
+									
+								</a>
+							</li>
+	
+							<!-- Wishlist Link -->
+							<li class="nav-item">
+								<a class="nav-link" href="/wishlist">
+									<i class="fas fa-heart" style="color: red; font-size: 20px;"></i>
+								</a>
+							</li>
 						</ul>
-
 					</div>
-					<!-- <a href="/cartlist" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
-						<i class="fas fa-shopping-cart"></i>
-						<span class="cart-count">4</span>
-					</a> -->
+	
 				</div>
 			</nav>
 		</div>
 	</header>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-</body>
-</html>
+	

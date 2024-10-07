@@ -1,11 +1,13 @@
 <%- include("../../views/partials/admin/header") %>
-<!-- Bootstrap CSS -->
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Bootstrap Bundle JS (includes Popper.js) -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="/asset/vendors/chart.js/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <section class="content-main">
     <div class="content-header">
         <div>
@@ -13,6 +15,10 @@
         </div>
        
     </div>
+    <div>
+        <canvas id="paymentChart"></canvas>
+      
+      </div>
 <div>
   <canvas id="salesChart" width="400" height="200"></canvas>
 
@@ -22,16 +28,13 @@
 <div class="container-scroller">
    
       <div class="main-panel">
-        <!-- <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;"> -->
+        
           <div class="page-header">
 
-            <div>
-              <canvas id="salesChart" width="400" height="200"></canvas>
-            
-            </div>
+          
             <div class="container mt-4">
               <div class="row">
-                  <!-- Top 10 Best-Selling Products Card -->
+                  
                   <div class="col-md-4">
                       <div class="card">
                           <div class="card-body text-center">
@@ -43,7 +46,7 @@
                       </div>
                   </div>
           
-                  <!-- Top 10 Best-Selling Brands Card -->
+                  
                   <div class="col-md-4">
                       <div class="card">
                           <div class="card-body text-center">
@@ -55,7 +58,7 @@
                       </div>
                   </div>
           
-                  <!-- Top 10 Best-Selling Categories Card -->
+                  
                   <div class="col-md-4">
                       <div class="card">
                           <div class="card-body text-center">
@@ -69,7 +72,7 @@
               </div>
           </div>
           
-          <!-- Modal for Best-Selling Products -->
+          
           <div class="modal fade" id="productsModal" tabindex="-1" aria-labelledby="productsModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                   <div class="modal-content">
@@ -83,7 +86,7 @@
                                   <tr>
                                       <th>Product Name</th>
                                       <th>Quantity Sold</th>
-                                      <!-- <th>Image</th> -->
+                                      
                                   </tr>
                               </thead>
                               <tbody>
@@ -91,7 +94,7 @@
                                       <tr>
                                           <td><%= product.name %></td>
                                           <td><%= product.quantitySold %></td>
-                                          <!-- <td><img src="/path/to/images/<%= product.image %>" alt="<%= product.name %>" width="50" /></td> -->
+                                          
                                       </tr>
                                   <% }) %>
                               </tbody>
@@ -101,7 +104,7 @@
               </div>
           </div>
           
-          <!-- Modal for Best-Selling Brands -->
+          
           <div class="modal fade" id="brandsModal" tabindex="-1" aria-labelledby="brandsModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                   <div class="modal-content">
@@ -131,7 +134,7 @@
               </div>
           </div>
           
-          <!-- Modal for Best-Selling Categories -->
+          
           <div class="modal fade" id="categoriesModal" tabindex="-1" aria-labelledby="categoriesModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                   <div class="modal-content">
@@ -181,13 +184,7 @@
                       <input type="date" id="endDate" name="endDate">
                     </div>
                     
-                    <!-- <div class="form-row">
-                      <label for="report-type">Report Type:</label>
-                      <select id="report-type" name="type">
-                        <option value="pdf">PDF</option>
-                        <option value="excel">Excel</option>
-                      </select>
-                    </div> -->
+                    
                     <button type="submit" class="btn-submit">Generate Report</button>
                     <p id="error-message" style="color: red;"></p>
                   </form>
@@ -227,7 +224,7 @@
            
 <p class="card-description"></p>
 
-<% if (totalSalesCount > 0) { %> <!-- Check if totalSalesCount is greater than zero -->
+<% if (totalSalesCount > 0) { %> 
   <h2 class="card-title" style="color: rgb(10, 109, 170); text-align: center;">Sales Report</h2>
     <div class="table-responsive">
         <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
@@ -261,7 +258,7 @@
         </table>
       
       
-        <div class="button-group"> <!-- Add some space between the table and buttons -->
+        <div class="button-group"> 
             <button class="blue-button">
                 <a href="/admin/download-pdf" style="color: inherit; text-decoration: none;">Download PDF</a>
             </button>
@@ -270,7 +267,7 @@
             </button>
         </div>
     </div>
-<% } else { %> <!-- If totalSalesCount is zero, show a message -->
+<% } else { %>
     <p style="text-align: center; color: red;">No sales data available.</p>
 <% } %>
  
@@ -424,25 +421,31 @@
         opacity: 0.9;
     }
 
-    /* Add responsiveness */
+    
     @media (max-width: 768px) {
         .table-responsive {
             overflow-x: auto;
         }
     }
     .blue-button {
-    background-color: #007bff; /* Blue color */
-    color: white; /* White text */
-    border: none; /* No border */
-    padding: 10px 20px; /* Padding for size */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
+    background-color: #007bff; 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-size: 16px; 
   }
 
   .blue-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3; 
   }
+  #paymentChart {
+   
+    max-width: 400px; /* Set max width */
+    max-height: 400px; /* Set max height */
+  }
+  
               
             </style>
             <br>
@@ -455,19 +458,18 @@
 
   </div>
   </div>
+  
   <script src="/asset/vendors/js/vendor.bundle.base.js"></script>
-  <!-- endinject -->
-  <!-- Plugin js for this page -->
+  
   <script src="/asset/vendors/chart.js/chart.umd.js"></script>
   <script src="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-  <!-- End plugin js for this page -->
-  <!-- inject:js -->
+  
   <script src="/asset/js/off-canvas.js"></script>
   <script src="/asset/js/misc.js"></script>
   <script src="/asset/js/settings.js"></script>
   <script src="/asset/js/todolist.js"></script>
   <script src="/asset/js/jquery.cookie.js"></script>
-  <!-- endinject -->
+ 
   <script>
     function setDateRange(range) {
       const now = new Date();
@@ -505,25 +507,21 @@
   </body>
 
   </html>
-  <!-- content-wrapper ends -->
-  <!-- partial:../../partials/_footer.html -->
+ 
   </section>
   
   <script>
    document.addEventListener("DOMContentLoaded", function() {
         const ctx = document.getElementById('salesChart').getContext('2d');
-        const salesData = <%- JSON.stringify(salesData) %>; // Ensure this is correctly passed
-
-        // Check if salesData is available
-        console.log('Sales Data:', salesData);
-
-        // Prepare labels and data for the chart
+        const salesData = <%- JSON.stringify(salesData) %>; 
+       
+        
         const labels = salesData.map(data => data.orderDate);
         const totalAmounts = salesData.map(data => data.totalAmount);
         const discountAmounts = salesData.map(data => data.discountAmount);
 
         const salesChart = new Chart(ctx, {
-            type: 'bar', // or 'line', 'pie', etc.
+            type: 'bar', 
             data: {
                 labels: labels,
                 datasets: [{
@@ -550,5 +548,48 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const paymentCounts = <%- JSON.stringify(orderCounts) %>;
+      const labels = paymentCounts.map(item => item._id);  
+      const data = paymentCounts.map(item => item.count);
+  
+      const ctx = document.getElementById('paymentChart').getContext('2d');
+  
+      // Set the canvas size directly
+      ctx.canvas.width = 400;  // Set the desired width
+      ctx.canvas.height = 400; // Set the desired height
+  
+      const paymentChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Orders by Payment Method',
+            data: data,
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            tooltip: {
+              callbacks: {
+                label: function(tooltipItem) {
+                  return `${labels[tooltipItem.dataIndex]}: ${data[tooltipItem.dataIndex]}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+  
 
 <%- include("../../views/partials/admin/footer") %>

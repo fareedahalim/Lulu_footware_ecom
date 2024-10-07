@@ -74,18 +74,18 @@ function couponValidation(event) {
     var minPurchase = document.getElementById('minPurchase').value;
     var maxPurchase = document.getElementById('maxPurchase').value;
 
-    // Reset previous errors
+    
     resetCouponErrors();
 
     var isValid = true;
 
-    // Validate coupon code
+    
     if (couponCode.trim() === '') {
         document.getElementById('codeError').innerText = 'Please enter a coupon code';
         isValid = false;
     }
 
-    // Validate discount value
+    
     if (discountValue.trim() === '' || isNaN(discountValue) || discountValue <= 0) {
         document.getElementById('discountValueError').innerText = 'Please enter a valid discount value';
         isValid = false;
@@ -94,7 +94,7 @@ function couponValidation(event) {
         isValid = false;
     }
 
-    // Validate expiry date
+    
     if (expiryDate.trim() === '') {
         document.getElementById('expirationDateError').innerText = 'Please select an expiry date';
         isValid = false;
@@ -108,13 +108,13 @@ function couponValidation(event) {
         }
     }
 
-    // Validate minimum purchase amount
+    
     if (minPurchase.trim() === '' || isNaN(minPurchase) || minPurchase <= 0) {
         document.getElementById('minOrderAmountError').innerText = 'Please enter a valid minimum purchase amount';
         isValid = false;
     }
 
-    // Validate maximum purchase amount
+    
     if (maxPurchase.trim() === '' || isNaN(maxPurchase) || maxPurchase <= 0) {
         document.getElementById('maxOrderAmountError').innerText = 'Please enter a valid maximum purchase amount';
         isValid = false;
@@ -123,7 +123,7 @@ function couponValidation(event) {
     return isValid;
 }
 
-// Function to reset error messages for coupon form
+
 function resetCouponErrors() {
     var errorMessages = document.getElementsByClassName('errorMessage');
     for (var i = 0; i < errorMessages.length; i++) {

@@ -124,26 +124,16 @@
 
 
 					</div>
-					<!-- <div class="sorting mr-auto">
-						<select>
-							<option value="1">Show 12</option>
-							<option value="1">Show 12</option>
-							<option value="1">Show 12</option>
-						</select>
-					</div> -->
 					
-
 				</div>
-				<!-- End Filter Bar -->
-				<!-- Start Best Seller -->
+				
 				<div class="single-product-slider" id="productsContainer">
 					<div class="container">
 						<div class="row justify-content-center">
 							<div class="col-lg-6 text-center">
 								<div class="section-title">
 									<h1>Latest Products</h1>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-										incididunt ut labore et dolore magna aliqua.</p>
+									
 								</div>
 							</div>
 						</div>
@@ -179,8 +169,7 @@
 															<% } %>
 
 																<div class="prd-bottom">
-																	<a href="/add-to-cart/<%=variant._id%>"
-																		class="social-info">
+																	<a href="javascript:void(0)" class="social-info add-to-cart-btn" data-stock="<%= variant.stock %>" data-id="<%= variant._id %>">
 																		<span class="ti-bag"></span>
 																		<p class="hover-text">add to bag</p>
 																	</a>
@@ -189,15 +178,7 @@
 																		<span class="lnr lnr-heart"></span>
 																		<p class="hover-text">Wishlist</p>
 																	</a>
-																	<!-- <a href="" class="social-info">
-																		<span class="lnr lnr-sync"></span>
-																		<p class="hover-text">compare</p>
-																	</a> -->
-																	<!-- <a href="/product-details/<%= variant._id%>"
-																		class="social-info">
-																		<span class="lnr lnr-move"></span>
-																		<p class="hover-text">view more</p>
-																	</a> -->
+																	
 																</div>
 												</div>
 											</div>
@@ -242,21 +223,28 @@
 
 	
 <%- include("../../views/partials/user/footer") %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script>
+ document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const stock = this.getAttribute('data-stock');
+            const productId = this.getAttribute('data-id');
 
-			// function filterProducts() {
-			// 	let searchInput = document.getElementById("searchInput").value.toLowerCase();
-			// 	let products = document.querySelectorAll(".single-product-wrapper");
-
-			// 	products.forEach(product => {
-			// 		let productName = product.querySelector(".product-name").innerText.toLowerCase();
-			// 		if (productName.includes(searchInput)) {
-			// 			product.style.display = "block"; // Show the product if it matches
-			// 		} else {
-			// 			product.style.display = "none"; // Hide the product if it doesn't match
-			// 		}
-			// 	});
-			// }
+            // Check if product is out of stock
+            if (stock == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'The product is out of stock!',
+                    confirmButtonText: 'Okay'
+                });
+            } else {
+                // Redirect to add to cart if in stock
+                window.location.href = `/add-to-cart/${productId}`;
+            }
+        });
+    });
+			
 
 
 			function filterProducts() {
@@ -282,8 +270,7 @@
 
 function updatePagination(totalVisibleProducts) {
     const totalPages = Math.ceil(totalVisibleProducts / itemsPerPage); // Adjust itemsPerPage based on your setting
-    // Implement your pagination update logic here
-    // For example, show/hide pagination links or disable them if there are no results
+   
 }
 
 

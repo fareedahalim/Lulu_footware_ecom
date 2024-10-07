@@ -45,9 +45,9 @@
                                         <td>
                                             <figure class="product-media">
                                                 <% if (wishlistitem.varient.images && wishlistitem.varient.images.length > 0) { %>
-                                                    <a href="/product/<%= wishlistitem.varient.productId._id %>">
+                                                    
                                                         <img src="<%= wishlistitem.varient.images[0] %>" alt="Product image" style="width: 100px;">
-                                                    </a>
+                                                   
                                                 <% } else { %>
                                                     <p>Image not available</p>
                                                 <% } %>
@@ -55,9 +55,9 @@
                                         </td>
                                         <td>
                                             <h3 class="product-title">
-                                                <a href="/product/<%= wishlistitem.varient.productId._id %>">
+                                               
                                                     <%= wishlistitem.varient.productId.productName || "Product Name Not Available" %>
-                                                </a>
+                                               
                                             </h3>
                                         </td>
                                         <td>Rs.<%= wishlistitem.varient.price || "Price Not Available" %></td>

@@ -6,7 +6,7 @@ const Varient=require("../models/varientModel")
 const path = require('path');
 const fs=require("fs")
 const sharp=require("sharp")
-//main category
+
 const category=async(req,res)=>{
     try {
         
@@ -44,7 +44,7 @@ const addCategory=async(req,res)=>{
         try {
             const { categoryName } = req.body;
     
-            // Validate category name
+            
             if (categoryName === "") {
                 return res.json({ success: false, message: "Please enter a category name." });
             }
@@ -53,9 +53,9 @@ const addCategory=async(req,res)=>{
                 return res.json({ success: false, message: "Category name must contain alphabetic characters only. Numbers or special characters are not allowed." });
             }
     
-            // Check if category name already exists
+            
             const existsCategoryName = await Category.findOne({ categoryName: new RegExp(`^${categoryName}$`, 'i') });
-            console.log(existsCategoryName)
+            
     
             if (existsCategoryName) {
                 if (existsCategoryName.isBlocked) {
@@ -65,11 +65,11 @@ const addCategory=async(req,res)=>{
                 }
             }
     
-            // Create new category
+        
             const newCategory = new Category({ categoryName });
             await newCategory.save();
     
-            // Send success response
+            
             return res.json({ success: true, message: "Category added successfully." });
             
         } catch (error) {
@@ -100,49 +100,13 @@ const addBrand=async (req,res)=>{
     }
 }
 
-// const addNewBrand = async (req, res) => {
-//     try {
-//         const { brandName } = req.body;
 
-//         // Check if the brand name already exists
-//         if(brandName===""){
-//             return res.render("admin/add-brand",{message:"Brand name is required"})
-//         }
-//         const existBrandName = await Brand.findOne({ brandName });
-
-//         if (existBrandName) {
-//             // If the brand already exists, render the form again with an error message
-//             return res.render("admin/add-brand", { message: "This Brand already exists, please choose another" });
-//         }
-
-//         // If not, proceed to create a new brand
-//         const newBrand = new Brand({
-//             brandName
-//         });
-
-//         const savedBrand = await newBrand.save();
-//         console.log("Brand saved:", savedBrand);
-
-//         // Redirect to the brand list or wherever appropriate
-//         return res.redirect('/admin/brand');
-
-//     } catch (error) {
-//         // Check if the error is a duplicate key error
-//         if (error.code === 11000) {
-//             return res.render("admin/add-brand", { message: "This Brand already exists, please choose another" });
-//         }
-
-//         // Handle other errors
-//         console.error('Error adding new brand:', error.message);
-//         res.status(500).send('Internal Server Error');
-//     }
-// };
 const addNewBrand = async (req, res) => {
     
         try {
             const { brandName } = req.body;
     
-            // Validate category name
+            
             if (brandName === "") {
                 return res.json({ success: false, message: "Please enter a brand name." });
             }
@@ -151,9 +115,9 @@ const addNewBrand = async (req, res) => {
                 return res.json({ success: false, message: "Brand name must contain alphabetic characters only. Numbers or special characters are not allowed." });
             }
     
-            // Check if category name already exists
+            
             const existsBrandName = await Brand.findOne({ brandName: new RegExp(`^${brandName}$`, 'i') });
-            // console.log(existsCategoryName)
+        
     
             if (existsBrandName) {
                 if (existsBrandName.isBlocked) {
@@ -163,11 +127,11 @@ const addNewBrand = async (req, res) => {
                 }
             }
     
-            // Create new category
+            
             const newBrand = new Brand({ categoryName });
             await newBrand.save();
     
-            // Send success response
+            
             return res.json({ success: true, message: "Brand added successfully." });
             
         } catch (error) {
@@ -196,7 +160,7 @@ const updateOccasionStatus = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
-//edit-occasion(rendering edit-occasion page)
+
 const loadEdit=async(req,res)=>{
 
     try {
@@ -215,15 +179,15 @@ const loadEdit=async(req,res)=>{
 const editOccasion = async (req, res) => {
     try {
         const occasionId = req.params.occasionId;
-        console.log(req.body,'body')
+        
         const { categoryName } = req.body;
-        console.log('Received Category Name:', categoryName); // Debugging line
+        
 
         if (!categoryName || !/^[A-Za-z\s]+$/.test(categoryName)) {
             return res.status(400).json({ message: "Occasion name is required and must contain only alphabetic characters and spaces." });
         }
 
-        // Check if the occasion name already exists
+        
         const existingOccasion = await Occasion.findOne({
             categoryName: new RegExp(`^${categoryName}$`, 'i'),
             _id: { $ne: occasionId }
@@ -233,7 +197,7 @@ const editOccasion = async (req, res) => {
             return res.status(400).json({ message: "This occasion name already exists. Please choose a different name." });
         }
 
-        // Update the occasion
+    
         const updatedOccasion = await Occasion.findByIdAndUpdate(
             occasionId,
             { categoryName: categoryName },
@@ -277,7 +241,7 @@ const loadEditBrand=async (req,res)=>{
 
         
         const brand = await Brand.findById(brandId);
-        console.log(brand)
+    
         
 
     
@@ -292,41 +256,29 @@ const loadEditBrand=async (req,res)=>{
 const editBrand = async (req, res) => {
     try {
         const brandId = req.params.brandId;
-        console.log(req.body,'body')
+        
         const { brandName } = req.body;
-        console.log('Received brand Name:', brandName); // Debugging line
+        
 
 
-        // Validate the brand name
+        
         if (!brandName || !/^[A-Za-z\s]+$/.test(brandName)) {
-            // return res.render('admin/edit-brand', {
-            //     message: "Brand name is required and must contain only alphabetic characters and spaces.",
-            //     brand: {
-            //         _id: brandId,
-            //         brandName
-            //     }
-            // });
+           
             return res.status(400).json({message:"Barnd name is required and must contain only alphabetic charecters and spaces "})
         }
 
-        // Check if the brand name already exists (excluding the current brand)
+        
         const existingBrand = await Brand.findOne({
             brandName: new RegExp(`^${brandName}$`, 'i'),
             _id: { $ne: brandId }
         });
 
         if (existingBrand) {
-            // return res.render('admin/edit-brand', {
-            //     message: "This brand name already exists. Please choose a different name.",
-            //     brand: {
-            //         _id: brandId,
-            //         brandName
-            //     }
-            // });
+           
             return res.status(400).json({message:"This brand name already exists.Please choose a differend name"})
         }
 
-        // Update the brand in the database
+        
         const updatedBrand = await Brand.findByIdAndUpdate(
             brandId,
             { brandName: brandName },
@@ -334,24 +286,18 @@ const editBrand = async (req, res) => {
         );
 
         if (!updatedBrand) {
-            // return res.render('admin/edit-brand', {
-            //     message: "Brand not found.",
-            //     brand: {
-            //         _id: brandId,
-            //         brandName
-            //     }
-            // });
+            
             return res.status(404).json({message:"Brand not found"})
         }
 
     
-        // res.redirect('/admin/brand');
+
         res.json({success:true})
     } catch (error) {
         console.error('Error updating brand:', error.message);
 
     
-        // return res.status(500).send('Internal Server Error');
+        
         res.status(500).json({message:'Internal Server Error'})
     }
 };
@@ -391,12 +337,12 @@ const loadproduct=async(req,res)=>{
 const loadAddProduct=async(req,res)=>{
     
         try {
-            // Fetch all brands and occasions from the database
+            
             const brands = await Brand.find({blocked:false});
             const occasions = await Occasion.find({blocked:false});
             
     
-            // Render the add-product page with the fetched data
+            
             res.render('admin/add-product', { 
                 brands, 
                 occasions 
@@ -412,22 +358,22 @@ const addNewProduct = async (req, res) => {
     try {
         const { productName, description, brand, category, gender } = req.body;
 
-        // Check if the product already exists
+        
         const existingProduct = await Product.findOne({ productName: productName.trim() });
 
         if (existingProduct) {
-            // If product exists, render the add-product page with an error message
+            
             const brands = await Brand.find({ blocked: false });
             const occasions = await Occasion.find({ blocked: false });
 
             return res.render('admin/add-product', { 
                 brands, 
                 occasions,
-                errorMessage: 'Product already exists' // Pass the error message
+                errorMessage: 'Product already exists' 
             });
         }
 
-        // If product does not exist, save the new product
+        
         const newProduct = new Product({
             productName,
             description,
@@ -437,7 +383,7 @@ const addNewProduct = async (req, res) => {
         });
 
         await newProduct.save();
-        res.redirect('/admin/products'); // Redirect to the products page
+        res.redirect('/admin/products'); 
 
     } catch (error) {
         console.error('Error adding new product:', error.message);
@@ -448,14 +394,14 @@ const addNewProduct = async (req, res) => {
 const loadEditProduct=async(req,res)=>{
     try {
        const productId=req.params.prodectId;
-       console.log("productId:",productId)
+       
        const product=await Product.findById(productId).populate('brand').populate('category')
        if(!product){
         return res.status(404).send("product not found")
        }
        const brands=await Brand.find();
        const occasions=await Occasion.find();
-    //    console.log("product:",product)
+    
        res.render('admin/edit-product',{product,brands,occasions})
 
     } catch (error) {
@@ -469,10 +415,10 @@ const editProduct=async(req,res)=>{
     
         try {
             const productId = req.params.productId;
-            console.log(productId)
+            
             const { productName, description, brand, category, gender } = req.body;
     
-            console.log('Received Product Data:', { productName, description, brand, category, gender });
+            
     
             // Validate the product name
             if (!productName || !/^[A-Za-z\s]+$/.test(productName)) {
@@ -509,12 +455,12 @@ const editProduct=async(req,res)=>{
     
  const updateProductStatus=async(req,res)=>{
         const productId = req.params.productId;
-        console.log(productId)
+        
 
     try {
         
         const product = await Product.findById(productId);
-        console.log(product)
+        
         if (!product) {
             return res.status(404).send('Product not found');
         }
@@ -522,10 +468,10 @@ const editProduct=async(req,res)=>{
         
         product.isBlocked = !product.isBlocked;
 
-        // Save the updated product
+    
         await product.save();
 
-        // Redirect back to the product list
+        
         res.redirect('/admin/products');
     } catch (error) {
         console.error(error);
@@ -537,10 +483,10 @@ const editProduct=async(req,res)=>{
 //Varient
 const loadAddVarient=async(req,res)=>{
     try {
-        console.log("loading add varient page")
+        
         const productId=req.params.productId;
         const product=await Product.findById(productId)
-        console.log(product,"product")
+        
          res.render('admin/add-varient',{product})
     } catch (error) {
         console.error('Error in rendering the add varient pafge')
@@ -550,12 +496,12 @@ const loadAddVarient=async(req,res)=>{
 
 
 const addVarient=async(req,res)=>{
-    console.log(req.files,"jghjgjhghjg")
+
     try {
         const productId=req.params.productId;
-        console.log(productId)
+        
         const productExists = await Product.findById(productId);
-        console.log(productExists)
+        
         if (!productExists) {
             return res.status(404).send("Product not found");
         }
@@ -565,7 +511,7 @@ const addVarient=async(req,res)=>{
         if(req.files&&Array.isArray(req.files)){
             images=req.files.map(file=>file.path.replace('public',''))
             }
-        // const images = req.files.map(file => file.path);
+
         const newVarient = new Varient({
             productId,
             stock,
@@ -587,9 +533,9 @@ const loadVarient = async (req, res) => {
     try {
         const productId=req.params.productId;
 
-        const variants = await Varient.find({productId:productId}); // Fetching all variants
+        const variants = await Varient.find({productId:productId}); 
         
-        res.render('admin/varient', { variants,productId }); // Render the variant page with the data
+        res.render('admin/varient', { variants,productId }); 
     } catch (error) {
         console.error('Error rendering variant page:', error.message);
         res.status(500).send("Internal Server Error");
@@ -607,7 +553,7 @@ const loadEditVarient=async(req,res)=>{
 
         res.render('admin/edit-varient', {
             varient: varient,
-            // You can pass additional data if needed
+            
         });
     } catch (error) {
         console.error('Error fetching variant:', error);
@@ -633,11 +579,11 @@ const editVarient=async(req,res)=>{
                     color,
                     price,
                     size,
-                    ...(images.length && { images }), // Only update images if new ones are provided
+                    ...(images.length && { images }), 
                 },
-                { new: true } // Return the updated variant
+                { new: true } 
             );
-            console.log(updatedVarient.productId,'ID')
+        
             if (!updatedVarient) {
                 return res.status(404).send('Variant not found');
             }
@@ -649,44 +595,23 @@ const editVarient=async(req,res)=>{
         }
     };
     
-// const editStock=async(req,res)=>{
+
+// const deleteVariant = async (req, res) => {
 //     try {
-//         const varientId=req.params.verientId;
-//         const {stock}=req.body;
-//         await Varient.findByIdAndUpdate(varientId,{stock:stock});
-//         res.redirect('/varients');
+//         const variantId = req.params.variantId;
 
+//         // Find the variant by its ID and delete it
+//         await Varient.findByIdAndDelete(variantId);
+
+//         req.flash('success', 'Variant deleted successfully');
+//         res.redirect('/admin/varient/' + req.body.productId); // Redirect back to the product's variants list page
 //     } catch (error) {
-//         console.error("Error",error)
-//         res.status(500).send('Error updating stock');
+//         console.error("Error deleting variant:", error.message);
+//         req.flash('error', 'Failed to delete variant');
+//         res.redirect('/admin/varient/' + req.body.productId); // Redirect back to variants page on failure
 //     }
-// }
+// };
 
-
-// Load variants for a specific product
-
-
-// Delete a specific variant
-const deleteVariant = async (req, res) => {
-    try {
-        const variantId = req.params.variantId;
-
-        // Find the variant by its ID and delete it
-        await Varient.findByIdAndDelete(variantId);
-
-        req.flash('success', 'Variant deleted successfully');
-        res.redirect('/admin/varient/' + req.body.productId); // Redirect back to the product's variants list page
-    } catch (error) {
-        console.error("Error deleting variant:", error.message);
-        req.flash('error', 'Failed to delete variant');
-        res.redirect('/admin/varient/' + req.body.productId); // Redirect back to variants page on failure
-    }
-};
-
-module.exports = {
-    loadVarient,
-    deleteVariant,
-};
 
     module.exports={
     category,
@@ -713,8 +638,8 @@ module.exports = {
     updateProductStatus,
     loadEditVarient,
     editVarient,
-    deleteVariant
-    // editStock
+    
+    
     
 
 
