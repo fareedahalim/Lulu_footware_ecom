@@ -43,69 +43,46 @@
         </div>
     </div>
 </div>
-
 <script>
-    document.getElementById("brandForm").addEventListener("submit", async function(event) {
-        event.preventDefault(); 
+document.getElementById("brandForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); 
 
-        const brandName = document.getElementById("brandName").value.trim();
-        const brandNameError = document.getElementById("brandNameError");
+    const brandName = document.getElementById("brandName").value.trim();
+    const brandNameError = document.getElementById("brandNameError");
 
-        
-        brandNameError.innerText = "";
+    brandNameError.innerText = "";
 
-        
-        if (brandName === "") {
-            brandNameError.innerText = "Brand name is required";
-            return false;
+    if (brandName === "") {
+        brandNameError.innerText = "Brand name is required";
+        return false;
+    }
+
+    if (!/^[A-Za-z\s]+$/.test(brandName)) {
+        brandNameError.innerText = "Brand name must contain alphabetic characters only.";
+        return false;
+    }
+
+    try {
+        const response = await fetch('/admin/add-brand', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ brandName })
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            brandNameError.innerText = result.message;
+        } else {
+            window.location.href = "/admin/brand";
         }
+    } catch (error) {
+        console.error("Error submitting the brand:", error);
+        brandNameError.innerText = "An error occurred. Please try again.";
+    }
+});
 
-        
-        if (!/^[A-Za-z\s]+$/.test(brandName)) {
-            brandNameError.innerText = "Brand name must contain alphabetic characters only.";
-            return false;
-        }
-
-    
-        try {
-            const response = await fetch('/admin/check-brand-unique', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ brandName })
-            });
-
-            const result = await response.json();
-
-            if (!result.isUnique) {
-                brandNameError.innerText = "Brand name already exists";
-                return false;
-            }
-
-        
-            const formResponse = await fetch("/admin/add-brand", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ brandName })
-            });
-
-            const formResult = await formResponse.json();
-
-            if (!formResult.success) {
-                
-                brandNameError.innerText = formResult.message;
-            } else {
-                
-                window.location.href = "/admin/brands";
-            }
-        } catch (error) {
-            console.error("Error checking brand name uniqueness:", error);
-            brandNameError.innerText = "An error occurred while checking brand name uniqueness. Please try again.";
-        }
-    });
 </script>
-
 <%- include("../../views/partials/admin/footer") %>

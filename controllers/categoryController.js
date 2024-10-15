@@ -102,44 +102,38 @@ const addBrand=async (req,res)=>{
 
 
 const addNewBrand = async (req, res) => {
-    
-        try {
-            const { brandName } = req.body;
-    
-            
-            if (brandName === "") {
-                return res.json({ success: false, message: "Please enter a brand name." });
-            }
-    
-            if (!/^[A-Za-z\s]+$/.test(brandName)) {
-                return res.json({ success: false, message: "Brand name must contain alphabetic characters only. Numbers or special characters are not allowed." });
-            }
-    
-            
-            const existsBrandName = await Brand.findOne({ brandName: new RegExp(`^${brandName}$`, 'i') });
-        
-    
-            if (existsBrandName) {
-                if (existsBrandName.isBlocked) {
-                    return res.json({ success: false, message: "This brand is blocked. Please choose a different name." });
-                } else {
-                    return res.json({ success: false, message: "This brand already exists. Please choose a different name." });
-                }
-            }
-    
-            
-            const newBrand = new Brand({ categoryName });
-            await newBrand.save();
-    
-            
-            return res.json({ success: true, message: "Brand added successfully." });
-            
-        } catch (error) {
-            console.error('Error adding new category:', error.message);
-            return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    try {
+        const { brandName } = req.body;
+
+        if (brandName === "") {
+            return res.json({ success: false, message: "Please enter a brand name." });
         }
-    };
-    
+
+        if (!/^[A-Za-z\s]+$/.test(brandName)) {
+            return res.json({ success: false, message: "Brand name must contain alphabetic characters only. Numbers or special characters are not allowed." });
+        }
+
+        // Check if the brand already exists (case-insensitive)
+        const existsBrandName = await Brand.findOne({ brandName: new RegExp(`^${brandName}$`, 'i') });
+
+        if (existsBrandName) {
+            if (existsBrandName.blocked) {
+                return res.json({ success: false, message: "This brand is blocked. Please choose a different name." });
+            } else {
+                return res.json({ success: false, message: "This brand already exists. Please choose a different name." });
+            }
+        }
+
+        // Save the new brand
+        const newBrand = new Brand({ brandName });
+        await newBrand.save();
+
+        return res.json({ success: true, message: "Brand added successfully." });
+    } catch (error) {
+        console.error('Error adding new brand:', error.message);
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
 
 //update-occasion
 const updateOccasionStatus = async (req, res) => {
